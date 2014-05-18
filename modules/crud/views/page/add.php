@@ -1,5 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
-<?print_r($add_property)?>
+
+
 <form action="" method="get" enctype="multipart/form-data">
     <table border="1">
         <?foreach ($add_property['field'] as  $name_fild):?>

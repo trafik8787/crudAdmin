@@ -21,6 +21,8 @@ class Cruds {
     private $remove_edit = null; //уброать кнопку редактировать
     private $set_where = null;
 
+    public $add_field = null; //поля которые будут видны при добавлении
+    public $edit_fields = null; //поля которые будут видны при редактировании
     public $add_action = null; //добавить екшен
 
 
@@ -45,8 +47,8 @@ class Cruds {
 
     }
     //отображаемые столбцы
-    public function show_columns ($columns) {
-        $this->column_array = $columns;
+    public function show_columns () {
+        $this->column_array = func_get_args();
     }
 
     //метот блокирования кнопки удалить
@@ -260,10 +262,15 @@ class Cruds {
         $this->callback_after_insert = array('name_function' => $name_function);
     }
 
+    //отображение полей при добавлении
+    public function add_field () {
+        $this->add_field = func_get_args();
+    }
 
-
-
-
+    //отображение полей при редактировании
+    public function edit_fields () {
+        $this->edit_fields = func_get_args();
+    }
 
 
 

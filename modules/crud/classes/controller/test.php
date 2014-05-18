@@ -20,16 +20,19 @@ class Controller_Test extends Controller_Main {
     public static  function asd () {
         $crud = new Cruds;
         $crud->load_table('articles');
-        $crud->show_name_column(array('id' => 'Nace', 'title' => 'Title')); //переименование полей таблицы вывода
+        $crud->show_name_column(array('id' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');
         $crud->callback_after_delete('call_after_del');
-        $crud->show_columns(array('id', 'title', 'author', 'date', 'content_short'));
+        $crud->show_columns('id', 'title', 'author', 'date', 'content_short');
         //$crud->remove_delete();
         //$crud->remove_edit();
         //$crud->set_where('id','=', 3,1);
         $crud->callback_befor_edit('call_bef_edit');
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
+
+        $crud->add_field('title', 'author', 'date');
+        $crud->edit_fields('title', 'author');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
@@ -74,5 +77,6 @@ class Controller_Test extends Controller_Main {
 
     }
 
-    
+
+
 }

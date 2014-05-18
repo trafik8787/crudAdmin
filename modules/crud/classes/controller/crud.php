@@ -112,12 +112,27 @@ class Controller_Crud extends Controller_Main {
         //вид edit
         $viev_edit = View::factory('page/edit');
 
-        $viev_edit->edit_property = array('field' => Model::factory('All')->select_all_where($retw->table,$this->id)[0],
-        'obj' => $_GET['obj']);
+        $fields = Model::factory('All')->select_all_where($retw->table,$this->id)[0];
+
+        //какие будут отображатся при редактировании
+        if ($retw->edit_fields != null) {
+            //вычисляяем пересечение масивов по ключам
+            $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
+            $field['id'] = $fields['id'];
+        }
+
+        $viev_edit->edit_property = array('field' => $field,
+                                            'obj' => $_GET['obj'],
+                                            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $viev_edit;
 
     }
+
+
+
+
+
 
     //для новых экшенов
     public function action_newAction () {
@@ -209,6 +224,12 @@ class Controller_Crud extends Controller_Main {
                 $fields[] = $name_count_rows['COLUMN_NAME'];
             }
 
+        }
+
+        //если определены поля которые должны отображатся при добавлении
+        if ($retw->add_field != null) {
+            //вычисляем схождение массивов
+           $fields =  array_intersect($retw->add_field, $fields);
         }
 
         $viev_add = View::factory('page/add');
