@@ -1,0 +1,443 @@
+
+/*
+
+	00. Font Face
+	01. Key Frames Fade-It
+	02. Media Queries MAX WIDTH 960px
+	03. Media Queries MAX WIDTH 720px
+	04. Media Queries MAX WIDTH 520px
+	05. Media Queries for Smartphones landscapes
+	06. Media Queries for Smartphones Portraits
+	07. Media Queries for iPads Portraits
+	08. WORKS GRID Media Queries
+	09. Mobile Navigation Queries
+
+*/
+
+
+
+/* 00. FONT FACE ================================================== */
+
+
+@font-face {
+    font-family: 'OpenSansLight';
+    src: url('../fonts/OpenSans-Light-webfont.eot');
+    src: url('../fonts/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/OpenSans-Light-webfont.woff') format('woff'),
+    url('../fonts/OpenSans-Light-webfont.ttf') format('truetype'),
+    /*url('../fonts/OpenSans-Light-webfont.svg#OpenSansLight') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'OpenSansRegular';
+    src: url('../fonts/OpenSans-Regular-webfont.eot');
+    src: url('../fonts/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/OpenSans-Regular-webfont.woff') format('woff'),
+    url('../fonts/OpenSans-Regular-webfont.ttf') format('truetype'),
+    /*url('../fonts/OpenSans-Regular-webfont.svg#OpenSansRegular') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'OpenSansSemibold';
+    src: url('../fonts/OpenSans-Semibold-webfont.eot');
+    src: url('../fonts/OpenSans-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/OpenSans-Semibold-webfont.woff') format('woff'),
+    url('../fonts/OpenSans-Semibold-webfont.ttf') format('truetype'),
+    /*url('../fonts/OpenSans-Semibold-webfont.svg#OpenSansSemibold') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+/* SOCIAL ICON */
+
+
+@font-face {
+    font-family: 'Socialico';
+    src: url('../fonts/Socialico.eot');
+    src: url('../fonts/Socialico.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Socialico.ttf') format('truetype'),
+    /*url('../fonts/Socialico.svg#Socialico') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+/* 01. KEY FRAMES FADE IN ================================================== */
+
+
+@-webkit-keyframes Anim { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes Anim { from { opacity:0; } to { opacity:1; } }
+@keyframes Anim { from { opacity:0; } to { opacity:1; } }
+
+.fade-it {
+    -webkit-animation:Anim ease-in 1;
+    -moz-animation:Anim ease-in 1;
+    animation:Anim ease-in 1;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    -webkit-animation-fill-mode:forwards;
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;}
+
+.fade-it {
+    -webkit-animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+    animation-delay: 0.3s;}
+
+
+/* 02. MAX WIDTH 960px ================================================== */
+
+
+@media screen and (max-width: 960px) {
+
+    body, html {overflow-x:hidden;}
+
+
+    #about .portraits {width:100%;}
+
+    .subtittle {
+        font-family:'OpenSansRegular', sans-serif;
+        font-size:18px;
+        padding:20px 30px 10px 30px;}
+
+    #whatwedo .og-grid .og-details h3 {
+        font-size:30px; }
+
+    #whatwedo .og-grid .og-details a {
+        font-size: 13px;
+        color: #FFF;
+        font-family:'OpenSansLight', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 10px 10px;
+        background: #00aed7;
+        border: 3px solid #00aed7;
+        display: inline-block;
+        margin: 10px 0 0;
+        outline: none;}
+
+}
+
+
+/* 02. MAX WIDTH 1024px ================================================== */
+
+
+@media screen and (max-width: 1024px) {
+
+    #home {
+        width:100%;
+        height:100%;
+        color:#FFF;
+        background:url('../images/wal_141.jpg')50% 80% no-repeat scroll !important;
+        background-position:center;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-attachment : fixed;  /* FIXED FOR IE */}
+
+
+    .ticker ul.tweet_list {
+        height:16px;
+        font-family:'OpenSansRegular', sans-serif;
+        font-size:12px;
+    }
+
+    .ticker .tweet_list li {
+        overflow:hidden;
+        font-family:'OpenSansRegular', sans-serif;
+        font-size:12px;
+        color:#666;
+        height:30px;
+    }
+
+    .subtittle {
+        font-family:'OpenSansRegular', sans-serif;
+        font-size:18px;
+        padding:20px 30px 10px 30px;}
+
+    #whatwedo .og-grid .og-details h3 {
+        font-size:30px; }
+
+    #whatwedo .og-grid .og-details a {
+        font-size: 13px;
+        color: #FFF;
+        font-family:'OpenSansLight', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 10px 10px;
+        background: #00aed7;
+        border: 3px solid #00aed7;
+        display: inline-block;
+        margin: 10px 0 0;
+        outline: none;}
+
+}
+
+/* 03. MAX WIDTH 720px ================================================== */
+
+
+@media screen and (max-width: 720px) {
+
+    #home {
+        width:100%;
+        height:100%;
+        color:#FFF;
+        background:url('../images/wal_141.jpg')50% 80% no-repeat scroll !important;
+        background-position:center;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-attachment : fixed;  /* FIXED FOR IE */}
+
+
+    #home .roles {
+        font-size:  20pt;  }
+
+    #about .portraits{
+        width: 50%;
+        margin-bottom: 4%;}
+
+    #contact .row .info {
+        margin-left:0%;
+        text-align:center;
+        line-height:25px;}
+
+    #whatwedo .og-grid {
+        padding: 10px 0;
+        margin: 0px auto;
+        text-align: center;
+        width: 100%;}
+
+    #whatwedo .og-grid li {
+        width: 100%;
+        display: inline-block;
+        margin: 0px 15px 20px 0px;
+        vertical-align: top;
+        height: 185px;}
+
+    #whatwedo .og-grid .og-details h3 {
+        font-size:20px; }
+
+    #whatwedo .og-grid .og-details a {
+        font-size: 13px;
+        color: #FFF;
+        font-family:'OpenSansLight', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 10px 10px;
+        background: #00aed7;
+        border: 3px solid #00aed7;
+        display: inline-block;
+        margin: 10px 0 0;
+        outline: none;}
+
+    #whatwedo .og-grid .og-details {
+        text-align: center;
+        width: 100%; }
+
+}
+
+
+/* 04. MAX WIDTH 520px ================================================== */
+
+
+@media screen and (max-width: 520px) {
+
+    #home {
+        width:100%;
+        height:100%;
+        color:#FFF;
+        background:url('../images/wal_141.jpg')50% 80% no-repeat scroll !important; /* -- CHANGE HERE -- */
+        background-position:center;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-attachment : fixed;  /* FIXED FOR IE */}
+
+
+    .row .subtittle {
+        font-size:16px;}
+
+    #whatwedo .row h2,
+    #about .row h2,
+    #contact .row h2 {
+        font-size:40px;}
+
+    #about .portraits{
+        width: 80%;
+        margin-bottom: 4%;}
+
+    .og-grid {
+        padding: 10px 0;
+        margin: 0px auto;
+        text-align: center;
+        width: 100%;}
+
+    .og-grid li {
+        width: 100%;
+        display: inline-block;
+        margin: 0px 15px 20px 0px;
+        vertical-align: top;
+        height: 185px;}
+
+    #whatwedo .og-grid .og-details a {
+        font-size: 13px;
+        color: #FFF;
+        font-family:'OpenSansLight', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 10px 10px;
+        background: #00aed7;
+        border: 3px solid #00aed7;
+        display: inline-block;
+        margin: 15px 0 0;
+        outline: none;}
+
+    #whatwedo .og-grid .og-details h3 {
+        font-size:20px; }
+
+    #whatwedo .og-grid .og-details {
+        text-align: center;
+        width: 100%; }
+
+    #social_module .row ul li i {
+        padding: 0px 0px 0px 0px;}
+
+    #contact .row .info {
+        margin-left:0%;
+        text-align:center;
+        line-height:25px;}
+
+}
+
+/* 05. Smartphones landscape  ================================================== */
+
+@media only screen
+and (max-device-width : 550px)
+and (orientation : landscape) {
+    #home {
+        height:100%;
+    }
+    #home .row h1 {
+        margin-top:5%;}
+
+    #down_button a {display: none;}
+}
+
+
+/* 06. Smartphones portraits  ================================================== */
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : portrait) {
+
+    #whatwedo .row h2,
+    #about .row h2,
+    #contact .row h2 {
+        font-size:30px;}
+}
+
+
+/* 07. iPads portrait  ================================================== */
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+
+    #home h1 {
+        margin-top:45%;}
+}
+
+
+/* 08. WORKS GRID Media Queries ================================================== */
+
+
+
+@-webkit-keyframes loader {
+    0% { background: #ddd; }
+    33% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ddd; }
+    66% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ddd, -15px 30px 1px #ccc; }
+}
+
+@-moz-keyframes loader {
+    0% { background: #ddd; }
+    33% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ddd; }
+    66% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ddd, -15px 30px 1px #ccc; }
+}
+
+@keyframes loader {
+    0% { background: #ddd; }
+    33% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ddd; }
+    66% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ddd, -15px 30px 1px #ccc; }
+}
+
+@media screen and (max-width: 830px) {
+
+    .og-expander h3 { font-size: 32px; }
+    .og-expander p { font-size: 13px; }
+    .og-expander a { font-size: 12px; }
+    .og-fullimg { margin-top:2%; }
+
+
+}
+
+@media screen and (max-width: 650px) {
+
+    .og-fullimg { display: none; }
+    .og-close {right:45%; top:10px; display: none; }
+    .og-details h3 {padding-top: 50px;}
+    .og-expander-container {padding-top:10px; }
+
+}
+
+@media screen and (max-width: 480px) {
+
+    .og-fullimg { display: none; }
+    .og-close {right:45%; top:10px; display: none; }
+    .og-details h3 {padding-top: 50px; width: 100%; }
+    .og-expander-container {padding-top:10px;  }
+
+}
+
+
+/* 09. Mobile Navigation Queries ================================================== */
+
+@media screen and (max-width: 650px) {
+
+
+    .nav-container nav ul li {
+        display: none;}
+
+    .nav-container	nav select text {
+        color:red;}
+
+    .nav-container	nav ul {
+        margin-top:20px;}
+
+    .nav-container	nav select {
+        display: block;
+        margin-top:20px;
+        background: url('../images/nav-icon.png') no-repeat  ;
+        width: 30px;
+        border: none;
+        height: 30px;
+        float: right;
+        color: rgba(0, 0, 0, 0.0); }
+
+}
