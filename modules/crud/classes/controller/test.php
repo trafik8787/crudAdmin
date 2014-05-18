@@ -15,6 +15,8 @@ class Controller_Test extends Controller_Main {
 
     }
 
+
+
     public static  function asd () {
         $crud = new Cruds;
         $crud->load_table('articles');
@@ -72,4 +74,5 @@ class Controller_Test extends Controller_Main {
 
     }
 
+    
 }
