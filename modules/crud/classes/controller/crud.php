@@ -119,6 +119,8 @@ class Controller_Crud extends Controller_Main {
             //вычисляяем пересечение масивов по ключам
             $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
             $field['id'] = $fields['id'];
+        } else {
+            $field = $fields;
         }
 
         $viev_edit->edit_property = array('field' => $field,

@@ -32,8 +32,8 @@ class Controller_Test extends Controller_Main {
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-        $crud->add_field('title', 'author', 'date');
-        $crud->edit_fields('title', 'author');
+        //$crud->add_field('title', 'author', 'date');
+        //$crud->edit_fields('title', 'author');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');

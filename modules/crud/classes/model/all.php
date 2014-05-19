@@ -64,4 +64,12 @@ class Model_All extends Model
         return $name_colums_table->execute()->as_array();
     }
 
+    public function information_table ($table) {
+        $name_colums_table = DB::query(Database::SELECT,
+            'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab');
+        $name_colums_table->param(':tab', $table);
+        return $name_colums_table->execute()->as_array();
+    }
+
+
 }
