@@ -25,6 +25,7 @@ class Controller_Test extends Controller_Main {
         $crud->callback_after_delete('call_after_del');
         $crud->show_columns('id', 'title', 'author', 'date', 'content_short');
         //$crud->remove_delete();
+        //$crud->remove_add ();
         //$crud->remove_edit();
         //$crud->set_where('id','=', 3,1);
         $crud->callback_befor_edit('call_bef_edit');

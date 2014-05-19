@@ -55,6 +55,8 @@
         </tr>
 
     <?endforeach?>
+
+    <?if ($table_propery['activ_operation']['add'] != true ):?>
     <tr>
         <form action="/admin/add" method="get">
             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
@@ -62,5 +64,5 @@
         </form>
 
     </tr>
-
+    <?endif?>
 </table>

@@ -19,6 +19,8 @@ class Cruds {
     public $column_array = null; //определение вызова метода определения полей таблицы
     private $remove_delete = null; //уброать кнопку удалить
     private $remove_edit = null; //уброать кнопку редактировать
+    private $remove_add = null; //уброать кнопку добавить
+
     private $set_where = null;
 
     public $add_field = null; //поля которые будут видны при добавлении
@@ -155,7 +157,9 @@ class Cruds {
             'query' => $query,
             'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
-            'activ_operation' => array('delete' => $this->remove_delete, 'edit' => $this->remove_edit), //передача состояния кнопок удаления редактирования добавления
+            'activ_operation' => array('delete' => $this->remove_delete,
+                                        'edit' => $this->remove_edit,
+                                        'add' => $this->remove_add), //передача состояния кнопок удаления редактирования добавления
             'name_colums_table' => $this->name_colums_table,
             'name_colums_table_show' => $name_colums_table_show, //названия полей таблицы
             'obj_serial' => base64_encode(serialize($object_serial)) //передача сериализованого обьекта
@@ -271,6 +275,13 @@ class Cruds {
     public function edit_fields () {
         $this->edit_fields = func_get_args();
     }
+
+    public function remove_add () {
+        $this->remove_add = true;
+    }
+
+
+
 
 
 

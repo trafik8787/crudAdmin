@@ -123,7 +123,7 @@ class Controller_Crud extends Controller_Main {
 
         $viev_edit->edit_property = array('field' => $field,
                                             'obj' => $_GET['obj'],
-                                            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
+                                            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые 
 
         $this->template->render = $viev_edit;
 
@@ -235,7 +235,8 @@ class Controller_Crud extends Controller_Main {
         $viev_add = View::factory('page/add');
 
         $viev_add->add_property = array('field' => $fields,
-            'obj' => $_GET['obj']);
+            'obj' => $_GET['obj'],
+            'name_colums_table_show' => $retw->new_name_column);
 
         $this->template->render = $viev_add;
 
