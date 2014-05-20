@@ -20,10 +20,11 @@ class Controller_Test extends Controller_Main {
     public static  function asd () {
         $crud = new Cruds;
         $crud->load_table('articles');
-        $crud->show_name_column(array('id' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
+        //$crud->load_table('test');
+        //$crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');
         $crud->callback_after_delete('call_after_del');
-        $crud->show_columns('id', 'title', 'author', 'date', 'content_short');
+        //$crud->show_columns('idRT', 'title', 'author', 'date', 'content_short');
         //$crud->remove_delete();
         //$crud->remove_add ();
         //$crud->remove_edit();
@@ -38,12 +39,15 @@ class Controller_Test extends Controller_Main {
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
+        //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;
+        //die(print_r(Kohana::$config->load('crudconfig.database')));
+
         return $crud;
     }
 
     public static function call_del ($key = null) {
 
-       // return $key['id']+1;
+        return false;
     }
 
     public static function call_after_del ($key_array = null) {
@@ -67,10 +71,10 @@ class Controller_Test extends Controller_Main {
     }
 
     public static function  cal_bef_inser ($key_array = null) {
-       if ( $key_array['title'] == 123) {
-           $key_array['title'] = 'ggggggggggggggggggggggggg';
-       }
-        return $key_array;
+//       if ( $key_array['title'] == 123) {
+//           $key_array['title'] = 'ggggggggggggggggggggggggg';
+//       }
+        return false;
     }
 
 

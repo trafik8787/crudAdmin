@@ -25,7 +25,7 @@
                 <? if($table_propery['activ_operation']['delete'] != true):?>
                     <form action="/admin/delete" method="post">
 
-                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query['id'])?>"/>
+                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
                         <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
                        <button type="submit">Del</button>
                     </form>
@@ -34,7 +34,7 @@
                 <? if($table_propery['activ_operation']['edit'] != true):?>
                     <form action="/admin/edit" method="get">
                         <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query['id'])?>"/>
+                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
                         <button type="submit">Edit</button>
                     </form>
                 <?endif?>
@@ -45,7 +45,7 @@
                         <form action="/admin/new/<?=$rows_action['url']?>" method="post">
                             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
                             <input type="hidden" name="func" value="<?=$rows_action['name_function']?>">
-                            <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query['id'])?>"/>
+                            <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
                             <button type="submit"><?=$rows_action['name_action']?></button>
                         </form>
                     <?endforeach?>

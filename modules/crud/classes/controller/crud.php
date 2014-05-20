@@ -71,6 +71,9 @@ class Controller_Crud extends Controller_Main {
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
 
+        //получаем первичный ключ
+        $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
+
         $this->id = Encrypt::instance()->decode(Arr::get($_GET, 'id'));
         $retw->render = true;
 
@@ -102,7 +105,7 @@ class Controller_Crud extends Controller_Main {
             }
 
             if ($retw->callback_befor_edit !== false) {
-                $query = Model::factory('All')->update($retw->table, $update,  $_GET['id']);
+                $query = Model::factory('All')->update($retw->table, $update,  $_GET[$key_primary]);
             }
 
             //die(print_r($update));
@@ -118,12 +121,13 @@ class Controller_Crud extends Controller_Main {
         if ($retw->edit_fields != null) {
             //вычисляяем пересечение масивов по ключам
             $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
-            $field['id'] = $fields['id'];
+            $field[$key_primary] = $fields[$key_primary];
         } else {
             $field = $fields;
         }
 
         $viev_edit->edit_property = array('field' => $field,
+                                            'key_primary' => $key_primary, //id первичный ключ
                                             'obj' => $_GET['obj'],
                                             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые 
 
@@ -219,10 +223,14 @@ class Controller_Crud extends Controller_Main {
             Request::initial()->redirect(Kohana::$config->load('crudconfig.base_url'));
         }
 
+
+        //получаем первичный ключ
+        $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
+
         //создаем масив полей для вывода в форме добавления
         foreach ($name_count as $name_count_rows) {
             //не пишем поле id в масив
-            if ($name_count_rows['COLUMN_NAME'] != 'id') {
+            if ($name_count_rows['COLUMN_NAME'] != $key_primary) {
                 $fields[] = $name_count_rows['COLUMN_NAME'];
             }
 

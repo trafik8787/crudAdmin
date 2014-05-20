@@ -11,7 +11,7 @@
             <form class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
 
                 <?foreach ($edit_property['field'] as $name_fied => $value_fild):?>
-                    <?if ($name_fied != 'id'):?>
+                    <?if ($name_fied != $edit_property['key_primary']):?>
                         <div class="form-group">
                             <?if (isset($edit_property['name_colums_table_show'][$name_fied])):?>
 

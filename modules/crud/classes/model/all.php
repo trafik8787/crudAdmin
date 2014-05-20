@@ -8,12 +8,16 @@
  */
 class Model_All extends Model
 {
+    protected  $key_primary;
+
     //выборка по id или без него
     public function select_all_where ($table, $id = null) {
 
+        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
+
         if ($id != null) {
         return DB::select()->from($table)
-            ->where('id', '=', $id)
+            ->where($this->key_primary, '=', $id)
             ->execute()->as_array();
 
         } else {
@@ -22,7 +26,8 @@ class Model_All extends Model
         }
     }
 
-    public function set_where ($table, $column = 'id', $operator = '=', $id = null) {
+
+    public function set_where ($table, $column , $operator, $id) {
 
         if ($id != null) {
             return DB::select()->from($table)
@@ -37,16 +42,20 @@ class Model_All extends Model
 
     //удаление по id
     public function delete ($table, $id) {
+
+        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
+
         return DB::delete($table)
-            ->where('id', '=', $id)
+            ->where($this->key_primary, '=', $id)
             ->execute();
     }
 
     //ОБНОВЛЕНЕ
     public function update ($table, $field, $id) {
+        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
         DB::update($table)
             ->set($field)
-            ->where('id', '=', $id)
+            ->where($this->key_primary, '=', $id)
             ->execute();
     }
     //добавление
@@ -59,17 +68,37 @@ class Model_All extends Model
     //ПОЛУЧАЕМ названия ПОЛЯ ТАБЛИИЦЫ
     public function name_count ($table) {
         $name_colums_table = DB::query(Database::SELECT,
-            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab');
+            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
         $name_colums_table->param(':tab', $table);
+        $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+
         return $name_colums_table->execute()->as_array();
     }
 
-    public function information_table ($table) {
-        $name_colums_table = DB::query(Database::SELECT,
-            'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab');
-        $name_colums_table->param(':tab', $table);
-        return $name_colums_table->execute()->as_array();
+    public function information_table ($table, $key_primary = null) {
+
+        if ($key_primary != null) {
+            $key_primary = 'PRI';
+            $name_colums_table = DB::query(Database::SELECT,
+                'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas AND COLUMN_KEY = :key_primary');
+            $name_colums_table->param(':tab', $table);
+            $name_colums_table->param(':key_primary', $key_primary);
+            $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+            return $name_colums_table->as_object()->execute();
+        } else {
+
+            $name_colums_table = DB::query(Database::SELECT,
+                'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+            $name_colums_table->param(':tab', $table);
+            $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+            return $name_colums_table->execute()->as_array();
+        }
+
+
     }
+
 
 
 }

@@ -9,5 +9,6 @@
 
 return array(
     'base_url'       => 'admin',
+    'database' => 'kohana',
     'description' => 'Самый лучший сайт на свете'
 );

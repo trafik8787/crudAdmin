@@ -13,6 +13,7 @@ class Cruds {
     private $name_colums_table; //названия полей таблицы
     public $new_name_column; //переименованые названия полей
     public $render = null; //рендер
+    public $key_primary; //хранит первичный ключ таблицы
 
     //хранит массив вызова обьекта Cruds
     public  $class_metod = null;
@@ -26,6 +27,7 @@ class Cruds {
     public $add_field = null; //поля которые будут видны при добавлении
     public $edit_fields = null; //поля которые будут видны при редактировании
     public $add_action = null; //добавить екшен
+
 
 
     //хуки
@@ -133,8 +135,10 @@ class Cruds {
             //выборка всех записей таблицы
             $query = Model::factory('All')->select_all_where($this->table);
         } else {
-            $query = Model::factory('All')->set_where($this->table, $this->set_where['colum'],
-                $this->set_where['operation'], $this->set_where['value']);
+            $query = Model::factory('All')->set_where($this->table,
+                                                        $this->set_where['colum'],
+                                                        $this->set_where['operation'],
+                                                        $this->set_where['value']);
         }
 
 
@@ -153,8 +157,12 @@ class Cruds {
             'callback_functions_array' => $this->class_metod
         );
 
+        //имя поля первичного ключа
+        $this->key_primary = Model::factory('All')->information_table($this->table, true)[0]->COLUMN_NAME;
+
         return array(
             'query' => $query,
+            'key_primary' => $this->key_primary,
             'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
             'activ_operation' => array('delete' => $this->remove_delete,
@@ -174,12 +182,6 @@ class Cruds {
 
 
 
-
-
-
-
-
-
 //    callback
 
     //перед удалением
@@ -190,7 +192,7 @@ class Cruds {
                 $name_function));
         }
 
-        if (@$data === false) {
+        if (@$data == false) {
             $this->callback_befor_delete = false;
         } else  {
             $this->callback_befor_delete = array('name_function' => $name_function);
@@ -215,7 +217,7 @@ class Cruds {
                 $name_function));
         }
 
-        if (@$data === false) {
+        if (@$data == false) {
             $this->callback_befor_edit = false;
         } else {
             $this->callback_befor_edit = array('name_function' => $name_function);
@@ -247,7 +249,7 @@ class Cruds {
                 $name_function));
         }
 
-        if (@$data === false) {
+        if (@$data == false) {
             $this->callback_before_insert = false;
         } else {
             $this->callback_before_insert = array('name_function' => $name_function);
@@ -276,77 +278,20 @@ class Cruds {
         $this->edit_fields = func_get_args();
     }
 
+    //удаляет кнопку добавить
     public function remove_add () {
         $this->remove_add = true;
     }
 
 
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-class Registry
-{
-    /**
-     * Статическое хранилище для данных
-     */
-    protected static $store = array();
-
-    /**
-     * Защита от создания экземпляров статического класса
-     */
-    protected function __construct() {}
-    protected function __clone() {}
-
-    /**
-     * Проверяет существуют ли данные по ключу
-     *
-     * @param string $name
-     * @return bool
-     */
-    public static function exists($name)
-    {
-        return isset(self::$store[$name]);
-    }
-
-    /**
-     * Возвращает данные по ключу или null, если не данных нет
-     *
-     * @param string $name
-     * @return unknown
-     */
-    public static function get($name)
-    {
-        return (isset(self::$store[$name])) ? self::$store[$name] : null;
-    }
-
-    /**
-     * Сохраняет данные по ключу в статическом хранилище
-     *
-     * @param string $name
-     * @param unknown $obj
-     * @return unknown
-     */
-    public static function set($name, $obj)
-    {
-        self::$store[$name] = $obj;
-        $GLOBALS['foo'] = self::$store[$name];
-        return self::$store[$name];
+    public function set_load_1N () {
 
     }
+
+
+
+
+
 
 }
 
