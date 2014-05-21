@@ -139,9 +139,10 @@ class Controller_Crud extends Controller_Main {
 
         $information_shem = Model::factory('All')->information_table($retw->table);
 
-        die(print_r($information_shem));
+        $type_field = $retw->shows_type_input_default($information_shem);
 
         $viev_edit->edit_property = array('field' => $field,
+                                            'type_field' => $type_field,
                                             'key_primary' => $key_primary, //id первичный ключ
                                             'obj' => $_GET['obj'],
                                             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые 
@@ -209,11 +210,9 @@ class Controller_Crud extends Controller_Main {
 
             }
 
-            //переиницыалзация хука
-
 
             if ($retw->callback_before_insert != null) {
-
+                //переиницыалзация хука
                 $retw->callback_before_insert($retw->callback_before_insert['name_function'], 'true');
 
                 $insert_befor = $insert;

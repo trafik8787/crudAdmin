@@ -34,7 +34,7 @@ class Controller_Test extends Controller_Main {
         $crud->callback_after_insert('cal_insert_inser');
 
         //$crud->add_field('title', 'author', 'date');
-        $crud->edit_fields('title', 'author');
+       // $crud->edit_fields('title', 'author');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
@@ -59,7 +59,7 @@ class Controller_Test extends Controller_Main {
 
 
         //$new_array['author'] = $old_array['idRT'];
-        return false;
+        //return false;
     }
 
     public static function addAction ($key_array = null) {

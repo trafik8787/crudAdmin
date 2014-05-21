@@ -1,8 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/modules/crud/js/bootstrap.min.js"></script>
+<script src="/modules/crud/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="/modules/crud/js/tinymce/tinymce.min.js"></script>
+<script src="/modules/crud/js/app.js"></script>
 <link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
+
 
 <div class="container">
     <div class="row">
@@ -23,7 +27,15 @@
 
                             <?endif?>
                             <div class="col-sm-10">
-                                <input class="form-control"  name="<?=$name_fied?>" value="<?=$value_fild?>" id="<?=$name_fied?>"/>
+                            <?//присваивание типов полей?>
+                                <?if (is_array($edit_property['type_field'][$name_fied])):?>
+                                    <?if ($edit_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
+                                        <<?=$edit_property['type_field'][$name_fied]['tag']?> class="form-control"  name="<?=$name_fied?>" id="<?=$name_fied?>"/><?=$value_fild?></<?=$edit_property['type_field'][$name_fied]['tag']?>>
+                                    <?endif?>
+                                <?else:?>
+                                    <input class="form-control" type="<?=$edit_property['type_field'][$name_fied]?>"  name="<?=$name_fied?>" value="<?=$value_fild?>" id="<?=$name_fied?>"/>
+                                <?endif?>
+
                             </div>
                         </div>
                     <?else:?>
