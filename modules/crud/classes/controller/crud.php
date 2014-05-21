@@ -22,10 +22,14 @@ class Controller_Crud extends Controller_Main {
             $re['callback_functions_array']['function']));
         //die($retw->callback_befor_delete);
         $this->id = Encrypt::instance()->decode(Arr::get($_POST, 'id'));
-        $retw->render = true;
+
         //делаем запрос если хоть один хук обявлен
         if ($retw->callback_befor_delete != null or $retw->callback_after_delete != null) {
             //получаем масив строку таблицы которая должна быть удалена
+            //переиницыализация хуков
+            $retw->callback_befor_delete($retw->callback_befor_delete['name_function'], 'true');
+            $retw->callback_after_delete($retw->callback_after_delete['name_function']);
+
             $query_array_del = Model::factory('All')->select_all_where($retw->table,$this->id);
         }
 
@@ -75,9 +79,10 @@ class Controller_Crud extends Controller_Main {
         $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
 
         $this->id = Encrypt::instance()->decode(Arr::get($_GET, 'id'));
-        $retw->render = true;
 
         if (isset($_GET['edit'])) {
+
+            $this->id = Arr::get($_GET, $key_primary);
 
             $name_count = Model::factory('All')->name_count($retw->table);
             //перебори формирования массива для передачи в модель для обновления записей
@@ -91,15 +96,21 @@ class Controller_Crud extends Controller_Main {
             }
 
             //если хук определен
-            if ($retw->callback_befor_edit != null){
+            if ($retw->callback_befor_edit !== null){
+
+                $retw->callback_befor_edit($retw->callback_befor_edit['name_function'], 'true');
                 //получаем масив строку таблицы которая должна быть редактирована
                 $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id);
-                //переиницыализация статического метода обработчика
-                $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
-                    $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));
+               // die(print_r($retw->callback_befor_edit['name_function']));
+                //если в хуке returm false
+                if ($retw->callback_befor_edit !== false) {
+                    //переиницыализация статического метода обработчика
+                    $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
+                        $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));
 
-                if ($callbackStatic != '') {
-                    $update = $callbackStatic;
+                    if ($callbackStatic != '') {
+                        $update = $callbackStatic;
+                    }
                 }
 
             }
@@ -125,6 +136,10 @@ class Controller_Crud extends Controller_Main {
         } else {
             $field = $fields;
         }
+
+        $information_shem = Model::factory('All')->information_table($retw->table);
+
+        die(print_r($information_shem));
 
         $viev_edit->edit_property = array('field' => $field,
                                             'key_primary' => $key_primary, //id первичный ключ
@@ -194,16 +209,24 @@ class Controller_Crud extends Controller_Main {
 
             }
 
+            //переиницыалзация хука
+
 
             if ($retw->callback_before_insert != null) {
 
+                $retw->callback_before_insert($retw->callback_before_insert['name_function'], 'true');
+
+                $insert_befor = $insert;
                 $insert = call_user_func(array($re['callback_functions_array']['class'],
                     $retw->callback_before_insert['name_function']), $insert);
 
             }
 
-            if ($retw->callback_before_insert != false) {
-
+            if ($retw->callback_before_insert !== false) {
+                //если хук ничего не возвращает пишем введенные в форму данные
+                if ($insert == ''){
+                    $insert = $insert_befor;
+                }
                 //удаляем ключи из масивов
                 $name_count_insert = array_values($name_count_insert);
                 $insert_value = array_values($insert);
@@ -212,6 +235,8 @@ class Controller_Crud extends Controller_Main {
             }
 
             if ($retw->callback_after_insert != null) {
+                //переиницыализация
+                $retw->callback_after_insert($retw->callback_after_insert['name_function'], 'true');
 
                 $query_array_del = Model::factory('All')->select_all_where($retw->table, $result[0]);
                 call_user_func(array($re['callback_functions_array']['class'],

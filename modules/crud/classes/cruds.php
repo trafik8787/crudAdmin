@@ -15,6 +15,7 @@ class Cruds {
     public $render = null; //рендер
     public $key_primary; //хранит первичный ключ таблицы
 
+    public $name_function = null;
     //хранит массив вызова обьекта Cruds
     public  $class_metod = null;
     public $column_array = null; //определение вызова метода определения полей таблицы
@@ -185,14 +186,15 @@ class Cruds {
 //    callback
 
     //перед удалением
-    public function callback_befor_delete ($name_function) {
+    public function callback_befor_delete ($name_function, $render = null) {
         //проверяем запускается ли из екшенов и определяем метод
-        if ($this->render === true) {
+
+        if ($render = 'true') {
             $data = call_user_func(array($this->class_metod['class'],
                 $name_function));
         }
 
-        if (@$data == false) {
+        if (@$data === false) {
             $this->callback_befor_delete = false;
         } else  {
             $this->callback_befor_delete = array('name_function' => $name_function);
@@ -200,24 +202,22 @@ class Cruds {
 
     }
 
+    //после удаления
     public function callback_after_delete ($name_function) {
-        //определяем метод не принимаем от функции никаких значений ибо нефиг
-        if ($this->render === true) {
-            call_user_func(array($this->class_metod['class'],
-                $name_function));
-        }
+
         $this->callback_after_delete = array('name_function' => $name_function);
     }
 
+
     //перед обновлением
-    public function callback_befor_edit ($name_function) {
+    public function callback_befor_edit ($name_function, $render = null) {
         //определяем метод
-        if ($this->render === true) {
+        if ($render == 'true') {
             $data = call_user_func(array($this->class_metod['class'],
                 $name_function));
         }
 
-        if (@$data == false) {
+        if (@$data === false) {
             $this->callback_befor_edit = false;
         } else {
             $this->callback_befor_edit = array('name_function' => $name_function);
@@ -242,14 +242,15 @@ class Cruds {
     }
 
     //хук добавить
-    public function callback_before_insert ($name_function) {
+    public function callback_before_insert ($name_function, $render = null) {
 
-        if ($this->render === true) {
+
+        if ($render == 'true') {
             $data = call_user_func(array($this->class_metod['class'],
                 $name_function));
         }
 
-        if (@$data == false) {
+        if (@$data === false) {
             $this->callback_before_insert = false;
         } else {
             $this->callback_before_insert = array('name_function' => $name_function);
@@ -261,10 +262,6 @@ class Cruds {
 
     public function callback_after_insert ($name_function) {
 
-        if ($this->render === true) {
-            call_user_func(array($this->class_metod['class'],
-                $name_function));
-        }
         $this->callback_after_insert = array('name_function' => $name_function);
     }
 

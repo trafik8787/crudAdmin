@@ -34,7 +34,7 @@ class Controller_Test extends Controller_Main {
         $crud->callback_after_insert('cal_insert_inser');
 
         //$crud->add_field('title', 'author', 'date');
-        //$crud->edit_fields('title', 'author');
+        $crud->edit_fields('title', 'author');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
@@ -46,24 +46,24 @@ class Controller_Test extends Controller_Main {
     }
 
     public static function call_del ($key = null) {
-
-        return false;
+        //die(print_r($key));
+       // return $key['idRT'] +1;
+       //return false;
     }
 
     public static function call_after_del ($key_array = null) {
-
+        die(print_r($key_array));
     }
 
     public static function call_bef_edit ($new_array = null, $old_array = null) {
-        if ($new_array['author'] == 123) {
-            $new_array['author'] = 'fghfgnbyhjyjsdyhstyj';
-        }
 
-        return $new_array;
+
+        //$new_array['author'] = $old_array['idRT'];
+        return false;
     }
 
     public static function addAction ($key_array = null) {
-        //die(print_r($key_array));
+        die(print_r($key_array));
     }
 
     public static function addAction2 ($key_array = null) {
@@ -74,12 +74,12 @@ class Controller_Test extends Controller_Main {
 //       if ( $key_array['title'] == 123) {
 //           $key_array['title'] = 'ggggggggggggggggggggggggg';
 //       }
-        return false;
+//        return $key_array;
     }
 
 
     public static function cal_insert_inser ($key_array = null) {
-
+        //die(print_r($key_array));
     }
 
 
