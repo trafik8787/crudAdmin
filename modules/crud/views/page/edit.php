@@ -33,7 +33,11 @@
                                         <<?=$edit_property['type_field'][$name_fied]['tag']?> class="form-control"  name="<?=$name_fied?>" id="<?=$name_fied?>"/><?=$value_fild?></<?=$edit_property['type_field'][$name_fied]['tag']?>>
                                     <?endif?>
                                 <?else:?>
-                                    <input class="form-control" type="<?=$edit_property['type_field'][$name_fied]?>"  name="<?=$name_fied?>" value="<?=$value_fild?>" id="<?=$name_fied?>"/>
+                                    <input class="form-control"
+                                           type="<?=$edit_property['type_field'][$name_fied]?>"
+                                           name="<?=$name_fied?>"
+                                           value="<?=$value_fild?>" id="<?=$name_fied?>"
+                                    />
                                 <?endif?>
 
                             </div>
@@ -47,7 +51,7 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$edit_property['obj']?>"/>
-                        <button type="submit" name="edit" class="btn btn-default btn-lg">Сохранить <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button type="submit" name="edit" class="btn btn-default btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                     </div>
                 </div>
 

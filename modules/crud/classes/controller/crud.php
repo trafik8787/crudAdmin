@@ -75,6 +75,9 @@ class Controller_Crud extends Controller_Main {
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
 
+        //установка язика
+        I18n::lang($retw->set_lang);
+
         //получаем первичный ключ
         $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
 
@@ -191,6 +194,9 @@ class Controller_Crud extends Controller_Main {
         //die(print_r($re));
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
+
+        //установка язика
+        I18n::lang($retw->set_lang);
 
         //флаг для запуска колбеков только при срабатывании екшена
         $retw->render = true;

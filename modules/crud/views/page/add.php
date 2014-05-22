@@ -17,7 +17,7 @@
         <?endforeach?>
         <tr>
             <input type="hidden" name="obj" value="<?=$add_property['obj']?>"/>
-            <td colspan="2"><button name="add" type="submit">Сохранить</button></td>
+            <td colspan="2"><button name="add" type="submit"><?=__('LANG_SAVE')?></button></td>
         </tr>
     </table>
 </form>

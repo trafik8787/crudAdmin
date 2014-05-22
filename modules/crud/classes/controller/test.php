@@ -20,6 +20,8 @@ class Controller_Test extends Controller_Main {
     public static  function asd () {
         $crud = new Cruds;
         $crud->load_table('articles');
+
+        //$crud->set_lang('ru');
         //$crud->load_table('test');
         //$crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');

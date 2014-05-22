@@ -15,6 +15,8 @@ class Cruds {
     public $render = null; //рендер
     public $key_primary; //хранит первичный ключ таблицы
 
+    public  $set_lang = 'en'; //язык
+
     public $name_function = null;
     //хранит массив вызова обьекта Cruds
     public  $class_metod = null;
@@ -42,6 +44,7 @@ class Cruds {
     public function  load_table ($table) {
         $this->table = $table;
 
+        //установка языка
         //определяем точку вызова
         $debug = debug_backtrace();
 
@@ -75,6 +78,8 @@ class Cruds {
     //метод рендера круда
     public function render () {
 
+
+
         //вид круда
         $about = View::factory('/page/page');
 
@@ -83,6 +88,10 @@ class Cruds {
 
         $this->render = true;
         //возвращает  отрендереный вид
+
+        //установка язика
+        I18n::lang($this->set_lang);
+
         return $about;
     }
 
@@ -241,6 +250,11 @@ class Cruds {
 
     }
 
+
+    public function set_lang ($lang) {
+        $this->set_lang = $lang;
+
+    }
 
 
     //типы полей по умолчанию

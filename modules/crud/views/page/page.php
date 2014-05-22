@@ -27,7 +27,7 @@
 
                         <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
                         <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                       <button type="submit">Del</button>
+                       <button type="submit"><?=__('LANG_DELETE')?></button>
                     </form>
                 <?endif?>
 
@@ -35,7 +35,7 @@
                     <form action="/admin/edit" method="get">
                         <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
                         <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                        <button type="submit">Edit</button>
+                        <button type="submit"><?=__('LANG_EDIT')?></button>
                     </form>
                 <?endif?>
                     <!-- новые екшены-->
@@ -60,7 +60,7 @@
     <tr>
         <form action="/admin/add" method="get">
             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-            <button type="submit">Add</button>
+            <button type="submit"><?=__('LAND_ADD')?></button>
         </form>
 
     </tr>
