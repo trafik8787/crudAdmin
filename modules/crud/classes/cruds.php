@@ -25,6 +25,9 @@ class Cruds {
     private $remove_edit = null; //уброать кнопку редактировать
     private $remove_add = null; //уброать кнопку добавить
 
+    public $disable_editor = array(); //отключение редактора
+
+
     private $set_where = null;
     public $set_field_type = array(); //типы полей
 
@@ -356,6 +359,10 @@ class Cruds {
 
     }
 
+    //отключение редактора
+    public function disable_editor ($field_name) {
+        $this->disable_editor[$field_name] = true;
+    }
 
     public function set_load_1N () {
 

@@ -36,6 +36,7 @@ class Controller_Test extends Controller_Main {
         $crud->callback_after_insert('cal_insert_inser');
         $crud->set_field_type('content_short', 'textarea');
         //$crud->set_field_type('author', 'text', 1223);
+        //$crud->disable_editor('title');
         //die(print_r($crud->set_field_type));
         //$crud->add_field('title', 'author', 'date');
        // $crud->edit_fields('title', 'author');

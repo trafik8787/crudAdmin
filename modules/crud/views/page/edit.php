@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
 
-<?print_r($edit_property['new_type_field'])?>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -49,7 +49,14 @@
                                 <?if (is_array($edit_property['type_field'][$name_fied])):?>
 
                                     <?if ($edit_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
-                                        <<?=$edit_property['type_field'][$name_fied]['tag']?> class="form-control"  name="<?=$name_fied?>" id="<?=$name_fied?>"/><?=$value_fild?></<?=$edit_property['type_field'][$name_fied]['tag']?>>
+
+                                        <<?=$edit_property['type_field'][$name_fied]['tag']?>
+                                        class="form-control <?if (empty($edit_property['disable_editor'][$name_fied])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
+                                        name="<?=$name_fied?>"
+                                        id="<?=$name_fied?>"/>
+                                            <?=$value_fild?>
+                                        </<?=$edit_property['type_field'][$name_fied]['tag']?>>
+
                                     <?endif?>
 
                                 <?else:?>

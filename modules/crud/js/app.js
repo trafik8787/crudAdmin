@@ -5,7 +5,8 @@
  * Time: 0:09
  * To change this template use File | Settings | File Templates.
  */
-tinymce.init({selector:'textarea'});
+tinymce.init({selector:'.add-editor'});
+
 $(document).ready(function(){
 
 });

@@ -140,19 +140,27 @@ class Controller_Crud extends Controller_Main {
             $field = $fields;
         }
 
-        $information_shem = Model::factory('All')->information_table($retw->table);
         //типы полей на основе типов mysql
+        $information_shem = Model::factory('All')->information_table($retw->table);
         $type_field = $retw->shows_type_input_default($information_shem);
 
-        //полечаем значения для переопределения полей
+        //полечаем значения для переопределения типов полей
         if (!empty($retw->set_field_type)) {
             $new_type_field = $retw->set_field_type;
         } else {
             $new_type_field = null;
         }
 
+        //отключение редактора
+        if (!empty($retw->disable_editor)) {
+            $disable_editor = $retw->disable_editor;
+        } else {
+            $disable_editor = null;
+        }
+
 
         $viev_edit->edit_property = array('field' => $field,
+                                            'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
                                             'type_field' => $type_field, //типы полей по дефолту
                                             'key_primary' => $key_primary, //id первичный ключ
