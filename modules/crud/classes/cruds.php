@@ -26,6 +26,7 @@ class Cruds {
     private $remove_add = null; //уброать кнопку добавить
 
     private $set_where = null;
+    public $set_field_type = array(); //типы полей
 
     public $add_field = null; //поля которые будут видны при добавлении
     public $edit_fields = null; //поля которые будут видны при редактировании
@@ -265,13 +266,14 @@ class Cruds {
                         'date' => 'date',
                         'int' => 'number',
                         'bigint' => 'number',
-                        'tinyint' => 'number',
+                        'tinyint' => 'checkbox',
                         'smallint' => 'number',
                         'mediumint' => 'number',
                         'float' => 'number',
                         'double' => 'number',
                         'bool'=> 'checkbox',
                         'boolean' => 'checkbox',
+                        'bit' => 'checkbox',
                         'char' =>  array('tag' => 'textarea'),
                         'tinytext' => 'text',
                         'mediumtext' => array('tag' => 'textarea'),
@@ -283,13 +285,18 @@ class Cruds {
                         'datetime' => 'datetime',
                         'time' => 'time',
                         'year' => 'month',
-                        'timestamp' => 'date');
+                        'timestamp' => 'datetime');
+
 
 
         foreach($information_shem as $row) {
             //все кроме первичного ключа
             if ($row['COLUMN_KEY'] != 'PRI') {
-                $new[$row['COLUMN_NAME']] = $retuyr[$row['DATA_TYPE']];
+                if (isset($retuyr[$row['DATA_TYPE']])) {
+                    $new[$row['COLUMN_NAME']] = $retuyr[$row['DATA_TYPE']];
+                } else {
+                    $new[$row['COLUMN_NAME']] = 'text';
+                }
             }
         }
 
@@ -337,6 +344,16 @@ class Cruds {
     //удаляет кнопку добавить
     public function remove_add () {
         $this->remove_add = true;
+    }
+
+    //типы полей
+    public function set_field_type ($field_name, $type_field, $field_value = null) {
+        //все вызовы в один масив аргументов
+        $this->set_field_type[$field_name] = array(
+            'type_field' => $type_field,
+            'field_value' => $field_value
+        );
+
     }
 
 

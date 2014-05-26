@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
 
-
+<?print_r($edit_property['new_type_field'])?>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -27,24 +27,65 @@
 
                             <?endif?>
                             <div class="col-sm-10">
-                            <?//присваивание типов полей?>
+
+                                <? //переопределение типов полей полей
+                                    if (!empty($edit_property['new_type_field'][$name_fied])) {
+
+                                        if ($edit_property['new_type_field'][$name_fied]['type_field']  == 'textarea') {
+                                            $edit_property['type_field'][$name_fied] = array('tag' => 'textarea');
+                                        } else {
+                                            $edit_property['type_field'][$name_fied] = $edit_property['new_type_field'][$name_fied]['type_field'];
+                                        }
+
+
+                                        if (!empty($edit_property['new_type_field'][$name_fied]['field_value'])) {
+                                               $value_fild =  $edit_property['new_type_field'][$name_fied]['field_value'];
+                                        }
+
+                                    }
+                                ?>
+
+                                <?//присваивание типов полей?>
                                 <?if (is_array($edit_property['type_field'][$name_fied])):?>
+
                                     <?if ($edit_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
                                         <<?=$edit_property['type_field'][$name_fied]['tag']?> class="form-control"  name="<?=$name_fied?>" id="<?=$name_fied?>"/><?=$value_fild?></<?=$edit_property['type_field'][$name_fied]['tag']?>>
                                     <?endif?>
+
                                 <?else:?>
-                                    <input class="form-control"
+
+                                    <?php
+                                        if ($edit_property['type_field'][$name_fied] != 'checkbox') {
+                                            $clas = 'form-control';
+                                            $checked = '';
+                                        } else {
+                                            $clas = '';
+                                            if ($value_fild == 1) {
+                                                $checked = 'checked';
+                                            }
+                                        }
+                                    ?>
+
+
+
+                                    <input
+                                           class="<?=$clas?>"
+                                           <?=$checked?>
                                            type="<?=$edit_property['type_field'][$name_fied]?>"
                                            name="<?=$name_fied?>"
-                                           value="<?=$value_fild?>" id="<?=$name_fied?>"
+                                           value="<?=$value_fild?>"
+                                           id="<?=$name_fied?>"
                                     />
+
                                 <?endif?>
 
                             </div>
                         </div>
                     <?else:?>
+
                         <?//id в скрытом поле?>
                         <input type="hidden"  name="<?=$name_fied?>" value="<?=$value_fild?>">
+
                     <?endif?>
                 <?endforeach?>
 
