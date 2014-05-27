@@ -57,7 +57,7 @@ class Controller_Test extends Controller_Main {
     }
 
     public static function call_after_del ($key_array = null) {
-        die(print_r($key_array));
+        //die(print_r($key_array));
     }
 
     public static function call_bef_edit ($new_array = null, $old_array = null) {
