@@ -83,6 +83,8 @@ class Controller_Crud extends Controller_Main {
 
         $this->id = Encrypt::instance()->decode(Arr::get($_GET, 'id'));
 
+       // die(print_r($this->id));
+
         if (isset($_GET['edit'])) {
 
             $this->id = Arr::get($_GET, $key_primary);
@@ -289,10 +291,25 @@ class Controller_Crud extends Controller_Main {
            $fields =  array_intersect($retw->add_field, $fields);
         }
 
+
+        //типы полей на основе типов mysql
+        $information_shem = Model::factory('All')->information_table($retw->table);
+        $type_field = $retw->shows_type_input_default($information_shem);
+
+        //полечаем значения для переопределения типов полей
+        if (!empty($retw->set_field_type)) {
+            $new_type_field = $retw->set_field_type;
+        } else {
+            $new_type_field = null;
+        }
+
+
         $viev_add = View::factory('page/add');
 
         $viev_add->add_property = array('field' => $fields,
             'obj' => $_GET['obj'],
+            'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
+            'type_field' => $type_field, //типы полей по дефолту
             'name_colums_table_show' => $retw->new_name_column);
 
         $this->template->render = $viev_add;
