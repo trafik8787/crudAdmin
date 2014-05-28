@@ -30,11 +30,11 @@
 
 
         $('.edit').click(function() {
-            $("#form-edit").submit();
+            $(this).parent().submit();
         });
 
         $('.delete').click(function() {
-            $('#form-delete').submit();
+            $(this).parent().submit();
         });
 
         $('.new-action').click(function() {
@@ -67,7 +67,11 @@
                     <?=$rows_column['COLUMN_NAME']?>
                 </th>
             <?endforeach?>
-            <th>Action</th>
+
+            <?//если все кнопки отключены отключаем поле операций?>
+            <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
+                <th><?=__('LANG_ACTION')?></th>
+            <?endif?>
         </tr>
     </thead>
 
@@ -81,62 +85,68 @@
                     </td>
 
                 <?endforeach?>
-                <td>
 
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            Action <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
+                <?//если все кнопки отключены отключаем поле операций?>
+                <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
 
-                            <li>
-                                <? if($table_propery['activ_operation']['edit'] != true):?>
-                                    <form id="form-edit" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/edit" method="get">
-                                        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                                        <a href="#" class="edit"><?=__('LANG_EDIT')?></a>
-                                    </form>
-                                <?endif?>
-                            </li>
+                    <td>
 
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <?=__('LANG_ACTION')?> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
 
-
-                            <?if($table_propery['add_action_url_icon'] != ''):?>
-
-                                <?foreach ($table_propery['add_action_url_icon'] as $rows_action):?>
-                                    <li>
-                                        <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/new/<?=$rows_action['url']?>" method="post">
+                                <li>
+                                    <? if($table_propery['activ_operation']['edit'] != true):?>
+                                        <form id="form-edit" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/edit" method="get">
                                             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                                            <input type="hidden" name="func" value="<?=$rows_action['name_function']?>">
                                             <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                                            <a href="#" class="new-action"><?=$rows_action['name_action']?></a>
+                                            <a href="#" class="edit"><span class="glyphicon glyphicon-edit"></span> <?=__('LANG_EDIT')?></a>
                                         </form>
-                                    </li>
-                                <?endforeach?>
-                            <?endif?>
+                                    <?endif?>
+                                </li>
 
 
 
+                                <?if($table_propery['add_action_url_icon'] != ''):?>
 
-                            <li class="divider"></li>
-
-                            <li>
-
-                                <? if($table_propery['activ_operation']['delete'] != true):?>
-                                    <form id="form-delete" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/delete" method="post">
-
-                                        <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                                        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                                        <a href="#" class="delete"><?=__('LANG_DELETE')?></a>
-                                    </form>
+                                    <?foreach ($table_propery['add_action_url_icon'] as $rows_action):?>
+                                        <li>
+                                            <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/new/<?=$rows_action['url']?>" method="post">
+                                                <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+                                                <input type="hidden" name="func" value="<?=$rows_action['name_function']?>">
+                                                <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
+                                                <a href="#" class="new-action"><span class="<?=$rows_action['icon']?>"></span> <?=$rows_action['name_action']?></a>
+                                            </form>
+                                        </li>
+                                    <?endforeach?>
                                 <?endif?>
 
 
-                            </li>
-                        </ul>
-                    </div>
 
-                </td>
+
+                                <li class="divider"></li>
+
+                                <li>
+
+                                    <? if($table_propery['activ_operation']['delete'] != true):?>
+                                        <form id="form-delete" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/delete" method="post">
+
+                                            <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
+                                            <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+                                            <a href="#" class="delete"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></a>
+                                        </form>
+                                    <?endif?>
+
+
+                                </li>
+                            </ul>
+                        </div>
+
+                    </td>
+
+                <?endif?>
 
             </tr>
 

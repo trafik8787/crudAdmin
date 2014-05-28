@@ -304,10 +304,18 @@ class Controller_Crud extends Controller_Main {
         }
 
 
+        //отключение редактора
+        if (!empty($retw->disable_editor)) {
+            $disable_editor = $retw->disable_editor;
+        } else {
+            $disable_editor = null;
+        }
+
         $viev_add = View::factory('page/add');
 
         $viev_add->add_property = array('field' => $fields,
             'obj' => $_GET['obj'],
+            'disable_editor' => $disable_editor, //отключение редактора
             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
             'type_field' => $type_field, //типы полей по дефолту
             'name_colums_table_show' => $retw->new_name_column);

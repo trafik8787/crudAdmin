@@ -41,7 +41,7 @@ class Controller_Test extends Controller_Main {
         //$crud->add_field('title', 'author', 'date');
        // $crud->edit_fields('title', 'author');
 
-        $crud->add_action('addAction', 'Ban', 'ban/actionAdd');
+        $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;

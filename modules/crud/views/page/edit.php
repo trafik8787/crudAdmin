@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
 
-
+<?//die(print_r($edit_property['new_type_field']))?>
 <div class="container">
     <div class="row">
         <div class="col-md-8">

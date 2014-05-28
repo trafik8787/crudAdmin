@@ -12,6 +12,7 @@ return array(
     'LANG_APLY' => 'Apply',
     'LANG_EDIT' => 'Edit',
     'LANG_DELETE' => 'Delete',
-    'LAND_ADD' => 'Add'
+    'LAND_ADD' => 'Add',
+    'LANG_ACTION' => 'Action'
 
 );

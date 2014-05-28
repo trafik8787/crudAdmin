@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
 
+
+<?//die(print_r($add_property['type_field']))?>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -15,6 +18,7 @@
             <form class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
 
                 <?foreach ($add_property['field'] as  $name_fild):?>
+
                     <div class="form-group">
 
                         <?if (isset($add_property['name_colums_table_show'][$name_fild])):?>
@@ -26,47 +30,45 @@
                         <div class="col-sm-10">
 
                             <? //переопределение типов полей полей
-                                if (!empty($add_property['new_type_field'][$name_fied])) {
+                                if (!empty($add_property['new_type_field'][$name_fild])) {
 
-                                    if ($add_property['new_type_field'][$name_fied]['type_field']  == 'textarea') {
-                                        $add_property['type_field'][$name_fied] = array('tag' => 'textarea');
+                                    if ($add_property['new_type_field'][$name_fild]['type_field']  == 'textarea') {
+                                        $add_property['type_field'][$name_fild] = array('tag' => 'textarea');
                                     } else {
-                                        $add_property['type_field'][$name_fied] = $add_property['new_type_field'][$name_fied]['type_field'];
+                                        $add_property['type_field'][$name_fild] = $add_property['new_type_field'][$name_fild]['type_field'];
                                     }
 
 
-                                    if (!empty($add_property['new_type_field'][$name_fied]['field_value'])) {
-                                        $value_fild =  $add_property['new_type_field'][$name_fied]['field_value'];
+                                    if (!empty($add_property['new_type_field'][$name_fild]['field_value'])) {
+                                        $value_fild =  $add_property['new_type_field'][$name_fild]['field_value'];
                                     }
 
                                 }
                             ?>
 
                             <?//присваивание типов полей?>
-                            <?if (is_array($add_property['type_field'][$name_fied])):?>
+                            <?if (is_array($add_property['type_field'][$name_fild])):?>
 
-                                <?if ($add_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
+                                <?if ($add_property['type_field'][$name_fild]['tag'] == 'textarea'):?>
 
-                                    <<?=$add_property['type_field'][$name_fied]['tag']?>
-                                    class="form-control <?if (empty($add_property['disable_editor'][$name_fied])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
-                                    name="<?=$name_fied?>"
-                                    id="<?=$name_fied?>"/>
+                                    <<?=$add_property['type_field'][$name_fild]['tag']?>
+                                    class="form-control <?if (empty($add_property['disable_editor'][$name_fild])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
+                                    name="<?=$name_fild?>"
+                                    id="<?=$name_fild?>"/>
 
-                                    </<?=$add_property['type_field'][$name_fied]['tag']?>>
+                                    </<?=$add_property['type_field'][$name_fild]['tag']?>>
 
                                     <?endif?>
 
                                 <?else:?>
 
                             <?php
-                            if ($add_property['type_field'][$name_fied] != 'checkbox') {
+                            if ($add_property['type_field'][$name_fild] != 'checkbox') {
                                 $clas = 'form-control';
                                 $checked = '';
                             } else {
                                 $clas = '';
-                                if ($value_fild == 1) {
-                                    $checked = 'checked';
-                                }
+
                             }
                             ?>
 
@@ -75,10 +77,10 @@
                             <input
                                     class="<?=$clas?>"
                                     <?=$checked?>
-                                    type="<?=$add_property['type_field'][$name_fied]?>"
-                                    name="<?=$name_fied?>"
+                                    type="<?=$add_property['type_field'][$name_fild]?>"
+                                    name="<?=$name_fild?>"
                                     value=""
-                                    id="<?=$name_fied?>"
+                                    id="<?=$name_fild?>"
                                     />
 
                             <?endif?>

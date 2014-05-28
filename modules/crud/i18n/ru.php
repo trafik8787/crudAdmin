@@ -12,6 +12,7 @@ return array(
     'LANG_APLY' => 'Применить',
     'LANG_EDIT' => 'Ректировать',
     'LANG_DELETE' => 'Удалить',
-    'LAND_ADD' => 'Добавить'
+    'LAND_ADD' => 'Добавить',
+    'LANG_ACTION' => 'Редактировать'
 
 );
