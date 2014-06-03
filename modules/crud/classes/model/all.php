@@ -13,7 +13,8 @@ class Model_All extends Model
     //выборка по id или без него
     public function select_all_where ($table, $id = null) {
 
-        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
+        $key_primary = $this->information_table($table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
         if ($id != null) {
         return DB::select()->from($table)
@@ -43,7 +44,8 @@ class Model_All extends Model
     //удаление по id
     public function delete ($table, $id) {
 
-        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
+        $key_primary = $this->information_table($table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
         return DB::delete($table)
             ->where($this->key_primary, '=', $id)
@@ -52,7 +54,8 @@ class Model_All extends Model
 
     //ОБНОВЛЕНЕ
     public function update ($table, $field, $id) {
-        $this->key_primary = $this->information_table($table, true)[0]->COLUMN_NAME;
+        $key_primary = $this->information_table($table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
         DB::update($table)
             ->set($field)
             ->where($this->key_primary, '=', $id)

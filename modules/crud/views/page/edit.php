@@ -1,11 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/modules/crud/js/bootstrap.min.js"></script>
-<script src="/modules/crud/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="/modules/crud/js/tinymce/tinymce.min.js"></script>
-<script src="/modules/crud/js/app.js"></script>
-<link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
+
+
 
 <?//die(print_r($edit_property['new_type_field']))?>
 <div class="container">
@@ -46,6 +41,7 @@
                                 ?>
 
                                 <?//присваивание типов полей?>
+
                                 <?if (is_array($edit_property['type_field'][$name_fied])):?>
 
                                     <?if ($edit_property['type_field'][$name_fied]['tag'] == 'textarea'):?>

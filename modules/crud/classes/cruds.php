@@ -6,7 +6,7 @@
  * Time: 14:01
  */
 
-class Cruds {
+class Cruds extends Controller_Main {
 
 
     public $table; //название таблицы
@@ -43,6 +43,12 @@ class Cruds {
     public $callback_befor_edit = null; //перед обновлением
     public $callback_before_insert = null; //перед добавлением
     public $callback_after_insert = null; //после добавления
+
+
+    public function __construct () {
+        parent::before();
+
+    }
 
 
     public function  load_table ($table) {
@@ -96,8 +102,44 @@ class Cruds {
         //установка язика
         I18n::lang($this->set_lang);
 
-        return $about;
+        $this->static_style();
+
+
+        $this->template->render = $about;
+
+        return $this->template;
     }
+
+
+    public function static_style () {
+
+        $media = Route::get('docs/media');
+
+        $styles = array(
+            $media->uri(array('file' => 'js/DataTables-1.10.0/media/css/jquery.dataTables.css')) => 'screen',
+            $media->uri(array('file' => 'css/bootstrap-theme.min.css')) => 'screen',
+            $media->uri(array('file' => 'css/bootstrap.min.css')) => 'screen',
+            $media->uri(array('file' => 'css/style.css')) => 'screen'
+        );
+
+        $this->template->styles = $styles;
+
+        // Add scripts
+        $scripts = array(
+            $media->uri(array('file' => 'js/DataTables-1.10.0/media/js/jquery.js')),
+            $media->uri(array('file' => 'js/DataTables-1.10.0/media/js/jquery.dataTables.js')),
+            $media->uri(array('file' => 'js/tinymce/jquery.tinymce.min.js')),
+            $media->uri(array('file' => 'js/tinymce/tinymce.min.js')),
+            $media->uri(array('file' => 'js/bootstrap.min.js')),
+            $media->uri(array('file' => 'js/app.js'))
+        );
+
+        $this->template->scripts = $scripts;
+
+        return array('scripts' => $scripts, 'styles' => $styles);
+
+    }
+
 
     //метод переименования полей
     public function show_name_column($new_name_column = array()) {
@@ -172,7 +214,10 @@ class Cruds {
         );
 
         //имя поля первичного ключа
-        $this->key_primary = Model::factory('All')->information_table($this->table, true)[0]->COLUMN_NAME;
+        $key_primary = Model::factory('All')->information_table($this->table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
+
+
 
         return array(
             'query' => $query,

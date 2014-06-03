@@ -7,11 +7,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class Controller_Test extends Controller_Main {
+class Controller_Test extends Controller {
 
     public function action_index() {
 
-        $this->template->render = self::asd()->render();
+
+        $this->response->body(self::asd()->render());
 
     }
 
@@ -19,7 +20,7 @@ class Controller_Test extends Controller_Main {
 
     public static  function asd () {
         $crud = new Cruds;
-        $crud->load_table('articles');
+        $crud->load_table('radacct');
 
         //$crud->set_lang('ru');
         //$crud->load_table('test');

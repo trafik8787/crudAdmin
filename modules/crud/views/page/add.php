@@ -1,12 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/modules/crud/js/bootstrap.min.js"></script>
-<script src="/modules/crud/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="/modules/crud/js/tinymce/tinymce.min.js"></script>
-<script src="/modules/crud/js/app.js"></script>
-<link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
+<script src="/modules/crud/media/js/bootstrap.min.js"></script>
+<script src="/modules/crud/media/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="/modules/crud/media/js/tinymce/tinymce.min.js"></script>
+<script src="/modules/crud/media/js/app.js"></script>
+<link rel="stylesheet" href="/modules/crud/media/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/modules/crud/media/css/bootstrap.min.css">
 
 
 <?//die(print_r($add_property['type_field']))?>

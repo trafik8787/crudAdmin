@@ -5,3 +5,8 @@
 --
 #0 /var/www/kohana/index.php(109): Kohana_Request->execute()
 #1 {main}
+2014-05-29 10:55:05 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: favicon.ico ~ SYSPATH/classes/kohana/request.php [ 1142 ]
+2014-05-29 10:55:05 --- STRACE: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: favicon.ico ~ SYSPATH/classes/kohana/request.php [ 1142 ]
+--
+#0 /var/www/kohana/index.php(109): Kohana_Request->execute()
+#1 {main}

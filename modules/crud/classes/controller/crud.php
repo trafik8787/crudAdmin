@@ -13,7 +13,6 @@ class Controller_Crud extends Controller_Main {
     protected $id;
 
 
-
     public function  action_delete () {
 
         $re = unserialize(base64_decode($_POST['obj']));
@@ -21,7 +20,7 @@ class Controller_Crud extends Controller_Main {
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
         //die($retw->callback_befor_delete);
-        $this->id = Encrypt::instance()->decode(Arr::get($_POST, 'id'));
+        $this->id = Arr::get($_POST, 'id');
 
         //делаем запрос если хоть один хук обявлен
         if ($retw->callback_befor_delete != null or $retw->callback_after_delete != null) {
@@ -79,9 +78,10 @@ class Controller_Crud extends Controller_Main {
         I18n::lang($retw->set_lang);
 
         //получаем первичный ключ
-        $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
+        $key_primary = Model::factory('All')->information_table($retw->table, true);
+        $key_primary = $key_primary[0]->COLUMN_NAME;
 
-        $this->id = Encrypt::instance()->decode(Arr::get($_GET, 'id'));
+        $this->id = Arr::get($_GET, 'id');
 
        // die(print_r($this->id));
 
@@ -131,7 +131,8 @@ class Controller_Crud extends Controller_Main {
         //вид edit
         $viev_edit = View::factory('page/edit');
 
-        $fields = Model::factory('All')->select_all_where($retw->table,$this->id)[0];
+        $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
+        $fields = $fields[0];
 
         //какие будут отображатся при редактировании
         if ($retw->edit_fields != null) {
@@ -167,9 +168,15 @@ class Controller_Crud extends Controller_Main {
                                             'type_field' => $type_field, //типы полей по дефолту
                                             'key_primary' => $key_primary, //id первичный ключ
                                             'obj' => $_GET['obj'],
-                                            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые 
+                                            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $viev_edit;
+
+
+        $crud_style = $retw->static_style();
+
+        $this->template->scripts = $crud_style['scripts'];
+        $this->template->styles = $crud_style['styles'];
 
     }
 
@@ -186,7 +193,7 @@ class Controller_Crud extends Controller_Main {
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
 
-        $this->id = Encrypt::instance()->decode(Arr::get($_POST, 'id'));
+        $this->id = Arr::get($_POST, 'id');
         $retw->render = true;
 
         //die(print_r($retw->add_action));
@@ -274,7 +281,8 @@ class Controller_Crud extends Controller_Main {
 
 
         //получаем первичный ключ
-        $key_primary = Model::factory('All')->information_table($retw->table, true)[0]->COLUMN_NAME;
+        $key_primary = Model::factory('All')->information_table($retw->table, true);
+        $key_primary = $key_primary[0]->COLUMN_NAME;
 
         //создаем масив полей для вывода в форме добавления
         foreach ($name_count as $name_count_rows) {
@@ -322,6 +330,10 @@ class Controller_Crud extends Controller_Main {
 
         $this->template->render = $viev_add;
 
+        $crud_style = $retw->static_style();
+
+        $this->template->scripts = $crud_style['scripts'];
+        $this->template->styles = $crud_style['styles'];
     }
 
 

@@ -2,51 +2,73 @@
 
 
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="/modules/crud/js/DataTables-1.10.0/media/css/jquery.dataTables.css">
-<!-- jQuery -->
-<script type="text/javascript" charset="utf8" src="/modules/crud/js/DataTables-1.10.0/media/js/jquery.js"></script>
-<!-- DataTables -->
-<script type="text/javascript" charset="utf8" src="/modules/crud/js/DataTables-1.10.0/media/js/jquery.dataTables.js"></script>
-<script src="/modules/crud/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/modules/crud/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="/modules/crud/css/bootstrap.min.css">
-<link rel="stylesheet" href="/modules/crud/css/style.css">
 
 <script>
 
 
     $(document).ready( function () {
+
+
         $('#table-crud').DataTable({
-
-//            "columnDefs": [ {
-//                "targets": -1,
-//                "data": null,
-//                "defaultContent": "<button>Click!</button><button>Click2!</button>"
-//            } ]
+            "pagingType": "full_numbers"
+            //"paging":   false
+//            "processing": true,
+//            "serverSide": true,
+//            "ajax": "/admin"
 
 
         });
 
-
-        $('.edit').click(function() {
-            $(this).parent().submit();
+        $('.w-ter').click(function(){
+            $.ajax({ // описываем наш запрос
+                type: "GET", // будем передавать данные через POST
+                dataType: "JSON", // указываем, что нам вернется JSON
+                url: "ajax/testAjax", // запрос отправляем на контроллер Ajax метод addarticle
+                data: "obj=sdfsdfsd&text=sdfsdfsdf", // передаем данные из формы
+                success: function(response) { // когда получаем ответ
+                    alert(response);
+                    console.log(response);
+                    //$('.w-ter').text(response.test);
+                }
+            });
+            return false;
         });
 
-        $('.delete').click(function() {
-            $(this).parent().submit();
-        });
+//        $('#table-crud').on( 'page.dt',   function (qwe) {
+//            console.log($('select[name="table-crud_length"]').val());
+//        }).dataTable();
 
-        $('.new-action').click(function() {
-            $(this).parent().submit();
-        });
 
+//        $('#example').dataTable( {
+//            "processing": true,
+//            "serverSide": true,
+//            "ajax": "/admin"
+//        } );
 
     } );
 
 </script>
 
 
+<!--<table id="example" class="display" cellspacing="0" width="100%">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>First name</th>-->
+<!--        <th>Last name</th>-->
+<!---->
+<!--    </tr>-->
+<!--    </thead>-->
+<!---->
+<!--    <tfoot>-->
+<!--    <tr>-->
+<!--        <th>First name</th>-->
+<!--        <th>Last name</th>-->
+<!---->
+<!--    </tr>-->
+<!--    </tfoot>-->
+<!--</table>-->
+
+<a class="w-ter" href="#">ter</a>
 
 
 <?if ($table_propery['activ_operation']['add'] != true ):?>
@@ -101,8 +123,9 @@
                                     <? if($table_propery['activ_operation']['edit'] != true):?>
                                         <form id="form-edit" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/edit" method="get">
                                             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                                            <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                                            <a href="#" class="edit"><span class="glyphicon glyphicon-edit"></span> <?=__('LANG_EDIT')?></a>
+                                            <input type="hidden" name="id" value="<?=$rows_query[$table_propery['key_primary']]?>"/>
+                                            <button type="submit" class="edit"><span class="glyphicon glyphicon-edit"></span> <?=__('LANG_EDIT')?></button>
+
                                         </form>
                                     <?endif?>
                                 </li>
@@ -116,8 +139,9 @@
                                             <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/new/<?=$rows_action['url']?>" method="post">
                                                 <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
                                                 <input type="hidden" name="func" value="<?=$rows_action['name_function']?>">
-                                                <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
-                                                <a href="#" class="new-action"><span class="<?=$rows_action['icon']?>"></span> <?=$rows_action['name_action']?></a>
+                                                <input type="hidden" name="id" value="<?=$rows_query[$table_propery['key_primary']]?>"/>
+                                                <button type="submit" class="new-action"><span class="<?=$rows_action['icon']?>"></span> <?=$rows_action['name_action']?></button>
+
                                             </form>
                                         </li>
                                     <?endforeach?>
@@ -133,9 +157,10 @@
                                     <? if($table_propery['activ_operation']['delete'] != true):?>
                                         <form id="form-delete" action="/<?=Kohana::$config->load('crudconfig.base_url')?>/delete" method="post">
 
-                                            <input type="hidden" name="id" value="<?=Encrypt::instance()->encode($rows_query[$table_propery['key_primary']])?>"/>
+                                            <input type="hidden" name="id" value="<?=$rows_query[$table_propery['key_primary']]?>"/>
                                             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-                                            <a href="#" class="delete"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></a>
+                                            <button type="submit" class="delete"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
+
                                         </form>
                                     <?endif?>
 
@@ -145,6 +170,7 @@
                         </div>
 
                     </td>
+
 
                 <?endif?>
 
