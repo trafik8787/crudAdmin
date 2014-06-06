@@ -11,7 +11,6 @@ class Controller_Test extends Controller {
 
     public function action_index() {
 
-
         $this->response->body(self::asd()->render());
 
     }
@@ -20,14 +19,14 @@ class Controller_Test extends Controller {
 
     public static  function asd () {
         $crud = new Cruds;
-        $crud->load_table('radacct');
+        $crud->load_table('articles');
 
         //$crud->set_lang('ru');
         //$crud->load_table('test');
-        //$crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
+        $crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');
         $crud->callback_after_delete('call_after_del');
-        //$crud->show_columns('idRT', 'title', 'author', 'date', 'content_short');
+        //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
         //$crud->remove_add ();
         //$crud->remove_edit();
@@ -35,9 +34,14 @@ class Controller_Test extends Controller {
         $crud->callback_befor_edit('call_bef_edit');
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
-        $crud->set_field_type('content_short', 'textarea');
-        //$crud->set_field_type('author', 'text', 1223);
+
+        $crud->set_field_type('content_short', 'text');
+        $crud->set_field_type('author', 'text');
+        $crud->set_field_type('title', 'text');
+
         //$crud->disable_editor('title');
+        //$crud->disable_editor('author');
+        //$crud->disable_editor('content_short');
         //die(print_r($crud->set_field_type));
         //$crud->add_field('title', 'author', 'date');
        // $crud->edit_fields('title', 'author');

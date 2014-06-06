@@ -36,10 +36,10 @@ Route::set('NewAction', Kohana::$config->load('crudconfig.base_url').'/new(/<url
     'action'     => 'newAction',
 ));
 
-Route::set('newAjax', Kohana::$config->load('crudconfig.base_url').'/ajax/testAjax')
+Route::set('newAjax', Kohana::$config->load('crudconfig.base_url').'/ajax/showTableAjax')
     ->defaults(array(
         'controller' => 'ajax',
-        'action'     => 'testAjax',
+        'action'     => 'showTableAjax',
     ));
 
 //static

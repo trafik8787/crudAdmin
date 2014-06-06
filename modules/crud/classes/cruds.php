@@ -31,11 +31,14 @@ class Cruds extends Controller_Main {
     private $set_where = null;
     public $set_field_type = array(); //типы полей
 
+    private $object_serial; //масив параметров для сериализации
+
     public $add_field = null; //поля которые будут видны при добавлении
     public $edit_fields = null; //поля которые будут видны при редактировании
     public $add_action = null; //добавить екшен
 
-
+    public $name_colums_table_show; //названия полей
+    public $name_colums_ajax; //название полей для аякса
 
     //хуки
     public $callback_befor_delete = null; //перед удалением
@@ -88,8 +91,6 @@ class Cruds extends Controller_Main {
     //метод рендера круда
     public function render () {
 
-
-
         //вид круда
         $about = View::factory('/page/page');
 
@@ -102,6 +103,7 @@ class Cruds extends Controller_Main {
         //установка язика
         I18n::lang($this->set_lang);
 
+        //загрузка статики
         $this->static_style();
 
 
@@ -165,8 +167,9 @@ class Cruds extends Controller_Main {
     }
 
 
+
     //метод запроса на выборку данных таблицы
-    private function select_table () {
+    public function select_table () {
         //возвращает названия полей таблицы
 
         $this->name_colums_table = Model::factory('All')->name_count($this->table);
@@ -186,6 +189,10 @@ class Cruds extends Controller_Main {
             $this->name_colums_table = $new_colums;
         }
 
+        //название полей для передачи в модель аякс
+        $this->name_colums_ajax = $this->name_colums_table;
+
+
         //вывод записей по обьекту set_where
         if ($this->set_where == null) {
             //выборка всех записей таблицы
@@ -201,15 +208,15 @@ class Cruds extends Controller_Main {
         //назначение имен полям
         if ($this->new_name_column != '') {
             //если вызов состоялся то метод переиницыализируется
-            $name_colums_table_show = $this->show_name_column($this->new_name_column);
+            $this->name_colums_table_show = $this->show_name_column($this->new_name_column);
         } else {
-            $name_colums_table_show = $this->name_colums_table;
+            $this->name_colums_table_show = $this->name_colums_table;
         }
 
 
 
         //масив параметров для сериализации
-        $object_serial = array('table' => $this->table,
+        $this->object_serial = array('table' => $this->table,
             'callback_functions_array' => $this->class_metod
         );
 
@@ -218,22 +225,120 @@ class Cruds extends Controller_Main {
         $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
 
-
         return array(
             'query' => $query,
             'key_primary' => $this->key_primary,
-            'add_insert' => 'asd',
+            //'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
             'activ_operation' => array('delete' => $this->remove_delete,
                                         'edit' => $this->remove_edit,
                                         'add' => $this->remove_add), //передача состояния кнопок удаления редактирования добавления
             'name_colums_table' => $this->name_colums_table,
-            'name_colums_table_show' => $name_colums_table_show, //названия полей таблицы
-            'obj_serial' => base64_encode(serialize($object_serial)) //передача сериализованого обьекта
+            'name_colums_table_show' => $this->name_colums_table_show, //названия полей таблицы
+            'obj_serial' => base64_encode(serialize($this->object_serial)) //передача сериализованого обьекта
         );
     }
 
 
+    //обработка аякс запроса пагинация сортировка поиск возвращает JSON
+    public function ajax_test ($get) {
+
+        $count = Model::factory('All')->count_table($this->table);
+       // die($count);
+        //колонки таблицы для отображения
+        foreach ($this->name_colums_ajax as $rows_column) {
+            $column[] = $rows_column['COLUMN_NAME'];
+        }
+
+        //поле для сортировки
+        $order_column = $column[$get['order'][0]['column']];
+        //принимаем тип сортировки asc или DESC
+        $order_by = $get['order'][0]['dir'];
+        //строка поиска
+        $search_like = $get['search']['value'];
+
+        $obj = base64_encode(serialize($this->object_serial));
+        //подготовка из масива в строку полей для передачи в модель
+
+        $query = Model::factory('All')->paginationAjax($get['length'], $get['start'],
+                                                        $this->table, $order_column,
+                                                        $order_by, $search_like, $column);
+        //иницыализация языкового класса
+        I18n::lang($this->set_lang);
+
+        foreach ($query['query'] as $rows) {
+            //редактировать
+            if ($this->remove_edit !== true) {
+
+                $htm_edit = '<div class="w-buton-form">
+                                <form id="form-edit" action="/'.Kohana::$config->load('crudconfig.base_url').'/edit" method="get">
+                                    <input type="hidden" name="obj" value="'.$obj.'"/>
+                                    <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
+                                    <button type="submit" class="edit btn btn-success btn-sm"><span class="glyphicon glyphicon-edit"></span> '.__('LANG_EDIT').'</button>
+                                </form>
+                            </div>';
+            } else {
+                $htm_edit = '';
+            }
+
+            //новые екшены
+            $htm_action = '';
+            if ($this->add_action != '') {
+                foreach ($this->add_action as $rows_action) {
+
+                    $htm_action .= '<div class="w-buton-form">
+                                        <form action="/'.Kohana::$config->load('crudconfig.base_url').'/new/'.$rows_action['url'].'" method="post">
+                                            <input type="hidden" name="obj" value="'.$obj.'"/>
+                                            <input type="hidden" name="func" value="'.$rows_action['name_function'].'">
+                                            <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
+                                            <button type="submit" class="new-action btn btn-primary btn-sm"><span class="'.$rows_action['icon'].'"></span> '.$rows_action['name_action'].'</button>
+                                        </form>
+                                    </div>';
+
+                }
+            } else {
+                $htm_action = '';
+            }
+
+            //удалить
+            if ($this->remove_delete !== true) {
+                $htm_delete = '<div class="w-buton-form">
+                                    <form id="form-delete" action="/'.Kohana::$config->load('crudconfig.base_url').'/delete" method="post">
+                                        <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
+                                        <input type="hidden" name="obj" value="'.$obj.'"/>
+                                        <button type="submit" class="delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"></span> '.__('LANG_DELETE').'</button>
+                                    </form>
+                                </div>';
+            } else {
+                $htm_delete = '';
+            }
+
+            $tmp_array = array_values(array_intersect_key($rows,array_flip($column)));
+
+            $tmp_array[] = $htm_edit.$htm_action.$htm_delete;
+            $dataQuery[] = $tmp_array;
+
+        }
+
+        if ($search_like != '')  {
+            $record_count = $query['count'];
+        } else {
+            $record_count = $count[0]['COUNT(*)'];
+        }
+
+        if (empty($query['query'])) {
+            $record_count = 0;
+            $dataQuery = '';
+        }
+
+        $re = array('draw' => $get['draw'],
+            'recordsTotal' => $count[0]['COUNT(*)'],
+            'recordsFiltered' => $record_count,
+
+            'data' => $dataQuery);
+
+        echo json_encode($re);
+    }
 
 
 

@@ -102,6 +102,53 @@ class Model_All extends Model
 
     }
 
+    public function count_table ($table) {
+        $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
 
+        return $count_table->execute()->as_array();
+    }
+
+    //пагинация
+    public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
+
+        if ($ofset == '' or $ofset == null) {
+            $ofset = 0;
+        }
+
+        if ($like != '') {
+            $i=0;
+            $Sql ='';
+
+            foreach ($column_like as $key => $column) {
+                $i++;
+                if ($i >= 1) {
+                    $or = ' OR ';
+                } else {
+                    $or = '';
+                }
+
+                if (count($column_like) == $i) {
+                   $or = '';
+                }
+
+                $Sql .= $column.' LIKE '. "'%".$like."%'" .$or;
+            }
+            $likeSql = ' WHERE '.$Sql.' ';
+
+        } else {
+            $likeSql = '';
+        }
+
+        $query = DB::query(Database::SELECT,
+            'SELECT * FROM ' .$table.' '.$likeSql.' '.
+            'ORDER BY '. $order_column.' '.$order_by.'
+            LIMIT '.$ofset.','.$limit)
+            ->execute()
+            ->as_array();
+
+
+
+        return array('query' => $query, 'count' => count($query));
+    }
 
 }

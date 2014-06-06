@@ -2,7 +2,6 @@
 
 
 
-<?//die(print_r($edit_property['new_type_field']))?>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -95,7 +94,7 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$edit_property['obj']?>"/>
-                        <button type="submit" name="edit" class="btn btn-default btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button type="submit" name="edit" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                     </div>
                 </div>
 
