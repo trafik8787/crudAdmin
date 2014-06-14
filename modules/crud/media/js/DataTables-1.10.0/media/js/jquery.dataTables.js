@@ -2626,12 +2626,13 @@
 		var tableId = settings.sTableId;
 		var previousSearch = settings.oPreviousSearch;
 		var features = settings.aanFeatures;
-		var input = '<input type="search" class="'+classes.sFilterInput+'"/>';
+		var input = '<input placeholder="Email" type="search" class="form-control'+classes.sFilterInput+'"/><span style="top: -23px; z-index: 2; opacity: 0.7;" class="glyphicon glyphicon-search"></span>';
 	
 		var str = settings.oLanguage.sSearch;
 		str = str.match(/_INPUT_/) ?
 			str.replace('_INPUT_', input) :
-			str+input;
+            input = '<input placeholder="'+str+'" type="search" class="form-control'+classes.sFilterInput+'"/><span style="top: -23px; z-index: 2; opacity: 0.7;" class="glyphicon glyphicon-search"></span>';
+			input;
 	
 		var filter = $('<div/>', {
 				'id': ! features.f ? tableId+'_filter' : null,

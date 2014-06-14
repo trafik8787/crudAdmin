@@ -1,20 +1,69 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
 
-
-
 <script>
 
 
     $(document).ready( function () {
 
+
+
+
+
         var table = $('#example').dataTable({
+            "pagingType": "full_numbers",
             "processing": true,
             "serverSide": true,
-            "aoColumnDefs": [{
-                "aTargets": [-1],
-                "bSortable": false
-            }],
+            "sLengthSelect": "form-control",
+            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>>rt<"bottom"ip><"clear">',//<"clear">
+            /*
+             l - Показать  записей
+             f - поиск
+             rt - таблица
+             ip - итформация и  пагинация
+            */
+
+            "bAutoWidth": false,
+
+            "oLanguage": {
+                "sProcessing": "<img src='<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
+                "sZeroRecords": "<?=__('LANG_NO_RECORD')?>",
+                "sInfo": "<?=__('LANG_INFO')?>",
+                "sLengthMenu": "<?=__('LANG_MENY')?>",
+                "sSearch": "<?=__('LANG_SEARCH')?>",
+                "sInfoEmpty": "No entries to show",
+
+
+
+
+                "oPaginate": {
+                    "sNext": "<?=__('LANG_NEXT')?>",
+                    "sLast": "<?=__('LANG_LAST')?>",
+                    "sFirst": "<?=__('LANG_FIRST')?>",
+                    "sPrevious": "<?=__('LANG_PREVIONS')?>"
+
+                }
+            },
+
+
+
+            "aoColumnDefs": [
+                {
+                    "aTargets": [-1],
+                    "bSortable": false,
+                    "bSearchable": false
+                },
+                {
+                    "aTargets": [0],
+                    "bSortable": false,
+                    "bSearchable": false
+
+                }
+
+            ],
+
+
+
             "ajax": {
                 "url": "ajax/showTableAjax",
                 "data": function ( d ) {
@@ -25,39 +74,89 @@
 
         });
 
+
         $('#table-crud').DataTable({
             "pagingType": "full_numbers"
-            //"paging":   false
-//            "processing": true,
-//            "serverSide": true,
-//            "ajax": "/admin"
 
         });
 
-        $('.w-ter').click(function(){
+        //удаление group
+        $('.w-del-array').click(function(){
+            var chek = $('.w-chec-table:checked').serialize();
+            var objecr = $('input[name="obj"]').val();
             $.ajax({ // описываем наш запрос
-                type: "GET", // будем передавать данные через POST
+                type: "POST", // будем передавать данные через POST
                 dataType: "JSON", // указываем, что нам вернется JSON
-                url: "ajax/showTableAjax", // запрос отправляем на контроллер Ajax метод addarticle
-                data: "obj=sdfsdfsd&text=sdfsdfsdf", // передаем данные из формы
+                url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
+                data: chek+"&obj="+objecr+"&del_arr=1", // передаем данные из формы
                 success: function(response) { // когда получаем ответ
-                    alert(response);
-                    console.log(response);
+                    //alert(response);
+                    //console.log(response);
+
+                    //table.row($(this)).remove().draw(false);
                     //$('.w-ter').text(response.test);
                 }
             });
+
+            var inD = new Array();
+
+            $('tr').each(function(i){
+                i = i-2;
+                if ($(this).hasClass('selected')) {
+                    inD.push(i);
+                }
+            });
+
+            table.fnDeleteRow(inD);
             return false;
         });
 
 
 
-        $('.edit').on('click', function(){
-            alert('sdffsd');
-            table
-                    .row( $(this).parents('tr') )
-                    .remove()
-                    .draw();
+
+        //edit
+        $(document).on('click', '.edit', function(){
+            $.ajax({ // описываем наш запрос
+                type: "GET", // будем передавать данные через POST
+                dataType: "HTML", // указываем, что нам вернется JSON
+                url: "/admin/edit", // запрос отправляем на контроллер Ajax метод addarticle
+                data: "obj="+$(this).data('obj')+"&id="+$(this).data('id'), // передаем данные из формы
+                success: function(response) { // когда получаем ответ
+                    //alert(response);
+                    //console.log(response);
+                    $('.conteiner-crud').html(response);
+                    //table.row($(this)).remove().draw(false);
+                    //$('.w-ter').text(response.test);
+                }
+            });
+
             return false;
+        });
+
+
+
+        //cecbox
+        $(document).on('click', '.w-chec-table-all-top', function(){
+            $('.w-chec-table').trigger('click');
+
+            state = $(this).prop('checked');
+            if(state) {
+                $('.w-del-array').prop('disabled', false);
+            } else {
+                $('.w-del-array').prop('disabled', true);
+            }
+        });
+
+        $(document).on('click', '.w-chec-table', function(){
+            state = $(this).prop('checked');
+
+            $(this).parents('tr').toggleClass('selected');
+
+            if(state) {
+                $('.w-del-array').prop('disabled', false);
+            } else {
+                $('.w-del-array').prop('disabled', true);
+            }
         });
 
 
@@ -68,22 +167,35 @@
 
     } );
 
+
+
 </script>
 
+<a href="#" class="qwe">qwe</a>
+<?//=mb_detect_encoding('בית')?>
+<!--add-->
 <?if ($table_propery['activ_operation']['add'] != true ):?>
-<tr>
-    <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/add" method="get">
-        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-        <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> <?=__('LAND_ADD')?></button>
-    </form>
 
-</tr>
+    <div class="w-buton-form">
+        <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/add" method="get">
+            <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+            <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> <?=__('LAND_ADD')?></button>
+        </form>
+    </div>
+
 <?endif?>
+
+<div class="w-buton-form">
+        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+        <input type="hidden" name="del_arr" value="1">
+        <button type="submit" disabled class="delete btn btn-danger btn-sm w-del-array"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
+</div>
 
 <table id="example" class="display" cellspacing="0" width="100%">
     <thead>
 
     <tr>
+            <th><input type="checkbox" class="w-chec-table-all-top"></th>
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
             <th>
                 <?=$rows_column['COLUMN_NAME']?>
@@ -98,6 +210,7 @@
 
     <tfoot>
     <tr>
+        <th>#</th>
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
         <th>
             <?=$rows_column['COLUMN_NAME']?>

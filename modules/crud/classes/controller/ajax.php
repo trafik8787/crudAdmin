@@ -12,14 +12,15 @@ class Controller_Ajax extends Controller {
 
         $re = unserialize(base64_decode($_GET['obj']));
         //die(print_r($re));
+        //переиницыализация круда
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
         $retw->select_table();
-        $retw->ajax_test($_GET);
+        $retw->ajax_query($_GET);
 
     }
 
-
+    //метод для вывода статики
     public function action_media () {
 
         $file = $this->request->param('file');

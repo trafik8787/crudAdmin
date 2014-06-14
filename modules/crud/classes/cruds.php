@@ -26,7 +26,7 @@ class Cruds extends Controller_Main {
     private $remove_add = null; //уброать кнопку добавить
 
     public $disable_editor = array(); //отключение редактора
-
+    private $disable_search = 'f'; //отключение поиска по таблице
 
     private $set_where = null;
     public $set_field_type = array(); //типы полей
@@ -176,13 +176,13 @@ class Cruds extends Controller_Main {
 
         //определяем какие поля будут выводится
         if ($this->column_array != null) {
-           // print_r($this->name_colums_table);
+            // print_r($this->name_colums_table);
             foreach ($this->name_colums_table as $colums_table){
-               foreach ($this->column_array as $colum){
-                   if ($colums_table['COLUMN_NAME'] == $colum) {
-                       $new_colums[] = array('COLUMN_NAME' => $colum);
-                   }
-               }
+                foreach ($this->column_array as $colum){
+                    if ($colums_table['COLUMN_NAME'] == $colum) {
+                        $new_colums[] = array('COLUMN_NAME' => $colum);
+                    }
+                }
 
             }
             //переопределяем обьект
@@ -199,9 +199,9 @@ class Cruds extends Controller_Main {
             $query = Model::factory('All')->select_all_where($this->table);
         } else {
             $query = Model::factory('All')->set_where($this->table,
-                                                        $this->set_where['colum'],
-                                                        $this->set_where['operation'],
-                                                        $this->set_where['value']);
+                $this->set_where['colum'],
+                $this->set_where['operation'],
+                $this->set_where['value']);
         }
 
 
@@ -231,8 +231,9 @@ class Cruds extends Controller_Main {
             //'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
             'activ_operation' => array('delete' => $this->remove_delete,
-                                        'edit' => $this->remove_edit,
-                                        'add' => $this->remove_add), //передача состояния кнопок удаления редактирования добавления
+                'edit' => $this->remove_edit,
+                'add' => $this->remove_add,
+                'search' => $this->disable_search), //передача состояния кнопок удаления редактирования добавления
             'name_colums_table' => $this->name_colums_table,
             'name_colums_table_show' => $this->name_colums_table_show, //названия полей таблицы
             'obj_serial' => base64_encode(serialize($this->object_serial)) //передача сериализованого обьекта
@@ -240,11 +241,16 @@ class Cruds extends Controller_Main {
     }
 
 
+
+
+
+
+
     //обработка аякс запроса пагинация сортировка поиск возвращает JSON
-    public function ajax_test ($get) {
+    public function ajax_query ($get) {
 
         $count = Model::factory('All')->count_table($this->table);
-       // die($count);
+         //die($count);
         //колонки таблицы для отображения
         foreach ($this->name_colums_ajax as $rows_column) {
             $column[] = $rows_column['COLUMN_NAME'];
@@ -260,11 +266,18 @@ class Cruds extends Controller_Main {
         $obj = base64_encode(serialize($this->object_serial));
         //подготовка из масива в строку полей для передачи в модель
 
-        $query = Model::factory('All')->paginationAjax($get['length'], $get['start'],
-                                                        $this->table, $order_column,
-                                                        $order_by, $search_like, $column);
+        $query = Model::factory('All')->paginationAjax(
+            $get['length'], //сколько записей нужно выбрать
+            $get['start'], //с какой записи начать выборку
+            $this->table, //имя таблицы
+            $order_column, //название поля по которому будет идти сортировка
+            $order_by, //тип сортировки ASK DESK
+            $search_like, //строка поиска
+            $column); //поля таблицы
+
         //иницыализация языкового класса
         I18n::lang($this->set_lang);
+
 
         foreach ($query['query'] as $rows) {
             //редактировать
@@ -274,7 +287,7 @@ class Cruds extends Controller_Main {
                                 <form id="form-edit" action="/'.Kohana::$config->load('crudconfig.base_url').'/edit" method="get">
                                     <input type="hidden" name="obj" value="'.$obj.'"/>
                                     <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
-                                    <button type="submit" class="edit btn btn-success btn-sm"><span class="glyphicon glyphicon-edit"></span> '.__('LANG_EDIT').'</button>
+                                    <button type="submit" data-obj="'.$obj.'" data-id="'.$rows[$this->key_primary].'" class="edit btn btn-success btn-sm"><span class="glyphicon glyphicon-edit"></span> '.__('LANG_EDIT').'</button>
                                 </form>
                             </div>';
             } else {
@@ -313,29 +326,40 @@ class Cruds extends Controller_Main {
                 $htm_delete = '';
             }
 
+
+
             $tmp_array = array_values(array_intersect_key($rows,array_flip($column)));
+            //кнопки удалить редактировать и новых екшенов
+            //добавляем в начало масива чекбоксы
+            array_unshift($tmp_array, '<input type="checkbox" class="w-chec-table" name="id_del_array[]" value="'.$rows[$this->key_primary].'">');
 
             $tmp_array[] = $htm_edit.$htm_action.$htm_delete;
             $dataQuery[] = $tmp_array;
 
+
+
+            //array_unshift($dataQuery, array('<input type="checkbox">'));
+
         }
 
+        //количество записей после поиска
         if ($search_like != '')  {
             $record_count = $query['count'];
         } else {
             $record_count = $count[0]['COUNT(*)'];
         }
 
+        //если в базе ничего не найдено то присваиваем пустое значение
         if (empty($query['query'])) {
             $record_count = 0;
             $dataQuery = '';
         }
 
         $re = array('draw' => $get['draw'],
-            'recordsTotal' => $count[0]['COUNT(*)'],
-            'recordsFiltered' => $record_count,
+            'recordsTotal' => $count[0]['COUNT(*)'], //всего записей в таблице
+            'recordsFiltered' => $record_count, //оставшиееся количество после поиска
 
-            'data' => $dataQuery);
+            'data' => $dataQuery); //данные для отображения в таблице
 
         echo json_encode($re);
     }
@@ -397,9 +421,9 @@ class Cruds extends Controller_Main {
 
         //Route::set('custom1', array('Controller_Crud', 'NewAction'), 'admin/new(/<bar>)'); // class::static()
         $this->add_action[] = array('name_function' => $name_function,
-                                    'name_action' => $name_action,
-                                    'url' => $url,
-                                     'icon' => $icon);
+            'name_action' => $name_action,
+            'url' => $url,
+            'icon' => $icon);
 
 
     }
@@ -415,30 +439,30 @@ class Cruds extends Controller_Main {
     public function shows_type_input_default ($information_shem) {
 
         $retuyr = array('varchar' => array('tag' => 'textarea'),
-                        'text' => 'text',
-                        'date' => 'date',
-                        'int' => 'number',
-                        'bigint' => 'number',
-                        'tinyint' => 'checkbox',
-                        'smallint' => 'number',
-                        'mediumint' => 'number',
-                        'float' => 'number',
-                        'double' => 'number',
-                        'bool'=> 'checkbox',
-                        'boolean' => 'checkbox',
-                        'bit' => 'checkbox',
-                        'char' =>  array('tag' => 'textarea'),
-                        'tinytext' => 'text',
-                        'mediumtext' => array('tag' => 'textarea'),
-                        'longtext' => array('tag' => 'textarea'),
-                        'tinyblob' => 'text',
-                        'blob' => 'text',
-                        'mediumblob' => array('tag' => 'textarea'),
-                        'longblob' => array('tag' => 'textarea'),
-                        'datetime' => 'datetime',
-                        'time' => 'time',
-                        'year' => 'month',
-                        'timestamp' => 'datetime');
+            'text' => 'text',
+            'date' => 'date',
+            'int' => 'number',
+            'bigint' => 'number',
+            'tinyint' => 'checkbox',
+            'smallint' => 'number',
+            'mediumint' => 'number',
+            'float' => 'number',
+            'double' => 'number',
+            'bool'=> 'checkbox',
+            'boolean' => 'checkbox',
+            'bit' => 'checkbox',
+            'char' =>  array('tag' => 'textarea'),
+            'tinytext' => 'text',
+            'mediumtext' => array('tag' => 'textarea'),
+            'longtext' => array('tag' => 'textarea'),
+            'tinyblob' => 'text',
+            'blob' => 'text',
+            'mediumblob' => array('tag' => 'textarea'),
+            'longblob' => array('tag' => 'textarea'),
+            'datetime' => 'datetime',
+            'time' => 'time',
+            'year' => 'month',
+            'timestamp' => 'datetime');
 
 
 
@@ -514,6 +538,11 @@ class Cruds extends Controller_Main {
         $this->disable_editor[$field_name] = true;
     }
 
+    //отключение поиска по таблице
+    public function disable_search () {
+        $this->disable_search = null;
+    }
+
     public function set_load_1N () {
 
     }
@@ -528,31 +557,31 @@ class Cruds extends Controller_Main {
 //
 //$MYSQL_TYPES=Array(
 //    // INTEGER
-//    // byte — кол-во байт на хранение,
-//    // max/min — предельные значения,
-//    // umax/umin — беззнаковые предельные значения
+//    // byte - кол-во байт на хранение,
+//    // max/min - предельные значения,
+//    // umax/umin - беззнаковые предельные значения
 //    'int'=>Array('byte'=>4, 'min'=>-2147483648, 'max'=>2147483647, 'umin'=>0, 'umax'=>4294967295),
 //    'bigint'=>Array('byte'=>8, 'min'=>-9223372036854775808, 'max'=>9223372036854775807, 'umin'=>0, 'umax'=>18446744073709551615),
 //    'tinyint'=>Array('byte'=>1, 'min'=>-128, 'max'=>127, 'umin'=>0, 'umax'=>255),
 //    'smallint'=>Array('byte'=>2, 'min'=>-32768, 'max'=>32767, 'umin'=>0, 'umax'=>65535),
 //    'mediumint'=>Array('byte'=>3, 'min'=>-8388608, 'max'=>8388607, 'umin'=>0, 'umax'=>16777215),
 //
-//    // DECIMAL   DECIMAL(M,D) m — кол-во цифр (max 65 цифр), d — сколько из них могут быть после запятой
-//    // min_byte/max_byte — краевые значения размера поля в байтах,
-//    // byte_formula — формула вычисления размерности
-//    // length — максимальное кол-во цифр
+//    // DECIMAL   DECIMAL(M,D) m - кол-во цифр (max 65 цифр), d - сколько из них могут быть после запятой
+//    // min_byte/max_byte - краевые значения размера поля в байтах,
+//    // byte_formula - формула вычисления размерности
+//    // length - максимальное кол-во цифр
 //    'decimal'=>Array('min_byte'=>2, 'max_byte'=>67, 'byte_formula'=>'(D==0?(M+1):(M+2)', 'length'=>65),
 //    'dec'=>Array('min_byte'=>2, 'max_byte'=>67, 'byte_formula'=>'D==0?(M+1):(M+2)', 'length'=>65),
 //    'numeric'=>Array('min_byte'=>2, 'max_byte'=>67, 'byte_formula'=>'D==0?(M+1):(M+2)', 'length'=>65),
 //
 //    // FLOAT DOUBLE
-//    // Внимание! Не храните денежные значения в этих полях!!! Деньги надо хранить — в DECIMAL
-//    // у FLOAT ТОЧНОСТЬ ТОЛЬКО 7 ЦИФР!!! (все остальные цифры «смазываются»)
-//    // у DOUBLE ТОЧНОСТЬ ТОЛЬКО 15 ЦИФР!!! (все остальные цифры «смазываются»)
-//    // byte — кол-во байт для хранения поля (по-умолчанию)
-//    // max_byte — максимальное кол-во байт для хранения
-//    // negative_min/negative_max — минмаксы для отрицательных чисел
-//    // positive_min/positive_max — минмаксы для положительных чисел
+//    // Внимание! Не храните денежные значения в этих полях!!! Деньги надо хранить - в DECIMAL
+//    // у FLOAT ТОЧНОСТЬ ТОЛЬКО 7 ЦИФР!!! (все остальные цифры <смазываются>)
+//    // у DOUBLE ТОЧНОСТЬ ТОЛЬКО 15 ЦИФР!!! (все остальные цифры <смазываются>)
+//    // byte - кол-во байт для хранения поля (по-умолчанию)
+//    // max_byte - максимальное кол-во байт для хранения
+//    // negative_min/negative_max - минмаксы для отрицательных чисел
+//    // positive_min/positive_max - минмаксы для положительных чисел
 //    'float'=>Array('byte'=>4, 'max_byte'=>8, 'negative_min'=>-3.402823466E+38, 'negative_max'=>-1.175494351E-38, 'positive_min'=>1.175494351E-38, 'positive_max'=>3.402823466E+38),
 //    'double'=>Array('byte'=>8, 'negative_min'=>-1.7976931348623157E+308, 'negative_max'=>-2.2250738585072014E-308, 'positive_min'=>2.2250738585072014E-308, 'positive_max'=>1.7976931348623157E+308),
 //
@@ -562,17 +591,17 @@ class Cruds extends Controller_Main {
 //    'boolean'=>Array('byte'=>1, 'true'=>1, 'false'=>0),
 //
 //    // VARCHAR
-//    // byte — кол-во байт отведенных для хранения (можно задать меньше)
-//    // min_byte — минимальное кол-во байт в которых может храниться поле (если длина равна 1)
+//    // byte - кол-во байт отведенных для хранения (можно задать меньше)
+//    // min_byte - минимальное кол-во байт в которых может храниться поле (если длина равна 1)
 //// В MYSQL 5.0.3 и выше, VARCHAR может быть до 65,535 символов!!!
-//    // length — максимальная длина символов в поле
+//    // length - максимальная длина символов в поле
 //    'varchar'=>Array('byte'=>256, 'min_byte'=>2, 'length'=>255),
 //    'char'=>Array('byte'=>256, 'min_byte'=>2, 'length'=>255),
 //
 //    // TEXT
-//    // byte — кол-во байт для хранения поля
-//    // min_byte — минимальное кол-во байт для хранения одного символа (если длина поля равна 1)
-//    // length — максимальное количество символов в поле
+//    // byte - кол-во байт для хранения поля
+//    // min_byte - минимальное кол-во байт для хранения одного символа (если длина поля равна 1)
+//    // length - максимальное количество символов в поле
 //    'tinytext'=>Array('byte'=>256, 'min_byte'=>2, 'length'=>255),
 //    'text'=>Array('byte'=>65537, 'min_byte'=>3, 'length'=>65535),
 //    'mediumtext'=>Array('byte'=>16777218, 'min_byte'=>4, 'length'=>16777215),
@@ -583,9 +612,9 @@ class Cruds extends Controller_Main {
 //    'longblob'=>Array('byte'=>4294967300, 'min_byte'=>5, 'length'=>4294967296),
 //
 //    // DATETIME
-//    // byte — кол-во байт для хранения значения поля
-//    // mask — стандартная маска ввода значения (есть куча других вариантов, о них читайте в мануале)
-//    // min/max — минимальные максимальные значения дат которые сохраняют поля
+//    // byte - кол-во байт для хранения значения поля
+//    // mask - стандартная маска ввода значения (есть куча других вариантов, о них читайте в мануале)
+//    // min/max - минимальные максимальные значения дат которые сохраняют поля
 //    'datetime'=>Array('byte'=>8, 'mask'=>'YYYY-MM-DD HH:MM:SS', 'min'=>'1000-01-01 00:00:00', 'max'=>'9999-12-31 23:59:59'),
 //    'date'=>Array('byte'=>3, 'mask'=>'YYYY-MM-DD', 'min'=>'1000-01-01', 'max'=>'9999-12-31'),
 //    'time'=>Array('byte'=>3, 'min'=>'-838:59:59', 'max'=>'838:59:59'),
@@ -593,9 +622,9 @@ class Cruds extends Controller_Main {
 //    'timestamp'=>Array('byte'=>4, 'mask'=>Array(14=>'YYYYMMDDHHMMSS',12=>'YYMMDDHHMMSS',10=>'YYMMDDHHMM',8=>'YYYYMMDD',6=>'YYMMDD',4=>'YYMM',2=>'YY'), 'min'=>1970, 'max'=>2036 ),
 //
 //    // ENUM
-//    // byte — кол-во байт на хранение поля
-//    // max_byte — максимальное кол-во байт, которое можно достигнуть при максимальном кол-ве элементов
-//    // max_number_of_element — кол-во элементов, которое может содержать поле
+//    // byte - кол-во байт на хранение поля
+//    // max_byte - максимальное кол-во байт, которое можно достигнуть при максимальном кол-ве элементов
+//    // max_number_of_element - кол-во элементов, которое может содержать поле
 //    'enum'=>Array('byte'=>1, 'max_byte'=>2, 'max_number_of_element'=>65535),
 //    'set'=>Array('byte'=>1, 'max_byte'=>8, 'max_number_of_element'=>64)
 //);* This source code was highlighted with Source Code Highlighter.

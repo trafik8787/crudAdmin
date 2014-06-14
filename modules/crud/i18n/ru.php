@@ -13,6 +13,15 @@ return array(
     'LANG_EDIT' => 'Ректировать',
     'LANG_DELETE' => 'Удалить',
     'LAND_ADD' => 'Добавить',
-    'LANG_ACTION' => 'Редактировать'
+    'LANG_ACTION' => 'Редактировать',
+    'LANG_NO_RECORD' => 'Не найдено ни одной записи',
+    'LANG_INFO' => 'Показано _START_ из _END_ всего _TOTAL_ записей',
+    'LANG_MENY' => 'Показать _MENU_ записей',
+    'LANG_SEARCH' => 'Поиск',
+
+    'LANG_FIRST' => 'Начало',
+    'LANG_PREVIONS' => 'Назад',
+    'LANG_NEXT' => 'Вперед',
+    'LANG_LAST' => 'Конец'
 
 );

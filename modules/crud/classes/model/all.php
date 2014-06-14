@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+﻿<?php defined('SYSPATH') or die('No direct script access.');
 /**
  * Created by JetBrains PhpStorm.
  * User: Vitalik
@@ -49,6 +49,17 @@ class Model_All extends Model
 
         return DB::delete($table)
             ->where($this->key_primary, '=', $id)
+            ->execute();
+    }
+
+    //удаление груповое
+    public function group_delete ($table, $idArr) {
+
+        $key_primary = $this->information_table($table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
+        //array('john', 'jane')
+        return DB::delete($table)
+            ->where($this->key_primary, 'IN', $idArr)
             ->execute();
     }
 
@@ -111,11 +122,13 @@ class Model_All extends Model
     //пагинация
     public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
 
+
+       // die('sdfsdf');
         if ($ofset == '' or $ofset == null) {
             $ofset = 0;
         }
 
-        if ($like != '') {
+        if ($like != '' and $like !== null) {
             $i=0;
             $Sql ='';
 
@@ -131,7 +144,7 @@ class Model_All extends Model
                    $or = '';
                 }
 
-                $Sql .= $column.' LIKE '. "'%".$like."%'" .$or;
+                $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
             }
             $likeSql = ' WHERE '.$Sql.' ';
 

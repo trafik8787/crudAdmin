@@ -11,6 +11,8 @@ class Controller_Crud extends Controller_Main {
 
     protected $table;
     protected $id;
+    protected $del_arr;
+    protected $id_del_array;
 
 
     public function  action_delete () {
@@ -22,6 +24,13 @@ class Controller_Crud extends Controller_Main {
         //die($retw->callback_befor_delete);
         $this->id = Arr::get($_POST, 'id');
 
+        //флаг для групового удаления
+        $this->del_arr = Arr::get($_POST, 'del_arr');
+
+        $this->id_del_array =  Arr::get($_POST, 'id_del_array');
+
+        //die(print_r($this->id_del_array));
+
         //делаем запрос если хоть один хук обявлен
         if ($retw->callback_befor_delete != null or $retw->callback_after_delete != null) {
             //получаем масив строку таблицы которая должна быть удалена
@@ -29,7 +38,7 @@ class Controller_Crud extends Controller_Main {
             $retw->callback_befor_delete($retw->callback_befor_delete['name_function'], 'true');
             $retw->callback_after_delete($retw->callback_after_delete['name_function']);
 
-            $query_array_del = Model::factory('All')->select_all_where($retw->table,$this->id);
+            $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id);
         }
 
 
@@ -46,9 +55,16 @@ class Controller_Crud extends Controller_Main {
 
         }
 
+
+
+
         if ($retw->callback_befor_delete !== false) {
             //удаляем
-            $query = Model::factory('All')->delete($retw->table, $this->id);
+            if ($this->del_arr == 1) {
+                $query =  Model::factory('All')->group_delete($retw->table, $this->id_del_array);
+            } else {
+                $query = Model::factory('All')->delete($retw->table, $this->id);
+            }
         }
 
         //проверяем обявлен ли хук

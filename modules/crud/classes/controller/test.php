@@ -23,7 +23,7 @@ class Controller_Test extends Controller {
 
         //$crud->set_lang('ru');
         //$crud->load_table('test');
-        $crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
+       //$crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');
         $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
@@ -35,10 +35,10 @@ class Controller_Test extends Controller {
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-        $crud->set_field_type('content_short', 'text');
-        $crud->set_field_type('author', 'text');
-        $crud->set_field_type('title', 'text');
-
+        //$crud->set_field_type('content_short', 'text');
+        //$crud->set_field_type('author', 'text');
+        //$crud->set_field_type('title', 'text');
+        //$crud->disable_search();
         //$crud->disable_editor('title');
         //$crud->disable_editor('author');
         //$crud->disable_editor('content_short');

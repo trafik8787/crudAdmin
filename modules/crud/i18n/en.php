@@ -13,6 +13,15 @@ return array(
     'LANG_EDIT' => 'Edit',
     'LANG_DELETE' => 'Delete',
     'LAND_ADD' => 'Add',
-    'LANG_ACTION' => 'Action'
+    'LANG_ACTION' => 'Action',
+    'LANG_NO_RECORD' => 'No matching records found',
+    'LANG_INFO' => 'Showing _START_ to _END_ of _TOTAL_ entries',
+    'LANG_MENY' => 'Show _MENU_ entries',
+    'LANG_SEARCH' => 'Search',
+
+    'LANG_FIRST' => 'First',
+    'LANG_PREVIONS' => 'Previouns',
+    'LANG_NEXT' => 'Next',
+    'LANG_LAST' => 'Last'
 
 );
