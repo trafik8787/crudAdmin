@@ -168,3 +168,13 @@
 --
 #0 /var/www/kohana/index.php(109): Kohana_Request->execute()
 #1 {main}
+2014-06-13 23:14:26 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: favicon.ico ~ SYSPATH/classes/kohana/request.php [ 1142 ]
+2014-06-13 23:14:26 --- STRACE: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: favicon.ico ~ SYSPATH/classes/kohana/request.php [ 1142 ]
+--
+#0 /var/www/kohana/index.php(109): Kohana_Request->execute()
+#1 {main}
+2014-06-13 23:56:57 --- ERROR: ErrorException [ 4 ]: syntax error, unexpected ')' ~ MODPATH/crud/classes/controller/crud.php [ 64 ]
+2014-06-13 23:56:57 --- STRACE: ErrorException [ 4 ]: syntax error, unexpected ')' ~ MODPATH/crud/classes/controller/crud.php [ 64 ]
+--
+#0 [internal function]: Kohana_Core::shutdown_handler()
+#1 {main}

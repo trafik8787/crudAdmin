@@ -48,7 +48,7 @@
                                         <<?=$edit_property['type_field'][$name_fied]['tag']?>
                                         class="form-control <?if (empty($edit_property['disable_editor'][$name_fied])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
                                         name="<?=$name_fied?>"
-                                        id="<?=$name_fied?>"/>
+                                        id="<?=$name_fied?>">
                                             <?=$value_fild?>
                                         </<?=$edit_property['type_field'][$name_fied]['tag']?>>
 

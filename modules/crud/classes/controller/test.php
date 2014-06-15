@@ -39,7 +39,7 @@ class Controller_Test extends Controller {
         //$crud->set_field_type('author', 'text');
         //$crud->set_field_type('title', 'text');
         //$crud->disable_search();
-        //$crud->disable_editor('title');
+        $crud->disable_editor('title');
         //$crud->disable_editor('author');
         //$crud->disable_editor('content_short');
         //die(print_r($crud->set_field_type));

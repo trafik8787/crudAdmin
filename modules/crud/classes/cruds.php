@@ -284,7 +284,7 @@ class Cruds extends Controller_Main {
             if ($this->remove_edit !== true) {
 
                 $htm_edit = '<div class="w-buton-form">
-                                <form id="form-edit" action="/'.Kohana::$config->load('crudconfig.base_url').'/edit" method="get">
+                                <form action="/'.Kohana::$config->load('crudconfig.base_url').'/edit" method="get">
                                     <input type="hidden" name="obj" value="'.$obj.'"/>
                                     <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
                                     <button type="submit" data-obj="'.$obj.'" data-id="'.$rows[$this->key_primary].'" class="edit btn btn-success btn-sm"><span class="glyphicon glyphicon-edit"></span> '.__('LANG_EDIT').'</button>
@@ -316,7 +316,7 @@ class Cruds extends Controller_Main {
             //удалить
             if ($this->remove_delete !== true) {
                 $htm_delete = '<div class="w-buton-form">
-                                    <form id="form-delete" action="/'.Kohana::$config->load('crudconfig.base_url').'/delete" method="post">
+                <form action="/'.Kohana::$config->load('crudconfig.base_url').'/delete" method="post">
                                         <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
                                         <input type="hidden" name="obj" value="'.$obj.'"/>
                                         <button type="submit" class="delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"></span> '.__('LANG_DELETE').'</button>

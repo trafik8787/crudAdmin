@@ -90,13 +90,10 @@
                 url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
                 data: chek+"&obj="+objecr+"&del_arr=1", // передаем данные из формы
                 success: function(response) { // когда получаем ответ
-                    //alert(response);
-                    //console.log(response);
 
-                    //table.row($(this)).remove().draw(false);
-                    //$('.w-ter').text(response.test);
                 }
             });
+
 
             var inD = new Array();
 
@@ -113,33 +110,77 @@
 
 
 
+        //delete
+        $(document).on('click', '.delete', function(){
 
-        //edit
-        $(document).on('click', '.edit', function(){
+            $(this).parent().parent().parent().parent().addClass('sends');
+
+            var chek = $(this).parent().serialize();
             $.ajax({ // описываем наш запрос
-                type: "GET", // будем передавать данные через POST
-                dataType: "HTML", // указываем, что нам вернется JSON
-                url: "/admin/edit", // запрос отправляем на контроллер Ajax метод addarticle
-                data: "obj="+$(this).data('obj')+"&id="+$(this).data('id'), // передаем данные из формы
+                type: "POST", // будем передавать данные через POST
+                dataType: "JSON", // указываем, что нам вернется JSON
+                url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
+                data: chek, // передаем данные из формы
                 success: function(response) { // когда получаем ответ
-                    //alert(response);
-                    //console.log(response);
-                    $('.conteiner-crud').html(response);
-                    //table.row($(this)).remove().draw(false);
-                    //$('.w-ter').text(response.test);
+
                 }
             });
 
+            var inDb;
+            $('tr').each(function(i){
+                i = i-2;
+                if ($(this).hasClass('sends')) {
+                    inDb = i;
+                }
+            });
+
+
+            table.fnDeleteRow([inDb]);
             return false;
         });
 
 
 
+
+        //edit
+//        $(document).on('click', '.edit', function(){
+//            $.ajax({ // описываем наш запрос
+//                type: "GET", // будем передавать данные через POST
+//                dataType: "HTML", // указываем, что нам вернется JSON
+//                url: "/admin/edit", // запрос отправляем на контроллер Ajax метод addarticle
+//                data: "obj="+$(this).data('obj')+"&id="+$(this).data('id'), // передаем данные из формы
+//                success: function(response) { // когда получаем ответ
+//                    //alert(response);
+//                    //console.log(response);
+//                    $('.conteiner-crud').html(response);
+//                    //table.row($(this)).remove().draw(false);
+//                    //$('.w-ter').text(response.test);
+//                }
+//            });
+//
+//
+//            return false;
+//        });
+
+
+
         //cecbox
         $(document).on('click', '.w-chec-table-all-top', function(){
+
+
             $('.w-chec-table').trigger('click');
 
+//            $('.w-chec-table').each(function(i){
+//
+//                if (!$(this).prop('checked')){
+//                    $('.w-chec-table').trigger('click');
+//                }
+//
+//            });
+
+
             state = $(this).prop('checked');
+
             if(state) {
                 $('.w-del-array').prop('disabled', false);
             } else {
@@ -171,7 +212,6 @@
 
 </script>
 
-<a href="#" class="qwe">qwe</a>
 <?//=mb_detect_encoding('בית')?>
 <!--add-->
 <?if ($table_propery['activ_operation']['add'] != true ):?>
