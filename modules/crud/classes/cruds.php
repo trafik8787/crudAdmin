@@ -27,6 +27,8 @@ class Cruds extends Controller_Main {
 
     public $disable_editor = array(); //отключение редактора
     private $disable_search = 'f'; //отключение поиска по таблице
+    private $enable_delete_group; //включить груповое удаление
+
 
     private $set_where = null;
     public $set_field_type = array(); //типы полей
@@ -233,7 +235,8 @@ class Cruds extends Controller_Main {
             'activ_operation' => array('delete' => $this->remove_delete,
                 'edit' => $this->remove_edit,
                 'add' => $this->remove_add,
-                'search' => $this->disable_search), //передача состояния кнопок удаления редактирования добавления
+                'search' => $this->disable_search,
+                'enable_delete_group' => $this->enable_delete_group), //передача состояния кнопок удаления редактирования добавления
             'name_colums_table' => $this->name_colums_table,
             'name_colums_table_show' => $this->name_colums_table_show, //названия полей таблицы
             'obj_serial' => base64_encode(serialize($this->object_serial)) //передача сериализованого обьекта
@@ -319,7 +322,7 @@ class Cruds extends Controller_Main {
                 <form action="/'.Kohana::$config->load('crudconfig.base_url').'/delete" method="post">
                                         <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
                                         <input type="hidden" name="obj" value="'.$obj.'"/>
-                                        <button type="submit" class="delete btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"></span> '.__('LANG_DELETE').'</button>
+                                        <button type="submit"  class="delete del-fal btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"></span> '.__('LANG_DELETE').'</button>
                                     </form>
                                 </div>';
             } else {
@@ -330,8 +333,11 @@ class Cruds extends Controller_Main {
 
             $tmp_array = array_values(array_intersect_key($rows,array_flip($column)));
             //кнопки удалить редактировать и новых екшенов
-            //добавляем в начало масива чекбоксы
-            array_unshift($tmp_array, '<input type="checkbox" class="w-chec-table" name="id_del_array[]" value="'.$rows[$this->key_primary].'">');
+
+            if ($this->enable_delete_group) {
+                //добавляем в начало масива чекбоксы
+                array_unshift($tmp_array, '<input type="checkbox" class="w-chec-table" name="id_del_array[]" value="'.$rows[$this->key_primary].'">');
+            }
 
             $tmp_array[] = $htm_edit.$htm_action.$htm_delete;
             $dataQuery[] = $tmp_array;
@@ -541,6 +547,11 @@ class Cruds extends Controller_Main {
     //отключение поиска по таблице
     public function disable_search () {
         $this->disable_search = null;
+    }
+
+    //включить груповое удаление
+    public function enable_delete_group () {
+        $this->enable_delete_group = true;
     }
 
     public function set_load_1N () {

@@ -22,6 +22,11 @@ return array(
     'LANG_FIRST' => 'Начало',
     'LANG_PREVIONS' => 'Назад',
     'LANG_NEXT' => 'Вперед',
-    'LANG_LAST' => 'Конец'
+    'LANG_LAST' => 'Конец',
+
+    'LANG_MODAL_DELETE_MSG' => 'Вы уверены что хотите удалить запись?',
+    'LANG_MODAL_DELETE_TITLE' => 'Внимание',
+    'LANG_MODAL_BUTON_DELETE' => 'Удалить',
+    'LANG_MODAL_BUTON_CENSEL' => 'Отмена'
 
 );

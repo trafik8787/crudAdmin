@@ -82,29 +82,40 @@
 
         //удаление group
         $('.w-del-array').click(function(){
-            var chek = $('.w-chec-table:checked').serialize();
-            var objecr = $('input[name="obj"]').val();
-            $.ajax({ // описываем наш запрос
-                type: "POST", // будем передавать данные через POST
-                dataType: "JSON", // указываем, что нам вернется JSON
-                url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
-                data: chek+"&obj="+objecr+"&del_arr=1", // передаем данные из формы
-                success: function(response) { // когда получаем ответ
 
-                }
-            });
+            if ($(this).hasClass('delete-query')) {
+
+                $('#myModal-group').modal('hide');
+
+                var chek = $('.w-chec-table:checked').serialize();
+                var objecr = $('input[name="obj"]').val();
+                $.ajax({ // описываем наш запрос
+                    type: "POST", // будем передавать данные через POST
+                    dataType: "JSON", // указываем, что нам вернется JSON
+                    url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
+                    data: chek+"&obj="+objecr+"&del_arr=1", // передаем данные из формы
+                    success: function(response) { // когда получаем ответ
+
+                    }
+                });
 
 
-            var inD = new Array();
+                var inD = new Array();
 
-            $('tr').each(function(i){
-                i = i-2;
-                if ($(this).hasClass('selected')) {
-                    inD.push(i);
-                }
-            });
+                $('tr').each(function(i){
+                    i = i-2;
+                    if ($(this).hasClass('selected')) {
+                        inD.push(i);
+                    }
+                });
 
-            table.fnDeleteRow(inD);
+                table.fnDeleteRow(inD);
+
+            } else {
+
+                $('#myModal-group').modal('show');
+            }
+
             return false;
         });
 
@@ -113,29 +124,42 @@
         //delete
         $(document).on('click', '.delete', function(){
 
-            $(this).parent().parent().parent().parent().addClass('sends');
+            if ($(this).hasClass('delete-query')) {
 
-            var chek = $(this).parent().serialize();
-            $.ajax({ // описываем наш запрос
-                type: "POST", // будем передавать данные через POST
-                dataType: "JSON", // указываем, что нам вернется JSON
-                url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
-                data: chek, // передаем данные из формы
-                success: function(response) { // когда получаем ответ
+                $('#myModal').modal('hide');
 
-                }
-            });
+                var chek = $('.serialise-form').val();
 
-            var inDb;
-            $('tr').each(function(i){
-                i = i-2;
-                if ($(this).hasClass('sends')) {
-                    inDb = i;
-                }
-            });
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "/admin/delete",
+                    data: chek,
+                    success: function(response) {
+
+                    }
+                });
+
+                var inDb;
+                $('tr').each(function(i){
+                    i = i-2;
+                    if ($('.del-fal').hasClass('sends')) {
+                        inDb = i;
+                    }
+                });
+
+                table.fnDeleteRow([inDb]);
 
 
-            table.fnDeleteRow([inDb]);
+            } else {
+
+                chek = $(this).parent().serialize();
+                $('.serialise-form').val(chek);
+                $(this).parent().parent().parent().parent().addClass('sends');
+                $('#myModal').modal('show');
+
+            }
+
             return false;
         });
 
@@ -164,20 +188,23 @@
 
 
 
-        //cecbox
+
+        //cecbox all
         $(document).on('click', '.w-chec-table-all-top', function(){
 
+            if ($(this).prop('checked')) {
 
-            $('.w-chec-table').trigger('click');
+                $('.w-chec-table').each(function(i){
 
-//            $('.w-chec-table').each(function(i){
-//
-//                if (!$(this).prop('checked')){
-//                    $('.w-chec-table').trigger('click');
-//                }
-//
-//            });
+                    if ($(this).prop('checked') != true){
+                        $(this).trigger('click');
+                    }
 
+                });
+
+            } else {
+                $('.w-chec-table').trigger('click');
+            }
 
             state = $(this).prop('checked');
 
@@ -188,7 +215,20 @@
             }
         });
 
+
+
+
+        //чекбокси построчно
         $(document).on('click', '.w-chec-table', function(){
+
+            $(this).each(function(i){
+
+                if ($(this).prop('checked') != true){
+                    $('.w-chec-table-all-top').prop('checked', false);
+                }
+
+            });
+
             state = $(this).prop('checked');
 
             $(this).parents('tr').toggleClass('selected');
@@ -201,12 +241,7 @@
         });
 
 
-//        $('#table-crud').on( 'page.dt',   function (qwe) {
-//            console.log($('select[name="table-crud_length"]').val());
-//        }).dataTable();
-
-
-    } );
+    });
 
 
 
@@ -214,6 +249,57 @@
 
 <?//=mb_detect_encoding('בית')?>
 <!--add-->
+
+<?if ($table_propery['activ_operation']['enable_delete_group']):?>
+
+    <div class="modal fade" id="myModal-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
+                </div>
+                <div class="modal-body">
+                    <?=__('LANG_MODAL_DELETE_MSG')?>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" class="serialise-form" value="">
+                    <button type="button" class="delete-query w-del-array btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?endif?>
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
+            </div>
+            <div class="modal-body">
+                <?=__('LANG_MODAL_DELETE_MSG')?>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" class="serialise-form" value="">
+                <button type="button" class="delete-query delete btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 <?if ($table_propery['activ_operation']['add'] != true ):?>
 
     <div class="w-buton-form">
@@ -235,7 +321,10 @@
     <thead>
 
     <tr>
+        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
             <th><input type="checkbox" class="w-chec-table-all-top"></th>
+        <?endif?>
+
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
             <th>
                 <?=$rows_column['COLUMN_NAME']?>
@@ -250,7 +339,10 @@
 
     <tfoot>
     <tr>
-        <th>#</th>
+        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
+            <th>#</th>
+        <?endif?>
+
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
         <th>
             <?=$rows_column['COLUMN_NAME']?>
@@ -265,115 +357,3 @@
     </tfoot>
 </table>
 
-
-
-
-<?//if ($table_propery['activ_operation']['add'] != true ):?>
-<!--    <tr>-->
-<!--        <form action="/--><?//=Kohana::$config->load('crudconfig.base_url')?><!--/add" method="get">-->
-<!--            <input type="hidden" name="obj" value="--><?//=$table_propery['obj_serial']?><!--"/>-->
-<!--            <button type="submit">--><?//=__('LAND_ADD')?><!--</button>-->
-<!--        </form>-->
-<!---->
-<!--    </tr>-->
-<?//endif?>
-<!---->
-<!--<table id="table-crud" class="display" cellspacing="0" width="100%">-->
-<!--    <thead>-->
-<!--        <tr>-->
-<!--            --><?//foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
-<!--                <th>-->
-<!--                    --><?//=$rows_column['COLUMN_NAME']?>
-<!--                </th>-->
-<!--            --><?//endforeach?>
-<!---->
-<!--            --><?////если все кнопки отключены отключаем поле операций?>
-<!--            --><?//if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
-<!--                <th>--><?//=__('LANG_ACTION')?><!--</th>-->
-<!--            --><?//endif?>
-<!--        </tr>-->
-<!--    </thead>-->
-<!---->
-<!--    <tbody>-->
-<!--        --><?//foreach ($table_propery['query'] as $rows_query):?>
-<!--            <tr>-->
-<!---->
-<!--                --><?//foreach ($table_propery['name_colums_table'] as $rows_column):?>
-<!--                    <td>-->
-<!--                        --><?//=$rows_query[$rows_column['COLUMN_NAME']]?>
-<!--                    </td>-->
-<!---->
-<!--                --><?//endforeach?>
-<!---->
-<!--                --><?////если все кнопки отключены отключаем поле операций?>
-<!--                --><?//if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
-<!---->
-<!--                    <td>-->
-<!---->
-<!--                        <div class="btn-group">-->
-<!--                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
-<!--                                --><?//=__('LANG_ACTION')?><!-- <span class="caret"></span>-->
-<!--                            </button>-->
-<!--                            <ul class="dropdown-menu" role="menu">-->
-<!---->
-<!--                                <li>-->
-<!--                                    --><?// if($table_propery['activ_operation']['edit'] != true):?>
-<!--                                        <form id="form-edit" action="/--><?//=Kohana::$config->load('crudconfig.base_url')?><!--/edit" method="get">-->
-<!--                                            <input type="hidden" name="obj" value="--><?//=$table_propery['obj_serial']?><!--"/>-->
-<!--                                            <input type="hidden" name="id" value="--><?//=$rows_query[$table_propery['key_primary']]?><!--"/>-->
-<!--                                            <button type="submit" class="edit"><span class="glyphicon glyphicon-edit"></span> --><?//=__('LANG_EDIT')?><!--</button>-->
-<!---->
-<!--                                        </form>-->
-<!--                                    --><?//endif?>
-<!--                                </li>-->
-<!---->
-<!---->
-<!---->
-<!--                                --><?//if($table_propery['add_action_url_icon'] != ''):?>
-<!---->
-<!--                                    --><?//foreach ($table_propery['add_action_url_icon'] as $rows_action):?>
-<!--                                        <li>-->
-<!--                                            <form action="/--><?//=Kohana::$config->load('crudconfig.base_url')?><!--/new/--><?//=$rows_action['url']?><!--" method="post">-->
-<!--                                                <input type="hidden" name="obj" value="--><?//=$table_propery['obj_serial']?><!--"/>-->
-<!--                                                <input type="hidden" name="func" value="--><?//=$rows_action['name_function']?><!--">-->
-<!--                                                <input type="hidden" name="id" value="--><?//=$rows_query[$table_propery['key_primary']]?><!--"/>-->
-<!--                                                <button type="submit" class="new-action"><span class="--><?//=$rows_action['icon']?><!--"></span> --><?//=$rows_action['name_action']?><!--</button>-->
-<!---->
-<!--                                            </form>-->
-<!--                                        </li>-->
-<!--                                    --><?//endforeach?>
-<!--                                --><?//endif?>
-<!---->
-<!---->
-<!---->
-<!---->
-<!--                                <li class="divider"></li>-->
-<!---->
-<!--                                <li>-->
-<!---->
-<!--                                    --><?// if($table_propery['activ_operation']['delete'] != true):?>
-<!--                                        <form id="form-delete" action="/--><?//=Kohana::$config->load('crudconfig.base_url')?><!--/delete" method="post">-->
-<!---->
-<!--                                            <input type="hidden" name="id" value="--><?//=$rows_query[$table_propery['key_primary']]?><!--"/>-->
-<!--                                            <input type="hidden" name="obj" value="--><?//=$table_propery['obj_serial']?><!--"/>-->
-<!--                                            <button type="submit" class="delete"><span class="glyphicon glyphicon-remove-circle"></span> --><?//=__('LANG_DELETE')?><!--</button>-->
-<!---->
-<!--                                        </form>-->
-<!--                                    --><?//endif?>
-<!---->
-<!---->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!---->
-<!--                    </td>-->
-<!---->
-<!---->
-<!--                --><?//endif?>
-<!---->
-<!--            </tr>-->
-<!---->
-<!--        --><?//endforeach?>
-<!---->
-<!--    </tbody>-->
-<!--</table>-->

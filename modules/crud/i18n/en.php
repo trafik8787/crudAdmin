@@ -22,6 +22,11 @@ return array(
     'LANG_FIRST' => 'First',
     'LANG_PREVIONS' => 'Previouns',
     'LANG_NEXT' => 'Next',
-    'LANG_LAST' => 'Last'
+    'LANG_LAST' => 'Last',
+
+    'LANG_MODAL_DELETE_MSG' => 'Are you sure you want to delete the record?',
+    'LANG_MODAL_DELETE_TITLE' => 'Caution!',
+    'LANG_MODAL_BUTON_DELETE' => 'Delete',
+    'LANG_MODAL_BUTON_CENSEL' => 'Censel'
 
 );
