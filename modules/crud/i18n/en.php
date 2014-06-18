@@ -27,6 +27,8 @@ return array(
     'LANG_MODAL_DELETE_MSG' => 'Are you sure you want to delete the record?',
     'LANG_MODAL_DELETE_TITLE' => 'Caution!',
     'LANG_MODAL_BUTON_DELETE' => 'Delete',
-    'LANG_MODAL_BUTON_CENSEL' => 'Censel'
+    'LANG_MODAL_BUTON_CENSEL' => 'Censel',
+    'LANG_BUTTON_APLY' => 'Apply',
+    'LANG_BUTTON_LOAD_APLY' => 'Save...'
 
 );

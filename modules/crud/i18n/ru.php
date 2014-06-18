@@ -27,6 +27,8 @@ return array(
     'LANG_MODAL_DELETE_MSG' => 'Вы уверены что хотите удалить запись?',
     'LANG_MODAL_DELETE_TITLE' => 'Внимание',
     'LANG_MODAL_BUTON_DELETE' => 'Удалить',
-    'LANG_MODAL_BUTON_CENSEL' => 'Отмена'
+    'LANG_MODAL_BUTON_CENSEL' => 'Отмена',
+    'LANG_BUTTON_APLY' => 'Применить',
+    'LANG_BUTTON_LOAD_APLY' => 'Сохраняю...'
 
 );

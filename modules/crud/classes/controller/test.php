@@ -28,7 +28,7 @@ class Controller_Test extends Controller {
         $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
-        //$crud->remove_add ();
+       // $crud->remove_add ();
         //$crud->remove_edit();
         //$crud->set_where('id','=', 3,1);
         $crud->callback_befor_edit('call_bef_edit');
@@ -40,7 +40,7 @@ class Controller_Test extends Controller {
         //$crud->set_field_type('title', 'text');
         //$crud->disable_search();
         $crud->disable_editor('title');
-        //$crud->enable_delete_group();
+        $crud->enable_delete_group();
         //$crud->disable_editor('author');
         //$crud->disable_editor('content_short');
         //die(print_r($crud->set_field_type));

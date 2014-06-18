@@ -113,11 +113,32 @@ class Model_All extends Model
 
     }
 
+    //количество записей
     public function count_table ($table) {
         $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
 
         return $count_table->execute()->as_array();
     }
+
+
+    //типы полей таблицы
+    private function information_data_type ($table) {
+
+    $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
+                                                  FROM INFORMATION_SCHEMA.COLUMNS
+                                                  WHERE table_name = :tab
+                                                    AND TABLE_SCHEMA = :bas');
+    $data_type->param(':tab', $table);
+    $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+    foreach ($data_type->execute()->as_array() as $row) {
+        $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+    }
+
+
+    return $result;
+}
+
 
     //пагинация
     public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
@@ -132,6 +153,12 @@ class Model_All extends Model
             $i=0;
             $Sql ='';
 
+            //получаем поля и тыпы к ним
+            $name_type_column = $this->information_data_type($table);
+
+
+                //die(print_r($name_type_column));
+
             foreach ($column_like as $key => $column) {
                 $i++;
                 if ($i >= 1) {
@@ -144,7 +171,20 @@ class Model_All extends Model
                    $or = '';
                 }
 
-                $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
+                if (mb_detect_encoding($like) != 'ASCII') {
+
+                    if ($name_type_column[$column] != 'date') {
+
+                        $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
+                    }
+
+                } else {
+
+                    $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
+                }
+
+
+
             }
             $likeSql = ' WHERE '.$Sql.' ';
 

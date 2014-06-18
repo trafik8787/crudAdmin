@@ -1,13 +1,31 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/modules/crud/media/js/bootstrap.min.js"></script>
-<script src="/modules/crud/media/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="/modules/crud/media/js/tinymce/tinymce.min.js"></script>
-<script src="/modules/crud/media/js/app.js"></script>
-<link rel="stylesheet" href="/modules/crud/media/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="/modules/crud/media/css/bootstrap.min.css">
 
+
+<script>
+    $(document).on('click', '#loading-example-btn', function(){
+
+        tinyMCE.triggerSave();
+
+        var btn = $(this);
+        btn.button('loading');
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "add",
+            data: $('#w-form-add').serialize()
+//            success: function(response) {
+//
+//            }
+        }).always(function () {
+                btn.button('reset');
+        });
+    });
+
+
+
+</script>
 
 <?//die(print_r($add_property['type_field']))?>
 
@@ -15,7 +33,7 @@
     <div class="row">
         <div class="col-md-8">
 
-            <form class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
+            <form id="w-form-add" class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
 
                 <?foreach ($add_property['field'] as  $name_fild):?>
 
@@ -99,7 +117,9 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$add_property['obj']?>"/>
-                        <button type="submit" name="add" class="btn btn-default btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <input type="hidden"  name="add"/>
+                        <button type="submit" class="btn btn-default btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
                 </div>
 

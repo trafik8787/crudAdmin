@@ -31,3 +31,9 @@
     height: 30px;
 }
 
+.w-buton-befor-table {
+    position: relative;
+    display: inline-block;
+}
+
+

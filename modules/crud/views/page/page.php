@@ -15,7 +15,8 @@
             "processing": true,
             "serverSide": true,
             "sLengthSelect": "form-control",
-            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>>rt<"bottom"ip><"clear">',//<"clear">
+            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>T>rt<"bottom"ip><"clear">',//<"clear">
+            //"sDom": 'T<"clear">lfrtip',
             /*
              l - Показать  записей
              f - поиск
@@ -23,10 +24,35 @@
              ip - итформация и  пагинация
             */
 
+            ///http://192.168.0.10:7799/admin/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf
+            "tableTools": {
+                "sSwfPath": "/<?=Kohana::$config->load('crudconfig.base_url')?>/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+
+                "aButtons": [
+
+                    {
+                        "sExtends": "print",
+                        "sButtonText": "Печать"
+
+                    },
+
+
+                    "csv",
+                    "xls",
+                    "pdf",
+                    {
+                        "sExtends":    "copy",
+                        "sButtonText": "Копировать"
+
+                    }
+                ]
+            },
+
+
             "bAutoWidth": false,
 
             "oLanguage": {
-                "sProcessing": "<img src='<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
+                "sProcessing": "<img src='/<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
                 "sZeroRecords": "<?=__('LANG_NO_RECORD')?>",
                 "sInfo": "<?=__('LANG_INFO')?>",
                 "sLengthMenu": "<?=__('LANG_MENY')?>",
@@ -48,17 +74,24 @@
 
 
             "aoColumnDefs": [
-                {
-                    "aTargets": [-1],
-                    "bSortable": false,
-                    "bSearchable": false
-                },
-                {
-                    "aTargets": [0],
-                    "bSortable": false,
-                    "bSearchable": false
 
-                }
+                <?if ($table_propery['activ_operation']['enable_delete_group']):?>
+                    {
+                        "aTargets": [0],
+                        "bSortable": false,
+                        "bSearchable": false
+
+                    }
+                <?endif?>
+
+                <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
+                    ,{
+                        "aTargets": [-1],
+                        "bSortable": false,
+                        "bSearchable": false,
+                        "sWidth": "250px"
+                    }
+                <?endif?>
 
             ],
 
@@ -75,6 +108,8 @@
         });
 
 
+
+
         $('#table-crud').DataTable({
             "pagingType": "full_numbers"
 
@@ -89,12 +124,12 @@
 
                 var chek = $('.w-chec-table:checked').serialize();
                 var objecr = $('input[name="obj"]').val();
-                $.ajax({ // описываем наш запрос
-                    type: "POST", // будем передавать данные через POST
-                    dataType: "JSON", // указываем, что нам вернется JSON
-                    url: "/admin/delete", // запрос отправляем на контроллер Ajax метод addarticle
-                    data: chek+"&obj="+objecr+"&del_arr=1", // передаем данные из формы
-                    success: function(response) { // когда получаем ответ
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "/<?=Kohana::$config->load('crudconfig.base_url')?>/delete",
+                    data: chek+"&obj="+objecr+"&del_arr=1",
+                    success: function(response) {
 
                     }
                 });
@@ -133,7 +168,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "/admin/delete",
+                    url: "/<?=Kohana::$config->load('crudconfig.base_url')?>/delete",
                     data: chek,
                     success: function(response) {
 
@@ -148,7 +183,10 @@
                     }
                 });
 
-                table.fnDeleteRow([inDb]);
+                table.fnDeleteRow([inDb],function (dtSettings, row) {
+
+
+                }, true);
 
 
             } else {
@@ -171,7 +209,7 @@
 //            $.ajax({ // описываем наш запрос
 //                type: "GET", // будем передавать данные через POST
 //                dataType: "HTML", // указываем, что нам вернется JSON
-//                url: "/admin/edit", // запрос отправляем на контроллер Ajax метод addarticle
+//                url: "/<?//=Kohana::$config->load('crudconfig.base_url')?>/edit", // запрос отправляем на контроллер Ajax метод addarticle
 //                data: "obj="+$(this).data('obj')+"&id="+$(this).data('id'), // передаем данные из формы
 //                success: function(response) { // когда получаем ответ
 //                    //alert(response);
@@ -247,7 +285,6 @@
 
 </script>
 
-<?//=mb_detect_encoding('בית')?>
 <!--add-->
 
 <?if ($table_propery['activ_operation']['enable_delete_group']):?>
@@ -302,7 +339,7 @@
 
 <?if ($table_propery['activ_operation']['add'] != true ):?>
 
-    <div class="w-buton-form">
+    <div class="w-buton-befor-table">
         <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/add" method="get">
             <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
             <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> <?=__('LAND_ADD')?></button>
@@ -311,13 +348,19 @@
 
 <?endif?>
 
-<div class="w-buton-form">
-        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-        <input type="hidden" name="del_arr" value="1">
-        <button type="submit" disabled class="delete btn btn-danger btn-sm w-del-array"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
-</div>
 
-<table id="example" class="display" cellspacing="0" width="100%">
+<?if ($table_propery['activ_operation']['enable_delete_group']):?>
+
+    <div class="w-buton-befor-table">
+            <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+            <input type="hidden" name="del_arr" value="1">
+            <button type="submit" disabled class="delete btn btn-danger btn-sm w-del-array"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
+    </div>
+
+<?endif?>
+
+
+<table id="example" class="display">
     <thead>
 
     <tr>

@@ -123,7 +123,9 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/DataTables-1.10.0/media/css/jquery.dataTables.css')) => 'screen',
             $media->uri(array('file' => 'css/bootstrap-theme.min.css')) => 'screen',
             $media->uri(array('file' => 'css/bootstrap.min.css')) => 'screen',
-            $media->uri(array('file' => 'css/style.css')) => 'screen'
+            $media->uri(array('file' => 'css/style.css')) => 'screen',
+            $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/css/dataTables.tableTools.min.css'))=> 'screen',
+            //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/css/dataTables.fixedHeader.min.css'))=> 'screen'
         );
 
         $this->template->styles = $styles;
@@ -135,7 +137,11 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/tinymce/jquery.tinymce.min.js')),
             $media->uri(array('file' => 'js/tinymce/tinymce.min.js')),
             $media->uri(array('file' => 'js/bootstrap.min.js')),
-            $media->uri(array('file' => 'js/app.js'))
+            $media->uri(array('file' => 'js/app.js')),
+            $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/js/dataTables.tableTools.min.js'))
+            //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')),
+            //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf'
+
         );
 
         $this->template->scripts = $scripts;
@@ -329,6 +335,8 @@ class Cruds extends Controller_Main {
                 $htm_delete = '';
             }
 
+            //удаляем все теги перед выводом в таблицу
+            $rows = array_map(array($this, 'no_tag'), $rows);
 
 
             $tmp_array = array_values(array_intersect_key($rows,array_flip($column)));
@@ -372,7 +380,12 @@ class Cruds extends Controller_Main {
 
 
 
+    private function no_tag ($n) {
+        //удаляем теги
+        $string = strip_tags($n);
+        return Text::limit_chars($string, 100);
 
+    }
 
 
 

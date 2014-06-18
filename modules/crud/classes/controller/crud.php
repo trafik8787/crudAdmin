@@ -232,6 +232,7 @@ class Controller_Crud extends Controller_Main {
 
     public function action_add () {
 
+
         $re = unserialize(base64_decode($_GET['obj']));
         //die(print_r($re));
         $retw = call_user_func(array($re['callback_functions_array']['class'],
@@ -247,7 +248,7 @@ class Controller_Crud extends Controller_Main {
 
 
         if (isset($_GET['add'])) {
-
+            //die(print_r($_GET));
             foreach ($name_count as $name_count_rows) {
 
                 if (isset($_GET[$name_count_rows['COLUMN_NAME']])) {
