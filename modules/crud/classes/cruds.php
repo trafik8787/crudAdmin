@@ -138,9 +138,12 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/tinymce/tinymce.min.js')),
             $media->uri(array('file' => 'js/bootstrap.min.js')),
             $media->uri(array('file' => 'js/app.js')),
-            $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/js/dataTables.tableTools.min.js'))
+            $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/js/dataTables.tableTools.min.js')),
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')),
-            //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf'
+            //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf',
+            $media->uri(array('file' => 'css/loader.GIF')) => 'screen'
+
+
 
         );
 
@@ -260,13 +263,25 @@ class Cruds extends Controller_Main {
 
         $count = Model::factory('All')->count_table($this->table);
          //die($count);
+
+        //если колонка с чекбоксами то добавляем в первый елемент масива первый столбик дублируем 0 и 1 одинаковы
+        if ($this->enable_delete_group) {
+            $column[0] = $this->name_colums_ajax[0]['COLUMN_NAME'];
+        }
+
         //колонки таблицы для отображения
-        foreach ($this->name_colums_ajax as $rows_column) {
+        foreach ($this->name_colums_ajax as $key => $rows_column) {
+            //если добавляется колонка групового удаления делаем перещет номером колонок
+
+
             $column[] = $rows_column['COLUMN_NAME'];
         }
 
+        //die(print_r($column));
+
         //поле для сортировки
         $order_column = $column[$get['order'][0]['column']];
+
         //принимаем тип сортировки asc или DESC
         $order_by = $get['order'][0]['dir'];
         //строка поиска
@@ -292,13 +307,13 @@ class Cruds extends Controller_Main {
             //редактировать
             if ($this->remove_edit !== true) {
 
-                $htm_edit = '<div class="w-buton-form">
-                                <form action="/'.Kohana::$config->load('crudconfig.base_url').'/edit" method="get">
-                                    <input type="hidden" name="obj" value="'.$obj.'"/>
-                                    <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
-                                    <button type="submit" data-obj="'.$obj.'" data-id="'.$rows[$this->key_primary].'" class="edit btn btn-success btn-sm"><span class="glyphicon glyphicon-edit"></span> '.__('LANG_EDIT').'</button>
-                                </form>
-                            </div>';
+                $data = array(
+                    'obj' => $obj,
+                    'id' => $rows[$this->key_primary],
+                );
+                //добавляем форму
+                $htm_edit = View::factory('action_page/actionEdit', $data);
+
             } else {
                 $htm_edit = '';
             }
@@ -308,14 +323,16 @@ class Cruds extends Controller_Main {
             if ($this->add_action != '') {
                 foreach ($this->add_action as $rows_action) {
 
-                    $htm_action .= '<div class="w-buton-form">
-                                        <form action="/'.Kohana::$config->load('crudconfig.base_url').'/new/'.$rows_action['url'].'" method="post">
-                                            <input type="hidden" name="obj" value="'.$obj.'"/>
-                                            <input type="hidden" name="func" value="'.$rows_action['name_function'].'">
-                                            <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
-                                            <button type="submit" class="new-action btn btn-primary btn-sm"><span class="'.$rows_action['icon'].'"></span> '.$rows_action['name_action'].'</button>
-                                        </form>
-                                    </div>';
+                    $data = array(
+                        'url' => $rows_action['url'],
+                        'obj' => $obj,
+                        'id' => $rows[$this->key_primary],
+                        'name_function' => $rows_action['name_function'],
+                        'icon' => $rows_action['icon'],
+                        'name_action' => $rows_action['name_action']
+                    );
+
+                    $htm_action .= View::factory('action_page/actionNewAction', $data);
 
                 }
             } else {
@@ -324,13 +341,14 @@ class Cruds extends Controller_Main {
 
             //удалить
             if ($this->remove_delete !== true) {
-                $htm_delete = '<div class="w-buton-form">
-                <form action="/'.Kohana::$config->load('crudconfig.base_url').'/delete" method="post">
-                                        <input type="hidden" name="id" value="'.$rows[$this->key_primary].'"/>
-                                        <input type="hidden" name="obj" value="'.$obj.'"/>
-                                        <button type="submit"  class="delete del-fal btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"></span> '.__('LANG_DELETE').'</button>
-                                    </form>
-                                </div>';
+
+                $data = array(
+                    'obj' => $obj,
+                    'id' => $rows[$this->key_primary],
+                );
+                //добавляем форму
+                $htm_delete = View::factory('action_page/actionDel', $data);
+
             } else {
                 $htm_delete = '';
             }
@@ -381,10 +399,7 @@ class Cruds extends Controller_Main {
 
 
     private function no_tag ($n) {
-        //удаляем теги
-        $string = strip_tags($n);
-        return Text::limit_chars($string, 100);
-
+        return strip_tags($n);
     }
 
 

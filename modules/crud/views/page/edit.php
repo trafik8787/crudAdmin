@@ -1,12 +1,35 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
+<script>
 
+    $(document).on('click', '#loading-example-btn', function(){
+
+        tinyMCE.triggerSave();
+
+        var btn = $(this);
+        btn.button('loading');
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: "edit",
+            data: $('#w-form-edit').serialize()
+//            success: function(response) {
+//
+//            }
+        }).always(function () {
+            btn.button('reset');
+        });
+    });
+
+
+</script>
 
 <div class="container">
     <div class="row">
         <div class="col-md-8">
 
-            <form class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
+            <form id="w-form-edit" class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
 
                 <?foreach ($edit_property['field'] as $name_fied => $value_fild):?>
                     <?if ($name_fied != $edit_property['key_primary']):?>
@@ -94,7 +117,8 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$edit_property['obj']?>"/>
-                        <button type="submit" name="edit" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <input type="hidden" name="edit"/>
+                        <button type="submit" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                         <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
                 </div>

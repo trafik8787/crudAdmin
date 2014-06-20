@@ -125,18 +125,18 @@ Kohana::modules(array(
  * defaults for the URI.
  */
 
-Route::set('about', 'admin')
-    ->defaults(array(
-        'controller' => 'admin',
-        'action'     => 'index',
-    ));
-
-
-Route::set('about', 'about')
-    ->defaults(array(
-    'controller' => 'page',
-    'action'     => 'about',
-));
+//Route::set('about', 'admin')
+//    ->defaults(array(
+//        'controller' => 'admin',
+//        'action'     => 'index',
+//    ));
+//
+//
+//Route::set('about', 'about')
+//    ->defaults(array(
+//    'controller' => 'page',
+//    'action'     => 'about',
+//));
 
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(

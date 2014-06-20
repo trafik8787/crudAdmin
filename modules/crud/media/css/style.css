@@ -24,11 +24,18 @@
     background-repeat: repeat-x;
 }
 
+.w-buton-form:first-child {
+    margin-left: 0;
+
+}
+
 .w-buton-form {
     position: relative;
     display: inline-block;
     margin-left: 2%;
-    height: 30px;
+    vertical-align: baseline;
+
+
 }
 
 .w-buton-befor-table {

@@ -144,6 +144,7 @@ class Model_All extends Model
     public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
 
 
+
        // die('sdfsdf');
         if ($ofset == '' or $ofset == null) {
             $ofset = 0;
@@ -152,6 +153,11 @@ class Model_All extends Model
         if ($like != '' and $like !== null) {
             $i=0;
             $Sql ='';
+
+           // if ($like == "'") {
+                $like = str_replace ("'", "\'", $like);
+                //$like = "\'";
+           // }
 
             //получаем поля и тыпы к ним
             $name_type_column = $this->information_data_type($table);
@@ -192,6 +198,11 @@ class Model_All extends Model
             $likeSql = '';
         }
 
+        $query_count =  DB::query(Database::SELECT,
+            'SELECT * FROM ' .$table.' '.$likeSql.' ')
+            ->execute()
+            ->as_array();
+
         $query = DB::query(Database::SELECT,
             'SELECT * FROM ' .$table.' '.$likeSql.' '.
             'ORDER BY '. $order_column.' '.$order_by.'
@@ -199,9 +210,8 @@ class Model_All extends Model
             ->execute()
             ->as_array();
 
-
-
-        return array('query' => $query, 'count' => count($query));
+        //count($query)
+        return array('query' => $query, 'count' => count($query_count));
     }
 
 }

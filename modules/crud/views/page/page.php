@@ -15,7 +15,7 @@
             "processing": true,
             "serverSide": true,
             "sLengthSelect": "form-control",
-            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>T>rt<"bottom"ip><"clear">',//<"clear">
+            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>>rt<"bottom"ip><"clear">',//<"clear">
             //"sDom": 'T<"clear">lfrtip',
             /*
              l - Показать  записей
@@ -25,29 +25,9 @@
             */
 
             ///http://192.168.0.10:7799/admin/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf
-            "tableTools": {
-                "sSwfPath": "/<?=Kohana::$config->load('crudconfig.base_url')?>/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-
-                "aButtons": [
-
-                    {
-                        "sExtends": "print",
-                        "sButtonText": "Печать"
-
-                    },
-
-
-                    "csv",
-                    "xls",
-                    "pdf",
-                    {
-                        "sExtends":    "copy",
-                        "sButtonText": "Копировать"
-
-                    }
-                ]
-            },
-
+           // "tableTools": {
+          //      "sSwfPath": "/<?//=Kohana::$config->load('crudconfig.base_url')?>/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+           // },
 
             "bAutoWidth": false,
 
@@ -75,21 +55,27 @@
 
             "aoColumnDefs": [
 
+
                 <?if ($table_propery['activ_operation']['enable_delete_group']):?>
                     {
-                        "aTargets": [0],
+
                         "bSortable": false,
-                        "bSearchable": false
+                        "bSearchable": false,
+                        "aTargets": [0]
 
                     }
                 <?endif?>
 
+                <?if (($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true) AND ($table_propery['activ_operation']['enable_delete_group'])):?>
+                    ,
+                <?endif?>
+
                 <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
-                    ,{
+                    {
                         "aTargets": [-1],
                         "bSortable": false,
                         "bSearchable": false,
-                        "sWidth": "250px"
+                        "sWidth": "25%"
                     }
                 <?endif?>
 
@@ -106,8 +92,6 @@
             }
 
         });
-
-
 
 
         $('#table-crud').DataTable({
@@ -209,7 +193,7 @@
 //            $.ajax({ // описываем наш запрос
 //                type: "GET", // будем передавать данные через POST
 //                dataType: "HTML", // указываем, что нам вернется JSON
-//                url: "/<?//=Kohana::$config->load('crudconfig.base_url')?>/edit", // запрос отправляем на контроллер Ajax метод addarticle
+//                url: "/<?=Kohana::$config->load('crudconfig.base_url')?>/edit", // запрос отправляем на контроллер Ajax метод addarticle
 //                data: "obj="+$(this).data('obj')+"&id="+$(this).data('id'), // передаем данные из формы
 //                success: function(response) { // когда получаем ответ
 //                    //alert(response);
