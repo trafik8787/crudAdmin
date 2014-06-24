@@ -107,11 +107,17 @@ class Controller_Crud extends Controller_Main {
 
             $name_count = Model::factory('All')->name_count($retw->table);
             //перебори формирования массива для передачи в модель для обновления записей
-            //ищем в масиве $_POST поля которые вернула модель name_count
+            //ищем в масиве $_GET поля которые вернула модель name_count
             foreach ($name_count as $name_count_rows) {
 
                 if (isset($_GET[$name_count_rows['COLUMN_NAME']])) {
-                    $update[$name_count_rows['COLUMN_NAME']] = $_GET[$name_count_rows['COLUMN_NAME']];
+                    //если это масив то сериализуем
+                    if (is_array($_GET[$name_count_rows['COLUMN_NAME']])) {
+                        $update[$name_count_rows['COLUMN_NAME']] = serialize($_GET[$name_count_rows['COLUMN_NAME']]);
+                    } else {
+                        $update[$name_count_rows['COLUMN_NAME']] = $_GET[$name_count_rows['COLUMN_NAME']];
+                    }
+
                 }
 
             }

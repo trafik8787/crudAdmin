@@ -20,6 +20,7 @@
         }).always(function () {
             btn.button('reset');
         });
+
     });
 
 
@@ -56,8 +57,11 @@
 
 
                                         if (!empty($edit_property['new_type_field'][$name_fied]['field_value'])) {
-                                               $value_fild =  $edit_property['new_type_field'][$name_fied]['field_value'];
+                                               $origin_value_fild = $value_fild; //первоначальное значение поля
+
+                                               $value_fild =  $edit_property['new_type_field'][$name_fied]['field_value']; //переопределенное значение
                                         }
+
 
                                     }
                                 ?>
@@ -68,39 +72,85 @@
 
                                     <?if ($edit_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
 
-                                        <<?=$edit_property['type_field'][$name_fied]['tag']?>
-                                        class="form-control <?if (empty($edit_property['disable_editor'][$name_fied])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
-                                        name="<?=$name_fied?>"
-                                        id="<?=$name_fied?>">
-                                            <?=$value_fild?>
-                                        </<?=$edit_property['type_field'][$name_fied]['tag']?>>
+
+                                        <?
+                                            if (empty($edit_property['disable_editor'][$name_fied])) {
+                                                $editor_class = 'add-editor';
+                                            } else {
+                                                $editor_class = '';
+                                            }
+
+                                            if (!empty($edit_property['new_type_field'][$name_fied]['attr'])) {
+
+                                                $attr = $edit_property['new_type_field'][$name_fied]['attr'];
+                                            } else {
+                                                $attr = '';
+                                            }
+
+                                            $data = array(
+                                                'value_fild' => $value_fild,
+                                                'name_fied' => $name_fied,
+                                                'disable_editor_class' => $editor_class,
+                                                'attr' => $attr
+                                            );
+
+                                            echo View::factory('controls/textarea', $data);
+
+
+                                        ?>
 
                                     <?endif?>
 
                                 <?else:?>
 
                                     <?php
-                                        if ($edit_property['type_field'][$name_fied] != 'checkbox') {
-                                            $clas = 'form-control';
-                                            $checked = '';
+
+                                        if (!empty($edit_property['new_type_field'][$name_fied]['attr'])) {
+
+                                            $attr = $edit_property['new_type_field'][$name_fied]['attr'];
                                         } else {
-                                            $clas = '';
-                                            if ($value_fild == 1) {
-                                                $checked = 'checked';
-                                            }
+                                            $attr = '';
                                         }
+
+                                        //если флажок или радио
+                                        if ($edit_property['type_field'][$name_fied] == 'checkbox' or $edit_property['type_field'][$name_fied] == 'radio') {
+
+                                            $data = array(
+                                                'type_field' => $edit_property['type_field'][$name_fied], //тип поля
+                                                'origin_value_fild' => $origin_value_fild, //значение получено из таблицы
+                                                'value_fild' => $value_fild, //возможно изминенное значение
+                                                'name_fied' => $name_fied, //имя поля name
+                                                'attr' => $attr
+                                            );
+
+                                            echo View::factory('controls/checkbox', $data);
+                                        //если селект
+                                        } elseif ($edit_property['type_field'][$name_fied] == 'select') {
+
+                                            $data = array(
+                                                'origin_value_fild' => $origin_value_fild,
+                                                'value_fild' => $value_fild,
+                                                'name_fied' => $name_fied,
+                                                'attr' => $attr
+                                            );
+
+                                            echo View::factory('controls/select', $data);
+                                        //остальние текстовые дата номер и т.д
+                                        } else {
+
+                                            $data = array(
+                                                'type_field' => $edit_property['type_field'][$name_fied],
+                                                'value_fild' => $value_fild,
+                                                'name_fied' => $name_fied,
+                                                'attr' => $attr
+                                            );
+
+                                            echo View::factory('controls/input_text', $data);
+                                        }
+
+
                                     ?>
 
-
-
-                                    <input
-                                           class="<?=$clas?>"
-                                           <?=$checked?>
-                                           type="<?=$edit_property['type_field'][$name_fied]?>"
-                                           name="<?=$name_fied?>"
-                                           value="<?=$value_fild?>"
-                                           id="<?=$name_fied?>"
-                                    />
 
                                 <?endif?>
 

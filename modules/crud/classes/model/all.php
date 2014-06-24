@@ -144,7 +144,6 @@ class Model_All extends Model
     public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
 
 
-
        // die('sdfsdf');
         if ($ofset == '' or $ofset == null) {
             $ofset = 0;

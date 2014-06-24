@@ -35,12 +35,14 @@ class Controller_Test extends Controller {
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-        //$crud->set_field_type('content_short', 'text');
-        //$crud->set_field_type('author', 'text');
-        //$crud->set_field_type('title', 'text');
+        $crud->set_field_type('content_short', 'select', array('y' => 'Да', 'n' => 'Нет'));
+        $crud->set_field_type('status', 'radio', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'), array('data-ir' => 'qweqwe', 'class' => 'sdfsdf'));
+        //$crud->set_field_type('author', 'text', 'y');
+        //$crud->set_field_type('status', 'checkbox');
+
         //$crud->disable_search();
         $crud->disable_editor('title');
-
+        $crud->enable_export();
         $crud->enable_delete_group();
         //$crud->disable_editor('author');
         //$crud->disable_editor('content_short');

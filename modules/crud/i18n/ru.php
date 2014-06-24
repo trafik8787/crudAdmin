@@ -29,6 +29,7 @@ return array(
     'LANG_MODAL_BUTON_DELETE' => 'Удалить',
     'LANG_MODAL_BUTON_CENSEL' => 'Отмена',
     'LANG_BUTTON_APLY' => 'Применить',
-    'LANG_BUTTON_LOAD_APLY' => 'Сохраняю...'
+    'LANG_BUTTON_LOAD_APLY' => 'Сохраняю...',
+    'LANG_BUTTON_COPY' => 'Копировать'
 
 );

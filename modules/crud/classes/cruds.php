@@ -28,7 +28,7 @@ class Cruds extends Controller_Main {
     public $disable_editor = array(); //отключение редактора
     private $disable_search = 'f'; //отключение поиска по таблице
     private $enable_delete_group; //включить груповое удаление
-
+    private $enable_export; //включить експорт
 
     private $set_where = null;
     public $set_field_type = array(); //типы полей
@@ -245,7 +245,8 @@ class Cruds extends Controller_Main {
                 'edit' => $this->remove_edit,
                 'add' => $this->remove_add,
                 'search' => $this->disable_search,
-                'enable_delete_group' => $this->enable_delete_group), //передача состояния кнопок удаления редактирования добавления
+                'enable_delete_group' => $this->enable_delete_group,
+                'enable_export' => $this->enable_export), //передача состояния кнопок удаления редактирования добавления
             'name_colums_table' => $this->name_colums_table,
             'name_colums_table_show' => $this->name_colums_table_show, //названия полей таблицы
             'obj_serial' => base64_encode(serialize($this->object_serial)) //передача сериализованого обьекта
@@ -399,7 +400,10 @@ class Cruds extends Controller_Main {
 
 
     private function no_tag ($n) {
-        return strip_tags($n);
+
+        $str = strip_tags($n);
+        return Text::limit_chars($str, 100);
+
     }
 
 
@@ -472,7 +476,8 @@ class Cruds extends Controller_Main {
     //типы полей по умолчанию
     public function shows_type_input_default ($information_shem) {
 
-        $retuyr = array('varchar' => array('tag' => 'textarea'),
+        $retuyr = array(
+            'varchar' => array('tag' => 'textarea'),
             'text' => 'text',
             'date' => 'date',
             'int' => 'number',
@@ -558,12 +563,23 @@ class Cruds extends Controller_Main {
     }
 
     //типы полей
-    public function set_field_type ($field_name, $type_field, $field_value = null) {
+    public function set_field_type ($field_name, $type_field, $field_value = null, $attr = null) {
         //все вызовы в один масив аргументов
+        if ($attr != null) {
+            $attr_str = '';
+            foreach ($attr as $atribut => $value) {
+                $attr_str .= ' '.$atribut.'="'.$value.'" ';
+            }
+        } else {
+            $attr_str = null;
+        }
+
         $this->set_field_type[$field_name] = array(
             'type_field' => $type_field,
-            'field_value' => $field_value
+            'field_value' => $field_value,
+            'attr' => $attr_str
         );
+
 
     }
 
@@ -580,6 +596,10 @@ class Cruds extends Controller_Main {
     //включить груповое удаление
     public function enable_delete_group () {
         $this->enable_delete_group = true;
+    }
+
+    public function enable_export () {
+        $this->enable_export = 'T';
     }
 
     public function set_load_1N () {

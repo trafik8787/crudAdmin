@@ -15,8 +15,8 @@
             "processing": true,
             "serverSide": true,
             "sLengthSelect": "form-control",
-            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?>>rt<"bottom"ip><"clear">',//<"clear">
-            //"sDom": 'T<"clear">lfrtip',
+            "sDom": '<"top"l<?=$table_propery['activ_operation']['search']?><?=$table_propery['activ_operation']['enable_export']?>>rt<"bottom"ip><"clear">',//<"clear">
+
             /*
              l - Показать  записей
              f - поиск
@@ -25,14 +25,26 @@
             */
 
             ///http://192.168.0.10:7799/admin/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf
-           // "tableTools": {
-          //      "sSwfPath": "/<?//=Kohana::$config->load('crudconfig.base_url')?>/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-           // },
+            "tableTools": {
+                "sSwfPath": "/<?=Kohana::$config->load('crudconfig.base_url')?>/media/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+                "aButtons": [
+
+                    "csv",
+                    "xls",
+                    "pdf",
+                    {
+                        "sExtends":     "copy",
+                        "sButtonText": "<?=__('LANG_BUTTON_COPY')?>"
+                    }
+                ]
+
+
+            },
 
             "bAutoWidth": false,
 
             "oLanguage": {
-                "sProcessing": "<img src='/<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
+                "sProcessing": "<img src='<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
                 "sZeroRecords": "<?=__('LANG_NO_RECORD')?>",
                 "sInfo": "<?=__('LANG_INFO')?>",
                 "sLengthMenu": "<?=__('LANG_MENY')?>",

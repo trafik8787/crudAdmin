@@ -69,14 +69,12 @@
 
                                 <?if ($add_property['type_field'][$name_fild]['tag'] == 'textarea'):?>
 
-                                    <<?=$add_property['type_field'][$name_fild]['tag']?>
+                                    <textarea
                                     class="form-control <?if (empty($add_property['disable_editor'][$name_fild])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
                                     name="<?=$name_fild?>"
-                                    id="<?=$name_fild?>"/>
+                                    id="<?=$name_fild?>"></textarea>
 
-                                    </<?=$add_property['type_field'][$name_fild]['tag']?>>
-
-                                    <?endif?>
+                                <?endif?>
 
                                 <?else:?>
 

@@ -29,6 +29,7 @@ return array(
     'LANG_MODAL_BUTON_DELETE' => 'Delete',
     'LANG_MODAL_BUTON_CENSEL' => 'Censel',
     'LANG_BUTTON_APLY' => 'Apply',
-    'LANG_BUTTON_LOAD_APLY' => 'Save...'
+    'LANG_BUTTON_LOAD_APLY' => 'Save...',
+    'LANG_BUTTON_COPY' => 'Copy'
 
 );
