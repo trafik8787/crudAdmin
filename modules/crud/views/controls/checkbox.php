@@ -9,7 +9,7 @@ $(document).on('click', '.w-cheked-status', function() {
     }
 });
 </script>
-<?print_r($attr)?>
+
 <div class="checkbox">
 
     <?if(is_array($value_fild)):?>
@@ -17,9 +17,7 @@ $(document).on('click', '.w-cheked-status', function() {
             if(!empty($origin_value_fild)) {
 
                 try {
-
                     $arr_value = unserialize($origin_value_fild);
-
                 } catch (Exception $e) {
                     $arr_value = $origin_value_fild;
                 }
@@ -41,7 +39,7 @@ $(document).on('click', '.w-cheked-status', function() {
 
             <?foreach ($value_fild as $val => $row):?>
 
-                <label><input <?=$attr?> type="radio" name="<?=$name_fied?>" <?if ($arr_value == $val):?> checked <?endif?> value="<?=$val?>"/> <?=$row?></label><br/>
+                <label><input <?=$attr?> type="radio" name="<?=$name_fied?>" <?if (!empty($arr_value)):?><?if ($arr_value == $val):?> checked <?endif?><?endif?> value="<?=$val?>"/> <?=$row?></label><br/>
 
             <?endforeach?>
 

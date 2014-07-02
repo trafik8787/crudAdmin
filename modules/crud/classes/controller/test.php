@@ -35,8 +35,11 @@ class Controller_Test extends Controller {
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-        $crud->set_field_type('content_short', 'select', array('y' => 'Да', 'n' => 'Нет'));
-        $crud->set_field_type('status', 'radio', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'), array('data-ir' => 'qweqwe', 'class' => 'sdfsdf'));
+        //$crud->set_field_type('content_short', 'file');
+        $crud->set_field_type('status', 'radio', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
+        $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views'),'', 'multiple');
+
+        //$crud->set_field_type('title', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         //$crud->set_field_type('author', 'text', 'y');
         //$crud->set_field_type('status', 'checkbox');
 

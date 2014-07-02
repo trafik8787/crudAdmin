@@ -115,6 +115,7 @@ class Model_All extends Model
 
     //количество записей
     public function count_table ($table) {
+
         $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
 
         return $count_table->execute()->as_array();

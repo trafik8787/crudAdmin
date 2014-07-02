@@ -32,6 +32,7 @@ class Cruds extends Controller_Main {
 
     private $set_where = null;
     public $set_field_type = array(); //типы полей
+    public $type_field_upload = array(); //тип поля file
 
     private $object_serial; //масив параметров для сериализации
 
@@ -125,6 +126,7 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'css/bootstrap.min.css')) => 'screen',
             $media->uri(array('file' => 'css/style.css')) => 'screen',
             $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/css/dataTables.tableTools.min.css'))=> 'screen',
+            $media->uri(array('file' => 'js/lightbox/css/lightbox.css')) => 'screen'
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/css/dataTables.fixedHeader.min.css'))=> 'screen'
         );
 
@@ -139,6 +141,7 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/bootstrap.min.js')),
             $media->uri(array('file' => 'js/app.js')),
             $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/js/dataTables.tableTools.min.js')),
+            $media->uri(array('file' => 'js/lightbox/js/lightbox.min.js')),
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')),
             //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf',
             $media->uri(array('file' => 'css/loader.GIF')) => 'screen'
@@ -303,6 +306,11 @@ class Cruds extends Controller_Main {
         //иницыализация языкового класса
         I18n::lang($this->set_lang);
 
+        //меняем названия поля и номера по порядку местами
+        $array_flip_column = array_flip($column);
+
+        //абсолютный путь к корню удаляется последний символ слеш
+        $path_absolute = substr(DOCROOT, 0, strlen(DOCROOT)-1);
 
         foreach ($query['query'] as $rows) {
             //редактировать
@@ -358,7 +366,60 @@ class Cruds extends Controller_Main {
             $rows = array_map(array($this, 'no_tag'), $rows);
 
 
-            $tmp_array = array_values(array_intersect_key($rows,array_flip($column)));
+
+            //die(print_r(array_intersect_key($rows, $array_flip_column)));
+
+            //Вычислить пересечение массивов, сравнивая ключи
+            $array_intersect_key_rows = array_intersect_key($rows, $array_flip_column);
+
+            if (!empty($this->type_field_upload)) {
+
+                foreach ($this->type_field_upload as $colum_name => $row_array) {
+                    $exemple_id = uniqid();
+                    //если есть параметр выводим в таблицу
+                    if (isset($row_array[3])) {
+
+                        if ($row_array[3] == 'views') {
+
+                               // die(print_r($array_intersect_key_rows[$colum_name]));
+                                try {
+
+                                    $new_rows = '';
+                                    foreach (unserialize($array_intersect_key_rows[$colum_name])  as $key => $url_relativ) {
+                                        // не отображаем картинки на главной кроме первой
+                                        if ($key != 0) {
+                                            $display = 'style="display: none"' ;
+                                        } else {
+                                            $display = '';
+                                        }
+
+                                        $new_rows .= '<a class="example-image-link" href="'.$url_relativ.'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."'.$display.'><img class="example-image" src="'.$url_relativ.'" width="100" /></a>';
+
+                                    }
+
+                                    $array_intersect_key_rows[$colum_name] = $new_rows;
+
+                                } catch (Exception $e) {
+
+                                    //если файл существует
+                                    if (file_exists($path_absolute.$array_intersect_key_rows[$colum_name]) AND ($array_intersect_key_rows[$colum_name] != '')) {
+                                        //переопределяем уже с тегом
+                                        $array_intersect_key_rows[$colum_name] = '<a class="example-image-link" href="'.$array_intersect_key_rows[$colum_name].'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."><img class="example-image" src="'.$array_intersect_key_rows[$colum_name].'" width="100" /></a>';
+                                    } else {
+                                        $array_intersect_key_rows[$colum_name] = 'Файла нету';
+                                    }
+                                }
+
+                        } else {
+                            // тут выброс екзекшена если вписана лабуда
+                        }
+                    }
+
+                }
+                //$this->type_field_upload[0]$array_intersect_key_rows
+            }
+
+            $tmp_array = array_values($array_intersect_key_rows);
             //кнопки удалить редактировать и новых екшенов
 
             if ($this->enable_delete_group) {
@@ -402,7 +463,8 @@ class Cruds extends Controller_Main {
     private function no_tag ($n) {
 
         $str = strip_tags($n);
-        return Text::limit_chars($str, 100);
+        //return Text::limit_chars($str, 100);
+        return  $str;
 
     }
 
@@ -563,8 +625,14 @@ class Cruds extends Controller_Main {
     }
 
     //типы полей
-    public function set_field_type ($field_name, $type_field, $field_value = null, $attr = null) {
+    public function set_field_type ($field_name, $type_field, $field_value = null, $multiple = null, $attr = null) {
         //все вызовы в один масив аргументов
+        //если тип поля file то принимаем масив значений тип, путь
+        if  (is_array($type_field)) {
+            $this->type_field_upload[$field_name] = $type_field;
+            $type_field = $type_field[0];
+        }
+
         if ($attr != null) {
             $attr_str = '';
             foreach ($attr as $atribut => $value) {
@@ -577,10 +645,20 @@ class Cruds extends Controller_Main {
         $this->set_field_type[$field_name] = array(
             'type_field' => $type_field,
             'field_value' => $field_value,
+            'multiple' => $multiple,
             'attr' => $attr_str
         );
+    }
 
+    //проверяет является ли файл картинкой
+    public function ist_images ($filename) {
 
+        $img = @getimagesize($filename);
+        if ($img) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //отключение редактора

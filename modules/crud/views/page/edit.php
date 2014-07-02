@@ -2,24 +2,33 @@
 
 <script>
 
+//    $(document).on('click', '#loading-save', function(){
+//        var form_edit = $('#w-form-edit');
+//        form_edit.detach('target');
+//    });
+
+
     $(document).on('click', '#loading-example-btn', function(){
-
+        var form_edit = $('#w-form-edit');
         tinyMCE.triggerSave();
+        form_edit.attr('target','hiddenframe');
+        form_edit.submit();
 
-        var btn = $(this);
-        btn.button('loading');
-
-        $.ajax({
-            type: "GET",
-            dataType: "html",
-            url: "edit",
-            data: $('#w-form-edit').serialize()
-//            success: function(response) {
+//        var btn = $(this);
+//        btn.button('loading');
 //
-//            }
-        }).always(function () {
-            btn.button('reset');
-        });
+//        $.ajax({
+//            type: "GET",
+//            dataType: "html",
+//            url: "edit",
+//            data: $('#w-form-edit').serialize()
+////            success: function(response) {
+////
+////            }
+//        }).always(function () {
+//            btn.button('reset');
+//        });
+        form_edit.removeAttr('target');
 
     });
 
@@ -30,7 +39,7 @@
     <div class="row">
         <div class="col-md-8">
 
-            <form id="w-form-edit" class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" id="w-form-edit" class="form-horizontal" role="form" >
 
                 <?foreach ($edit_property['field'] as $name_fied => $value_fild):?>
                     <?if ($name_fied != $edit_property['key_primary']):?>
@@ -104,12 +113,19 @@
                                 <?else:?>
 
                                     <?php
-
+                                        //атрибуты
                                         if (!empty($edit_property['new_type_field'][$name_fied]['attr'])) {
 
                                             $attr = $edit_property['new_type_field'][$name_fied]['attr'];
                                         } else {
                                             $attr = '';
+                                        }
+
+                                        //множественный выбор
+                                        if (!empty($edit_property['new_type_field'][$name_fied]['multiple'])){
+                                            $multiple = $edit_property['new_type_field'][$name_fied]['multiple'];
+                                        } else {
+                                            $multiple = null;
                                         }
 
                                         //если флажок или радио
@@ -135,6 +151,17 @@
                                             );
 
                                             echo View::factory('controls/select', $data);
+                                        //если file
+                                        } elseif ($edit_property['type_field'][$name_fied] == 'file') {
+
+                                            $data = array(
+                                                //'origin_value_fild' => $origin_value_fild,
+                                                'value_fild' => $value_fild,
+                                                'name_fied' => $name_fied,
+                                                'multiple' => $multiple
+                                            );
+
+                                            echo View::factory('controls/input_file', $data);
                                         //остальние текстовые дата номер и т.д
                                         } else {
 
@@ -168,13 +195,13 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$edit_property['obj']?>"/>
                         <input type="hidden" name="edit"/>
-                        <button type="submit" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button type="submit" id="loading-save" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                         <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
                 </div>
 
             </form>
-
+            <iframe id="hiddenframe" name="hiddenframe" style="width:0; height:0; border:0"></iframe>
 
         </div>
     </div>
