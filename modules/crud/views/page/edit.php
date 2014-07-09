@@ -128,6 +128,13 @@
                                             $multiple = null;
                                         }
 
+                                        //тип файлов картинки или другие файлы
+                                        if (!empty($edit_property['type_field_upload'][$name_fied][4])){
+                                            $type_field_upload = $edit_property['type_field_upload'][$name_fied][4];
+                                        } else {
+                                            $type_field_upload = null;
+                                        }
+
                                         //если флажок или радио
                                         if ($edit_property['type_field'][$name_fied] == 'checkbox' or $edit_property['type_field'][$name_fied] == 'radio') {
 
@@ -158,7 +165,8 @@
                                                 //'origin_value_fild' => $origin_value_fild,
                                                 'value_fild' => $value_fild,
                                                 'name_fied' => $name_fied,
-                                                'multiple' => $multiple
+                                                'multiple' => $multiple,
+                                                'type_field_upload' => $type_field_upload
                                             );
 
                                             echo View::factory('controls/input_file', $data);
@@ -166,8 +174,10 @@
                                         } else {
 
                                             $data = array(
+                                                //'origin_value_fild' => $origin_value_fild,
                                                 'type_field' => $edit_property['type_field'][$name_fied],
                                                 'value_fild' => $value_fild,
+                                                'multiple' => $multiple,
                                                 'name_fied' => $name_fied,
                                                 'attr' => $attr
                                             );

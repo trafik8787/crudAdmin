@@ -43,6 +43,9 @@ class Cruds extends Controller_Main {
     public $name_colums_table_show; //названия полей
     public $name_colums_ajax; //название полей для аякса
 
+
+    private $tmp_name_column_file; //временно для rows
+
     //хуки
     public $callback_befor_delete = null; //перед удалением
     public $callback_after_delete = null; //после удаления
@@ -362,12 +365,11 @@ class Cruds extends Controller_Main {
                 $htm_delete = '';
             }
 
+            //die(print_r($rows));
+            $this->tmp_name_column_file = $rows; //сохраняем предидущее состояниемасива для получения не урезаных данных
             //удаляем все теги перед выводом в таблицу
             $rows = array_map(array($this, 'no_tag'), $rows);
 
-
-
-            //die(print_r(array_intersect_key($rows, $array_flip_column)));
 
             //Вычислить пересечение массивов, сравнивая ключи
             $array_intersect_key_rows = array_intersect_key($rows, $array_flip_column);
@@ -377,47 +379,48 @@ class Cruds extends Controller_Main {
                 foreach ($this->type_field_upload as $colum_name => $row_array) {
                     $exemple_id = uniqid();
                     //если есть параметр выводим в таблицу
-                    if (isset($row_array[3])) {
 
-                        if ($row_array[3] == 'views') {
 
-                               // die(print_r($array_intersect_key_rows[$colum_name]));
-                                try {
+                    if ($row_array[3] == 'views' and $row_array[4] == 'img') {
 
-                                    $new_rows = '';
-                                    foreach (unserialize($array_intersect_key_rows[$colum_name])  as $key => $url_relativ) {
-                                        // не отображаем картинки на главной кроме первой
-                                        if ($key != 0) {
-                                            $display = 'style="display: none"' ;
-                                        } else {
-                                            $display = '';
-                                        }
+                           // die(print_r($array_intersect_key_rows[$colum_name]));
+                            try {
 
-                                        $new_rows .= '<a class="example-image-link" href="'.$url_relativ.'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."'.$display.'><img class="example-image" src="'.$url_relativ.'" width="100" /></a>';
-
-                                    }
-
-                                    $array_intersect_key_rows[$colum_name] = $new_rows;
-
-                                } catch (Exception $e) {
-
-                                    //если файл существует
-                                    if (file_exists($path_absolute.$array_intersect_key_rows[$colum_name]) AND ($array_intersect_key_rows[$colum_name] != '')) {
-                                        //переопределяем уже с тегом
-                                        $array_intersect_key_rows[$colum_name] = '<a class="example-image-link" href="'.$array_intersect_key_rows[$colum_name].'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."><img class="example-image" src="'.$array_intersect_key_rows[$colum_name].'" width="100" /></a>';
+                                $new_rows = '';
+                                foreach (unserialize($this->tmp_name_column_file[$colum_name])  as $key => $url_relativ) {
+                                    // не отображаем картинки на главной кроме первой
+                                    if ($key != 0) {
+                                        $display = 'style="display: none"' ;
                                     } else {
-                                        $array_intersect_key_rows[$colum_name] = 'Файла нету';
+                                        $display = '';
                                     }
+
+                                    $new_rows .= '<a class="example-image-link" href="'.$url_relativ.'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."'.$display.'><img class="example-image" src="'.$url_relativ.'" width="100" /></a>';
+
                                 }
 
-                        } else {
-                            // тут выброс екзекшена если вписана лабуда
-                        }
+                                $array_intersect_key_rows[$colum_name] = $new_rows;
+
+                            } catch (Exception $e) {
+
+                                //если файл существует
+                                if (file_exists($path_absolute.$this->tmp_name_column_file[$colum_name]) AND ($this->tmp_name_column_file[$colum_name] != '')) {
+                                    //переопределяем уже с тегом
+                                    $array_intersect_key_rows[$colum_name] = '<a class="example-image-link" href="'.$this->tmp_name_column_file[$colum_name].'" data-lightbox="example-'.$exemple_id.'" data-title="Optional caption."><img class="example-image" src="'.$this->tmp_name_column_file[$colum_name].'" width="100" /></a>';
+                                } else {
+                                    $array_intersect_key_rows[$colum_name] = 'Файла нету';
+                                }
+                            }
+
+                    } else {
+                        // тут выброс екзекшена если вписана лабуда
                     }
+
 
                 }
                 //$this->type_field_upload[0]$array_intersect_key_rows
             }
+
 
             $tmp_array = array_values($array_intersect_key_rows);
             //кнопки удалить редактировать и новых екшенов
@@ -463,10 +466,12 @@ class Cruds extends Controller_Main {
     private function no_tag ($n) {
 
         $str = strip_tags($n);
-        //return Text::limit_chars($str, 100);
-        return  $str;
+        return Text::limit_chars($str, 100);
+        
 
     }
+
+
 
 
 
@@ -653,12 +658,17 @@ class Cruds extends Controller_Main {
     //проверяет является ли файл картинкой
     public function ist_images ($filename) {
 
-        $img = @getimagesize($filename);
-        if ($img) {
-            return true;
-        } else {
+        try {
+
+            $img = getimagesize($filename);
+            if ($img) {
+                return true;
+            }
+        } catch (Exception $e) {
+
             return false;
         }
+
     }
 
     //отключение редактора

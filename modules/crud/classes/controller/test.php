@@ -5,7 +5,25 @@
  * Date: 09.05.14
  * Time: 1:04
  * To change this template use File | Settings | File Templates.
- */
+ *
+ *
+ *
+ *
+ *
+ *  $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', '');
+ *
+ * Первый параметр - название поля
+ * Второй параметр - тип поля принимает принимает строковою (text,chekbox,radio,textarea,) или масив для поля передачи файла
+ *  array первый параметр - тип поля,
+ * второй - директория сохранения файла,
+ * третий - префикс для названия файла,
+ * четвертый - принимает флаг vievs для вывода картинок в таблице
+ * пятый - может принимать два параметра img - для загрузки others - для других файлов
+ *
+ * третий параметр - принимает значение поля по дефолту может принимать масив для чекбоксов и радио array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю')
+ * четвертый параметр  - multiple поля множественного выбора
+ * пятый - масив атрибутов поля
+*/
 
 class Controller_Test extends Controller {
 
@@ -32,12 +50,14 @@ class Controller_Test extends Controller {
         //$crud->remove_edit();
         //$crud->set_where('id','=', 3,1);
         $crud->callback_befor_edit('call_bef_edit');
-        $crud->callback_before_insert('cal_bef_inser');
-        $crud->callback_after_insert('cal_insert_inser');
+        //$crud->callback_before_insert('cal_bef_inser');
+        //$crud->callback_after_insert('cal_insert_inser');
 
         //$crud->set_field_type('content_short', 'file');
-        $crud->set_field_type('status', 'radio', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
-        $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views'),'', 'multiple');
+        //$crud->set_field_type('status', 'checkbox', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
+        $crud->set_field_type('status', 'text', '','multiple');
+        $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', '');
+
 
         //$crud->set_field_type('title', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         //$crud->set_field_type('author', 'text', 'y');
@@ -51,7 +71,7 @@ class Controller_Test extends Controller {
         //$crud->disable_editor('content_short');
         //die(print_r($crud->set_field_type));
         //$crud->add_field('title', 'author', 'date');
-       // $crud->edit_fields('title', 'author');
+        //$crud->edit_fields('title', 'author');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
         $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');

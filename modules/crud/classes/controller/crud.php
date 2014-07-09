@@ -89,8 +89,31 @@ class Controller_Crud extends Controller_Main {
     }
 
 
+    private function file_force_download($file) {
+
+        $absolute = URL::site(substr($file, 1), 'http');
+        $headers = get_headers($absolute, 1);
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private",false); // нужен для некоторых браузеров
+        header("Content-type: ".Arr::get($headers, 'Content-Type'));
+        header("Content-Disposition: attachment; filename=".basename($file));
+        header("Content-Transfer-Encoding: binary");
+
+    }
+
+
+
+
+
+
+
+
+
 
     public function action_edit () {
+
 
         if (isset($_POST['edit'])) {
              //die(print_r($_FILES));
@@ -130,7 +153,10 @@ class Controller_Crud extends Controller_Main {
                 if (isset($_POST[$name_count_rows['COLUMN_NAME']])) {
                     //если это масив то сериализуем
                     if (is_array($_POST[$name_count_rows['COLUMN_NAME']])) {
-                        $update[$name_count_rows['COLUMN_NAME']] = serialize($_POST[$name_count_rows['COLUMN_NAME']]);
+                        //удаляем пустые элементы масива
+                        $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
+
+                        $update[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
                     } else {
                         $update[$name_count_rows['COLUMN_NAME']] = $_POST[$name_count_rows['COLUMN_NAME']];
                     }
@@ -266,6 +292,13 @@ class Controller_Crud extends Controller_Main {
             $new_type_field = null;
         }
 
+        //масив параметров для поля file
+        if (!empty($retw->type_field_upload)) {
+            $type_field_upload = $retw->type_field_upload;
+        } else {
+            $type_field_upload = null;
+        }
+
         //отключение редактора
         if (!empty($retw->disable_editor)) {
             $disable_editor = $retw->disable_editor;
@@ -277,6 +310,7 @@ class Controller_Crud extends Controller_Main {
         $viev_edit->edit_property = array('field' => $field,
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
+                                            'type_field_upload' => $type_field_upload, //масив параметров для поля file
                                             'type_field' => $type_field, //типы полей по дефолту
                                             'key_primary' => $key_primary, //id первичный ключ
                                             'obj' => $_GET['obj'],
@@ -291,6 +325,13 @@ class Controller_Crud extends Controller_Main {
         $this->template->styles = $crud_style['styles'];
 
     }
+
+
+
+
+
+
+
 
 
 
@@ -326,11 +367,25 @@ class Controller_Crud extends Controller_Main {
 
 
 
+
+
+
+
+
+
+
+
+
     public function action_add () {
 
 
-        $re = unserialize(base64_decode($_GET['obj']));
-        //die(print_r($re));
+        if (isset($_POST['add'])) {
+            //die(print_r($_FILES));
+            $re = unserialize(base64_decode($_POST['obj']));
+        } else {
+            $re = unserialize(base64_decode($_GET['obj']));
+        }
+
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
 
@@ -343,18 +398,90 @@ class Controller_Crud extends Controller_Main {
         $name_count = Model::factory('All')->name_count($retw->table);
 
 
-        if (isset($_GET['add'])) {
+        if (isset($_POST['add'])) {
             //die(print_r($_GET));
             foreach ($name_count as $name_count_rows) {
 
-                if (isset($_GET[$name_count_rows['COLUMN_NAME']])) {
-                    //подготовка масиивов для передачи в модель
-                    $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
-                    $insert[$name_count_rows['COLUMN_NAME']] = $_GET[$name_count_rows['COLUMN_NAME']];
+                //если это масив то сериализуем для multiple полей
+                if (isset($_POST[$name_count_rows['COLUMN_NAME']])) {
+
+                    if (is_array($_POST[$name_count_rows['COLUMN_NAME']])) {
+                        //подготовка масиивов для передачи в модель
+                        $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
+                        //удаляем пустые элементы масива
+                        $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
+
+                        $insert[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
+
+                    } else {
+                        $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
+                        $insert[$name_count_rows['COLUMN_NAME']] = $_POST[$name_count_rows['COLUMN_NAME']];
+                    }
+                //если поля нету то проверяем масив $_FILES
+                } else {
+
+                    //если поле определено как file
+                    if (!empty($retw->type_field_upload[$name_count_rows['COLUMN_NAME']])) {
+                        //die(print_r($name_count_rows['COLUMN_NAME']));
+                        //получаем масив с типом поля и путь к дирикктории хранения файла
+                        $dir_path = $retw->type_field_upload[$name_count_rows['COLUMN_NAME']];
+
+                        //добавляем название поля если он есть в масиве $_FILES
+                        $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
+
+                        //проверяем является ли масивом
+                        if (is_array($_FILES[$name_count_rows['COLUMN_NAME']]['name'])) {
+
+
+                            foreach ($_FILES[$name_count_rows['COLUMN_NAME']]['name'] as $key => $rows_name) {
+                                //проверка на наличие отправляемого файла
+
+                                if ($rows_name != '') {
+                                    //расширение файла
+                                    $type_file = '.'. strtolower(pathinfo($rows_name, PATHINFO_EXTENSION));
+                                    //генерируем имя файла с префиксом
+                                    $name_file =  $dir_path[2].uniqid().$type_file;
+                                    //получаем абсолютный путь к директории храния файла
+                                    $file_path = $this->uploads_dir_absolut($dir_path[1]);
+                                    //сохранение файла
+                                    $uploaded = Upload::save(array('tmp_name' => $_FILES[$name_count_rows['COLUMN_NAME']]['tmp_name'][$key]), $name_file, $file_path['absolut']);
+                                    //создание масива относительных путей
+                                    $file_update[] = $file_path['relative'].$name_file;
+                                }
+                            }
+
+                            //сохранение в базе
+                            $insert[$name_count_rows['COLUMN_NAME']] = serialize($file_update);
+
+
+                        } else {
+                            //если не multiple
+
+                            //расширение файла
+                            $type_file = '.'. strtolower(pathinfo($_FILES[$name_count_rows['COLUMN_NAME']]['name'], PATHINFO_EXTENSION));
+
+                            //генерация имени файла $dir_path[2] - префикс
+                            $name_file =  $dir_path[2].uniqid().$type_file;
+                            //получаем масив путей абсолютный и относительный
+                            $file_path = $this->uploads_dir_absolut($dir_path[1]);
+
+                            $uploaded = Upload::save($_FILES[$name_count_rows['COLUMN_NAME']], $name_file, $file_path['absolut']);
+
+                            if ($uploaded)
+                            {
+                                //относительный путь к файлу запись в базу
+                                $insert[$name_count_rows['COLUMN_NAME']] = $file_path['relative'].$name_file;
+                                // set file type
+
+                            }
+                        }
+
+                    }
+
                 }
 
             }
-
+            //die(print_r($insert));
 
             if ($retw->callback_before_insert != null) {
                 //переиницыалзация хука
@@ -371,9 +498,12 @@ class Controller_Crud extends Controller_Main {
                 if ($insert == ''){
                     $insert = $insert_befor;
                 }
+
                 //удаляем ключи из масивов
                 $name_count_insert = array_values($name_count_insert);
+                //die(print_r($name_count_insert));
                 $insert_value = array_values($insert);
+
                 $result = Model::factory('All')->insert($retw->table, $name_count_insert, $insert_value);
 
             }

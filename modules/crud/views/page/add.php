@@ -33,74 +33,143 @@
     <div class="row">
         <div class="col-md-8">
 
-            <form id="w-form-add" class="form-horizontal" role="form" action="" method="get" enctype="multipart/form-data">
+            <form id="w-form-add" class="form-horizontal" role="form" action="" method="POST" enctype="multipart/form-data">
 
-                <?foreach ($add_property['field'] as  $name_fild):?>
+                <?foreach ($add_property['field'] as  $name_fied):?>
 
                     <div class="form-group">
 
-                        <?if (isset($add_property['name_colums_table_show'][$name_fild])):?>
-                                <label for="<?=$name_fild?>" class="col-sm-2 control-label"><?=$add_property['name_colums_table_show'][$name_fild]?></label>
+                        <?if (isset($add_property['name_colums_table_show'][$name_fied])):?>
+                                <label for="<?=$name_fied?>" class="col-sm-2 control-label"><?=$add_property['name_colums_table_show'][$name_fied]?></label>
                             <?else:?>
-                                <label for="<?=$name_fild?>" class="col-sm-2 control-label"><?=$name_fild?></label>
+                                <label for="<?=$name_fied?>" class="col-sm-2 control-label"><?=$name_fied?></label>
                         <?endif?>
 
                         <div class="col-sm-10">
 
                             <? //переопределение типов полей полей
-                                if (!empty($add_property['new_type_field'][$name_fild])) {
+                                if (!empty($add_property['new_type_field'][$name_fied])) {
 
-                                    if ($add_property['new_type_field'][$name_fild]['type_field']  == 'textarea') {
-                                        $add_property['type_field'][$name_fild] = array('tag' => 'textarea');
+                                    if ($add_property['new_type_field'][$name_fied]['type_field']  == 'textarea') {
+                                        $add_property['type_field'][$name_fied] = array('tag' => 'textarea');
                                     } else {
-                                        $add_property['type_field'][$name_fild] = $add_property['new_type_field'][$name_fild]['type_field'];
+                                        $add_property['type_field'][$name_fied] = $add_property['new_type_field'][$name_fied]['type_field'];
                                     }
 
 
-                                    if (!empty($add_property['new_type_field'][$name_fild]['field_value'])) {
-                                        $value_fild =  $add_property['new_type_field'][$name_fild]['field_value'];
+                                    if (!empty($add_property['new_type_field'][$name_fied]['field_value'])) {
+                                        $value_fild =  $add_property['new_type_field'][$name_fied]['field_value'];
+                                    } else {
+                                        $value_fild = null;
                                     }
 
                                 }
                             ?>
 
                             <?//присваивание типов полей?>
-                            <?if (is_array($add_property['type_field'][$name_fild])):?>
+                            <?if (is_array($add_property['type_field'][$name_fied])):?>
 
-                                <?if ($add_property['type_field'][$name_fild]['tag'] == 'textarea'):?>
+                                <?if ($add_property['type_field'][$name_fied]['tag'] == 'textarea'):?>
 
-                                    <textarea
-                                    class="form-control <?if (empty($add_property['disable_editor'][$name_fild])) echo 'add-editor' //добавляем клас если полю не отключен редактор?>"
-                                    name="<?=$name_fild?>"
-                                    id="<?=$name_fild?>"></textarea>
+
+                                    <?
+
+                                        if (empty($add_property['disable_editor'][$name_fied])) {
+                                            $editor_class = 'add-editor';
+                                        } else {
+                                            $editor_class = '';
+                                        }
+
+                                        if (!empty($add_property['new_type_field'][$name_fied]['attr'])) {
+                                            $attr = $add_property['new_type_field'][$name_fied]['attr'];
+                                        } else {
+                                            $attr = '';
+                                        }
+
+                                        $data = array(
+                                            'name_fied' => $name_fied,
+                                            'disable_editor_class' => $editor_class,
+                                            'attr' => $attr
+                                        );
+
+                                        echo View::factory('controls/textarea', $data);
+
+                                    ?>
 
                                 <?endif?>
 
-                                <?else:?>
+                            <?else:?>
 
-                            <?php
-                            if ($add_property['type_field'][$name_fild] != 'checkbox') {
-                                $clas = 'form-control';
-                                $checked = '';
-                            } else {
-                                $clas = '';
+                                <?
+                                    //атрибуты
+                                    if (!empty($add_property['new_type_field'][$name_fied]['attr'])) {
 
-                            }
-                            ?>
+                                        $attr = $add_property['new_type_field'][$name_fied]['attr'];
+                                    } else {
+                                        $attr = '';
+                                    }
 
+                                    //множественный выбор
+                                    if (!empty($add_property['new_type_field'][$name_fied]['multiple'])){
+                                        $multiple = $add_property['new_type_field'][$name_fied]['multiple'];
+                                    } else {
+                                        $multiple = null;
+                                    }
 
+                                    //тип файлов картинки или другие файлы
+                                    if (!empty($add_property['type_field_upload'][$name_fied][4])){
+                                        $type_field_upload = $add_property['type_field_upload'][$name_fied][4];
+                                    } else {
+                                        $type_field_upload = null;
+                                    }
 
-                            <input
-                                    class="<?=$clas?>"
-                                    <?=$checked?>
-                                    type="<?=$add_property['type_field'][$name_fild]?>"
-                                    name="<?=$name_fild?>"
-                                    value=""
-                                    id="<?=$name_fild?>"
-                                    />
+                                    //если флажок или радио
+                                    if ($add_property['type_field'][$name_fied] == 'checkbox' or $add_property['type_field'][$name_fied] == 'radio') {
+
+                                        $data = array(
+                                            'value_fild' => $value_fild,
+                                            'type_field' => $add_property['type_field'][$name_fied], //тип поля
+                                            'name_fied' => $name_fied, //имя поля name
+                                            'attr' => $attr
+                                        );
+
+                                        echo View::factory('controls/checkbox', $data);
+                                        //если селект
+                                    } elseif ($add_property['type_field'][$name_fied] == 'select') {
+
+                                        $data = array(
+                                            'value_fild' => $value_fild,
+                                            'name_fied' => $name_fied,
+                                            'attr' => $attr
+                                        );
+
+                                        echo View::factory('controls/select', $data);
+                                        //если file
+                                    } elseif ($add_property['type_field'][$name_fied] == 'file') {
+
+                                        $data = array(
+                                            //'origin_value_fild' => $origin_value_fild,
+                                            'name_fied' => $name_fied,
+                                            'multiple' => $multiple,
+                                            'type_field_upload' => $type_field_upload
+                                        );
+
+                                        echo View::factory('controls/input_file', $data);
+                                        //остальние текстовые дата номер и т.д
+                                    } else {
+
+                                        $data = array(
+                                            'type_field' => $add_property['type_field'][$name_fied],
+                                            'value_fild' => $value_fild,
+                                            'name_fied' => $name_fied,
+                                            'attr' => $attr
+                                        );
+
+                                        echo View::factory('controls/input_text', $data);
+                                    }
+                                ?>
 
                             <?endif?>
-
 
 
 

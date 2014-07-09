@@ -2,42 +2,70 @@
 
 <?//print_r(unserialize($value_fild))?>
 <?
-    if (!empty($value_fild)) {
+    if ($type_field_upload == 'img') {
 
-        try {
+        if (!empty($value_fild)) {
 
-            $value_fild = unserialize($value_fild); ?>
+            try {
 
-            <?if (!empty($value_fild)):?>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>File</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?$exemple_id = uniqid()?>
-                    <? foreach ($value_fild as $row): ?>
+                $value_fild = unserialize($value_fild); ?>
 
-                         <tr>
-                           <td>
-                               <a class="example-image-link" href="<?=$row?>" data-lightbox="example-<?=$exemple_id?>" data-title="Optional caption."><img width="70" src="<?=$row?>" alt=""></a>
-                               <input type="hidden" name="editfile-<?=$name_fied?>[]" value="<?=$row?>">
-                           </td>
+                <?if (!empty($value_fild)):?>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>File</th>
+<!--                                <th>Action</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?$exemple_id = uniqid()?>
+                        <? foreach ($value_fild as $row): ?>
 
-                           <td><a class="w-delete" href="#">del</a></td>
-                        </tr>
-                    <?endforeach?>
-                    </tbody>
-                </table>
-            <?endif?>
+                             <tr class="w-tr-hover-file-del">
+                               <td>
+                                   <a class="example-image-link" href="<?=$row?>" data-lightbox="example-<?=$exemple_id?>" data-title="Optional caption."><img width="70" src="<?=$row?>" alt=""></a>
+                                   <input type="hidden" name="editfile-<?=$name_fied?>[]" value="<?=$row?>">
 
-       <? } catch (Exception $e) { ?>
+                                   <span class="glyphicon glyphicon-remove w-delete"></span>
 
-            <img width="200" src="<?=$value_fild?>" alt="">
+                               </td>
 
-       <? } ?>
+<!--                               <td><a class="w-delete" href="#">del</a></td>-->
+                            </tr>
+                        <?endforeach?>
+                        </tbody>
+                    </table>
+                <?endif?>
+
+           <? } catch (Exception $e) { ?>
+
+                <img width="200" src="<?=$value_fild?>" alt="">
+
+           <? } ?>
+
+        <?
+        }
+
+    } elseif ($type_field_upload == 'others') {?>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>File</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+                <tbody>
+                     <tr>
+                         <td>
+
+                             <a class="w-download" href="<?=URL::site(substr($value_fild, 1), 'http')?>"><?=basename($value_fild)?></a>
+                         </td>
+
+                         <td><a class="w-delete" href="#">del</a></td>
+                     </tr>
+                </tbody>
+        </table>
 
     <?}?>
 
@@ -64,3 +92,4 @@
 
 <?endif?>
 
+<span class="w-float-reset"></span>

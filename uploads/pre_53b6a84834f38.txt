@@ -1,0 +1,131 @@
+kupix.ru/bitrix/
+[15.11.2013 18:09:02] Evgeny Maslenkov: admin:MjN4QOMR31c2YmbTtFQG
+[15.11.2013 18:09:15] Evgeny Maslenkov: kupinet
+[15.11.2013 18:09:16] Evgeny Maslenkov: 1VjhLYPLQGK1ywcgdpFK
+[15.11.2013 18:09:19] Evgeny Maslenkov: 5.9.19.245
+[15.11.2013 18:32:12] Evgeny Maslenkov: http://auto-clients.herokuapp.com/#html/public/verify.php
+[15.11.2013 18:36:47] Evgeny Maslenkov: http://dev.1c-bitrix.ru/api_help/main/reference/cuser/getlist.php
+
+
+mail.devinsight.ru
+[17.11.2013 14:19:32] Evgeny Maslenkov: trash@devinsight.ru
+[17.11.2013 14:19:35] Evgeny Maslenkov: qwerty123456
+[17.11.2013 14:19:39] Evgeny Maslenkov: djsfhsdhfkjhsjkfhjk@devinsight.ru
+[17.11.2013 14:20:26] Evgeny Maslenkov: jquery.validate
+[17.11.2013 14:21:00] Evgeny Maslenkov: -Добавить еще одного клиента - без заполненного телефона
+[17.11.2013 14:21:26] Evgeny Maslenkov: -Добавил двух новых пользователей с одинаковым номером телефона
+[17.11.2013 14:22:03] Evgeny Maslenkov: Рассылать email
+Рассылать sms
+---
+Это группы, в которые юзер добавлен по умолчанию.
+[17.11.2013 14:23:00] Evgeny Maslenkov: http://kupix.ru/bitrix/admin/iblock_section_admin.php?IBLOCK_ID=13&type=feedback_selection&lang=ru&find_section_section=0
+[17.11.2013 14:25:05] Evgeny Maslenkov: http://kupix.ru/bitrix/admin/iblock_section_admin.php?IBLOCK_ID=2&type=catalog&lang=ru&find_section_section=0
+[17.11.2013 14:29:37] Evgeny Maslenkov: http://dev.1c-bitrix.ru/api_help/iblock/classes/ciblocksection/getlist.php
+[17.11.2013 14:29:39] Evgeny Maslenkov: http://dev.1c-bitrix.ru/api_help/iblock/classes/ciblockelement/add.php
+
+result_modifier.php
+[18:45:10] Evgeny Maslenkov: component_epilog.php
+[18:45:17] Evgeny Maslenkov: CPHPCache::Init
+
+
+vvd доступ
+[11:21:33] Evgeny Maslenkov: vvd:aAfvYRxeOcEjx1XpIeE8@vm5.host.devinsight.ru
+admin:aAfvYRxeOcEjx1XpIeE8
+[11:21:41] Evgeny Maslenkov: vvd.p.devinsight.ru
+[11:21:42] Evgeny Maslenkov: abv.p.devinsight.ru
+abv:JTpjBhBK3t449aLB3xRI@vm2.host.devinsight.ru
+[13:34:15] Evgeny Maslenkov: admin  abv.p.devinsight.ru
+PVbIueg6EN1XwQcdwYtA
+
+
+<ul>
+	<li><a href="/main.php"> главная </a></li>
+	<li><a href="/about.php"> о компании </a></li>
+	<li><a href="/contacts.php"> контакты </a></li>
+	<li><a href="/cooperation.php"> сотрудничество </a></li>
+	<li><a href="/gallery.php"> галерея </a></li>
+	<li><a href="/jobs.php"> вакансии </a></li>
+	<li><a href="/news.php"> новости </a></li>
+	<li><a href="/newsDetail.php"> новость детально </a></li>
+	<li><a href="/objects.php"> объекты </a></li>
+	<li><a href="/objectDetail.php"> объект детально </a></li>
+	<li><a href="/rental.php"> аренда строй техники </a></li>
+</ul>
+
+
+
+admin:b238xdfch
+ssh.grandivini.nichost.ru
+[29.11.2013 19:00:54] Evgeny Maslenkov: grandivini
+[29.11.2013 19:00:58] Evgeny Maslenkov: r3ofkjqo
+[29.11.2013 19:01:27] Evgeny Maslenkov: result1.txt и result2.txt в документ_рут
+
+
+
+
+vm2.host.devinsight.ru
+[13:48:12] Evgeny Maslenkov: попробуй от юзера tdbashkran:Jp8kb4mCBXVlogywqFPW
+DAJKfb827bf2273
+
+(echo "Subject:Hi"; echo "Body contents";) | sendmail -v trafik8787@gmail.com
+
+
+chown tdbashkran:tdbashkran -R /var/spool/exim
+
+
+
+
+[9:04:35] Evgeny Maslenkov: ncsemena:Fc00VWDvP065v1qYVKmG@vm5.host.devinsight.ru
+[9:04:43] Evgeny Maslenkov: админка
+[9:04:52] Evgeny Maslenkov: admin k.makeev@ncsemena.ru
+Heccrbq7JujhjlKexibq.
+
+irina_androsova
+ irina_valitova
+87048
+borodach@werwer.com
+
+
++380955744474
+
+http://lcab.smsintel.ru/
+логин ооо спк апд
+пароль ncsemena
+
+
+
+				ncseeds
+[21:04:45] Evgeny Maslenkov: Heccrbq7JujhjlKexibq.
+[21:04:49] Evgeny Maslenkov: обрати внимание на точку
+[21:05:12] Evgeny Maslenkov: ncsemena.ru
+[21:05:18] Evgeny Maslenkov: ftp/ssh
+[21:05:24] Evgeny Maslenkov: в админку пароль тот же
+[21:05:27] Evgeny Maslenkov: но логин admin
+[21:05:32] Evgeny Maslenkov: базу обязательно задампить
+
+
+
+
+
+Доступ к obshagi.ru
+
+	
+7P7uFlAVtX5sxHsveFzk
+obshagi
+[15:31:49] Егор Скачков: Админка:
+admin
+M2mxTioVQx5908RSSJJZ
+
+
+obshagi.p.devinsight.ru
+liveinmoscow:08namXhom9Q2i6NcIKaK@vm2.host.devinsight.ru
+[18:08:20] Evgeny Maslenkov: admin M2mxTioVQx5908RSSJJZ
+
+
+http://kuhluck.ru/bitrix/admin
+[9:17:32] Evgeny Maslenkov: kt
+[9:17:33] Evgeny Maslenkov: sDkYJDTwPqF4vtjbH62D
+[9:17:36] Evgeny Maslenkov: vm5.host.devinsight.ru
+[9:17:37] Evgeny Maslenkov: admin
+1liDnRTkqAnPSjDM
+

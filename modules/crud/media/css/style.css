@@ -72,3 +72,15 @@
     margin-left:2px;
 }
 /*input_file end*/
+.w-delete {
+    display: none;
+    float: right;
+}
+
+.w-tr-hover-file-del:hover .w-delete {
+   display: inline;
+}
+
+.w-float-reset {
+    clear: right;
+}
