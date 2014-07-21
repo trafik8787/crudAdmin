@@ -214,4 +214,22 @@ class Model_All extends Model
         return array('query' => $query, 'count' => count($query_count));
     }
 
+    //получение данных из другой таблицы
+    public function get_table_relativ ($Table, $field) {
+
+        $query = DB::query(Database::SELECT,
+            'SELECT '.$field.' FROM ' .$Table.'')
+            ->execute()
+            ->as_array();
+
+        foreach ($query as $rows) {
+            $result[$rows[$field]] = $rows[$field];
+        }
+
+
+        return $result;
+    }
+
+
+
 }

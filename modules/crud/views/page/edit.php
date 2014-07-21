@@ -35,6 +35,8 @@
 
 </script>
 
+<?print_r($edit_property['relation_one'])?>
+<?print_r($edit_property['new_type_field'])?>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -153,6 +155,7 @@
                                             $data = array(
                                                 'origin_value_fild' => $origin_value_fild,
                                                 'value_fild' => $value_fild,
+                                                'multiple' => $multiple,
                                                 'name_fied' => $name_fied,
                                                 'attr' => $attr
                                             );

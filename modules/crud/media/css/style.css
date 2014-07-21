@@ -32,7 +32,7 @@
 .w-buton-form {
     position: relative;
     display: inline-block;
-    margin-left: 2%;
+    /*margin-left: 2%;*/
     vertical-align: baseline;
 
 
@@ -83,4 +83,8 @@
 
 .w-float-reset {
     clear: right;
+}
+
+.input-group {
+    margin-bottom: 2px;
 }

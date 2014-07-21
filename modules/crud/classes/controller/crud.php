@@ -308,6 +308,7 @@ class Controller_Crud extends Controller_Main {
 
 
         $viev_edit->edit_property = array('field' => $field,
+                                            'relation_one' => $retw->relation_one,
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
                                             'type_field_upload' => $type_field_upload, //масив параметров для поля file
@@ -456,24 +457,30 @@ class Controller_Crud extends Controller_Main {
 
                         } else {
                             //если не multiple
+                            if ($_FILES[$name_count_rows['COLUMN_NAME']]['name'] != '') {
 
-                            //расширение файла
-                            $type_file = '.'. strtolower(pathinfo($_FILES[$name_count_rows['COLUMN_NAME']]['name'], PATHINFO_EXTENSION));
+                                //расширение файла
+                                $type_file = '.'. strtolower(pathinfo($_FILES[$name_count_rows['COLUMN_NAME']]['name'], PATHINFO_EXTENSION));
 
-                            //генерация имени файла $dir_path[2] - префикс
-                            $name_file =  $dir_path[2].uniqid().$type_file;
-                            //получаем масив путей абсолютный и относительный
-                            $file_path = $this->uploads_dir_absolut($dir_path[1]);
+                                //генерация имени файла $dir_path[2] - префикс
+                                $name_file =  $dir_path[2].uniqid().$type_file;
+                                //получаем масив путей абсолютный и относительный
+                                $file_path = $this->uploads_dir_absolut($dir_path[1]);
 
-                            $uploaded = Upload::save($_FILES[$name_count_rows['COLUMN_NAME']], $name_file, $file_path['absolut']);
+                                $uploaded = Upload::save($_FILES[$name_count_rows['COLUMN_NAME']], $name_file, $file_path['absolut']);
 
-                            if ($uploaded)
-                            {
-                                //относительный путь к файлу запись в базу
-                                $insert[$name_count_rows['COLUMN_NAME']] = $file_path['relative'].$name_file;
-                                // set file type
+                                if ($uploaded)
+                                {
+                                    //относительный путь к файлу запись в базу
+                                    $insert[$name_count_rows['COLUMN_NAME']] = $file_path['relative'].$name_file;
+                                    // set file type
 
+                                }
+
+                            } else { //если файл не был передан
+                                $insert[$name_count_rows['COLUMN_NAME']] = '';
                             }
+
                         }
 
                     }

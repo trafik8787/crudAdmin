@@ -44,7 +44,7 @@
             "bAutoWidth": false,
 
             "oLanguage": {
-                "sProcessing": "<img src='<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
+                "sProcessing": "<img src='/<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
                 "sZeroRecords": "<?=__('LANG_NO_RECORD')?>",
                 "sInfo": "<?=__('LANG_INFO')?>",
                 "sLengthMenu": "<?=__('LANG_MENY')?>",
@@ -63,10 +63,7 @@
                 }
             },
 
-
-
             "aoColumnDefs": [
-
 
                 <?if ($table_propery['activ_operation']['enable_delete_group']):?>
                     {
@@ -93,15 +90,32 @@
 
             ],
 
-
-
             "ajax": {
                 "url": "ajax/showTableAjax",
+
                 "data": function ( d ) {
                     d.obj = $('input[name="obj"]').val();
 
                 }
+            },
+            //после выполнения ajax запроса
+            "fnInitComplete" : function () {
+
+                //this.fnPageChange(parseInt($('.w-number-page').val()));
+               // this.fnPageChange(2);
+
             }
+
+
+
+
+        });
+
+
+        table.on( 'page.dt',   function (e) {
+
+            var page = table.fnSettings()._iDisplayStart / table.fnSettings()._iDisplayLength + 1;
+            $('.w-number-page').val(page -1);
 
         });
 
@@ -195,6 +209,7 @@
             }
 
             return false;
+
         });
 
 
@@ -329,8 +344,7 @@
 </div>
 
 
-
-
+<input type="hidden" class="w-number-page" value="0"/>
 
 
 <?if ($table_propery['activ_operation']['add'] != true ):?>

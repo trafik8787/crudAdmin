@@ -72,6 +72,8 @@ $(document).ready(function(){
 
     $(document).on('click', '.btn-add', function(e)
     {
+
+
         e.preventDefault();
 
         var controlForm = $(this).parents('.w-input-form'),
@@ -83,6 +85,14 @@ $(document).ready(function(){
             .removeClass('btn-add').addClass('btn-remove')
             .removeClass('btn-success').addClass('btn-danger')
             .html('<span class="glyphicon glyphicon-minus" style="padding: 3px"></span>');
+
+        var wit = newEntry.find('.chosen-container-single').width();
+        console.log(wit);
+        newEntry.find('.chosen-container-single').detach('.chosen-container-single');
+        $(".chosen-select").chosen();
+        newEntry.find('.chosen-container-single').css('width', wit+'px');
+
+
     }).on('click', '.btn-remove', function(e)
         {
             $(this).parents('.entry:first').remove();
@@ -100,5 +110,40 @@ $(document).ready(function(){
         return false
     });
 
+
+    $(".chosen-select").chosen();
+
+    $('.form_date').datetimepicker({
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+
+    $('.form_time').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 1,
+        minView: 0,
+        maxView: 1,
+        forceParse: 0
+    });
+
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
 
 });

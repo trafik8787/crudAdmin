@@ -44,6 +44,8 @@ class Cruds extends Controller_Main {
     public $name_colums_ajax; //название полей для аякса
 
 
+    public $relation_one; //получить содержимое другой таблицы
+
     private $tmp_name_column_file; //временно для rows
 
     //хуки
@@ -129,7 +131,9 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'css/bootstrap.min.css')) => 'screen',
             $media->uri(array('file' => 'css/style.css')) => 'screen',
             $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/css/dataTables.tableTools.min.css'))=> 'screen',
-            $media->uri(array('file' => 'js/lightbox/css/lightbox.css')) => 'screen'
+            $media->uri(array('file' => 'js/lightbox/css/lightbox.css')) => 'screen',
+            $media->uri(array('file' => 'css/chosen.min.css')) => 'screen',
+            $media->uri(array('file' => 'css/bootstrap-datetimepicker.min.css')) => 'screen'
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/css/dataTables.fixedHeader.min.css'))=> 'screen'
         );
 
@@ -145,9 +149,11 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/app.js')),
             $media->uri(array('file' => 'js/DataTables-1.10.0/extensions/TableTools/js/dataTables.tableTools.min.js')),
             $media->uri(array('file' => 'js/lightbox/js/lightbox.min.js')),
+            $media->uri(array('file' => 'js/chosen.jquery.min.js')),
+            $media->uri(array('file' => 'js/bootstrap-datetimepicker.min.js')),
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')),
             //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf',
-            $media->uri(array('file' => 'css/loader.GIF')) => 'screen'
+            $media->uri(array('file' => 'css/loader.GIF'))
 
 
 
@@ -690,9 +696,12 @@ class Cruds extends Controller_Main {
         $this->enable_export = 'T';
     }
 
-    public function set_load_1N () {
+    public function relation_one ($field1, $Table, $field2) {
+
+       $this->relation_one[$field1] = Model::factory('All')->get_table_relativ($Table, $field2);
 
     }
+
 
 
 

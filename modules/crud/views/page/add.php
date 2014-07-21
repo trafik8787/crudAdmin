@@ -5,22 +5,27 @@
 <script>
     $(document).on('click', '#loading-example-btn', function(){
 
+        var form_add = $('#w-form-add');
         tinyMCE.triggerSave();
-
-        var btn = $(this);
-        btn.button('loading');
-
-        $.ajax({
-            type: "GET",
-            dataType: "html",
-            url: "add",
-            data: $('#w-form-add').serialize()
-//            success: function(response) {
+        form_add.attr('target','hiddenframe');
+        form_add.submit();
 //
-//            }
-        }).always(function () {
-                btn.button('reset');
-        });
+//        tinyMCE.triggerSave();
+//
+//        var btn = $(this);
+//        btn.button('loading');
+//
+//        $.ajax({
+//            type: "GET",
+//            dataType: "html",
+//            url: "add",
+//            data: $('#w-form-add').serialize()
+////            success: function(response) {
+////
+////            }
+//        }).always(function () {
+//                btn.button('reset');
+//        });
     });
 
 
@@ -139,6 +144,7 @@
 
                                         $data = array(
                                             'value_fild' => $value_fild,
+                                            'multiple' => $multiple,
                                             'name_fied' => $name_fied,
                                             'attr' => $attr
                                         );
@@ -161,6 +167,7 @@
                                         $data = array(
                                             'type_field' => $add_property['type_field'][$name_fied],
                                             'value_fild' => $value_fild,
+                                            'multiple' => $multiple,
                                             'name_fied' => $name_fied,
                                             'attr' => $attr
                                         );
@@ -191,6 +198,7 @@
                 </div>
 
             </form>
+            <iframe id="hiddenframe" name="hiddenframe" style="width:0; height:0; border:0"></iframe>
 
         </div>
     </div>
