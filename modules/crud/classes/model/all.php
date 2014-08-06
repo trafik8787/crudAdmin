@@ -215,19 +215,30 @@ class Model_All extends Model
     }
 
     //получение данных из другой таблицы
-    public function get_table_relativ ($Table, $field) {
+    public function get_table_relativ ($Table, $field, $field_value) {
 
         $query = DB::query(Database::SELECT,
-            'SELECT '.$field.' FROM ' .$Table.'')
+            'SELECT '.$field.','.$field_value.' FROM ' .$Table.'')
             ->execute()
             ->as_array();
 
-        foreach ($query as $rows) {
-            $result[$rows[$field]] = $rows[$field];
+//        foreach ($query as $rows) {
+//            $result[$rows[$field]] = $rows[$field];
+//        }
+//
+
+        if (!empty($query)) {
+
+            foreach ($query as $rows) {
+                $result[$rows[$field_value]] = $rows[$field];
+            }
+
+            return $result;
+        } else {
+            return false;
         }
 
 
-        return $result;
     }
 
 

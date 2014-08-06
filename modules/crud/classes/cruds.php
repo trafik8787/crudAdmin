@@ -696,10 +696,10 @@ class Cruds extends Controller_Main {
         $this->enable_export = 'T';
     }
 
-    public function relation_one ($field1, $Table, $field2) {
+    public function relation_one ($Table, $field2, $field_value) {
 
-       $this->relation_one[$field1] = Model::factory('All')->get_table_relativ($Table, $field2);
-
+        $this->relation_one = Model::factory('All')->get_table_relativ($Table, $field2, $field_value);
+        return $this->relation_one;
     }
 
 

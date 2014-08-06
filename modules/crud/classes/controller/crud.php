@@ -308,7 +308,7 @@ class Controller_Crud extends Controller_Main {
 
 
         $viev_edit->edit_property = array('field' => $field,
-                                            'relation_one' => $retw->relation_one,
+
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
                                             'type_field_upload' => $type_field_upload, //масив параметров для поля file
