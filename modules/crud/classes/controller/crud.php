@@ -150,6 +150,8 @@ class Controller_Crud extends Controller_Main {
             //ищем в масиве $_GET поля которые вернула модель name_count
             foreach ($name_count as $name_count_rows) {
 
+
+
                 if (isset($_POST[$name_count_rows['COLUMN_NAME']])) {
                     //если это масив то сериализуем
                     if (is_array($_POST[$name_count_rows['COLUMN_NAME']])) {
@@ -161,6 +163,7 @@ class Controller_Crud extends Controller_Main {
                         $update[$name_count_rows['COLUMN_NAME']] = $_POST[$name_count_rows['COLUMN_NAME']];
                     }
                 //если поля нету то проверяем масив $_FILES
+                    $new_array = $update;
                 } else {
 
                     //если поле определено как file
@@ -248,6 +251,7 @@ class Controller_Crud extends Controller_Main {
                // die(print_r($retw->callback_befor_edit['name_function']));
                 //если в хуке returm false
                 if ($retw->callback_befor_edit !== false) {
+                    //die(print_r($update));
                     //переиницыализация статического метода обработчика
                     $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
                         $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));

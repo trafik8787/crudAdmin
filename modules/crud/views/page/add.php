@@ -31,8 +31,8 @@
 
 
 </script>
+<!--<pre>--><?////die(print_r($add_property))?><!--</pre>-->
 
-<?//die(print_r($add_property['type_field']))?>
 
 <div class="container">
     <div class="row">
@@ -154,7 +154,6 @@
                                     } elseif ($add_property['type_field'][$name_fied] == 'file') {
 
                                         $data = array(
-                                            //'origin_value_fild' => $origin_value_fild,
                                             'name_fied' => $name_fied,
                                             'multiple' => $multiple,
                                             'type_field_upload' => $type_field_upload
@@ -166,7 +165,6 @@
 
                                         $data = array(
                                             'type_field' => $add_property['type_field'][$name_fied],
-                                            'value_fild' => $value_fild,
                                             'multiple' => $multiple,
                                             'name_fied' => $name_fied,
                                             'attr' => $attr

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
-<?//die(print_r($value_fild))?>
+<?//print_r($value_fild)?>
 
 <?if (!empty($multiple)):?>
 

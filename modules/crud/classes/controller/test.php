@@ -53,8 +53,8 @@ class Controller_Test extends Controller {
         //$crud->callback_before_insert('cal_bef_inser');
         //$crud->callback_after_insert('cal_insert_inser');
 
-       $crud->set_field_type('content_short', 'select',  $crud->relation_one('test', 'deskription','idd'), 'multiple');
-
+       //$crud->set_field_type('content_short', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
+        $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', 'multiple');
         //$crud->set_field_type('status', 'checkbox', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
         //$crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', '');
@@ -96,9 +96,8 @@ class Controller_Test extends Controller {
     }
 
     public static function call_bef_edit ($new_array = null, $old_array = null) {
-
-
-        //$new_array['author'] = $old_array['idRT'];
+        //die(print_r($old_array));
+       //$new_array['author'] = $old_array['idRT'] . $new_array['author'];
         //return false;
     }
 
