@@ -34,29 +34,29 @@ class Controller_Test extends Controller {
     }
 
 
-
     public static  function asd () {
         $crud = new Cruds;
-        $crud->load_table('articles');
+        $crud->load_table('city');
 
-        //$crud->set_lang('ru');
+        $crud->set_lang('ru');
         //$crud->load_table('test');
-       //$crud->show_name_column(array('idRT' => 'Nace', 'title' => 'Title', 'author' => 'Author')); //переименование полей таблицы вывода
-        $crud->callback_befor_delete('call_del');
-        $crud->callback_after_delete('call_after_del');
+       $crud->show_name_column(array('id' => 'ID', 'name' => 'Название')); //переименование полей таблицы вывода
+       // $crud->callback_befor_delete('call_del');
+       // $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
        // $crud->remove_add ();
         //$crud->remove_edit();
-        //$crud->set_where('id','=', 3,1);
-        $crud->callback_befor_edit('call_bef_edit');
-        //$crud->callback_before_insert('cal_bef_inser');
-        //$crud->callback_after_insert('cal_insert_inser');
+        //$crud->set_where('name_en','=', "'Dimona'");
 
-       //$crud->set_field_type('content_short', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
-        $crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', 'multiple');
+        //$crud->callback_befor_edit('call_bef_edit');
+        $crud->callback_before_insert('cal_bef_inser');
+        $crud->callback_after_insert('cal_insert_inser');
+
+       //$crud->set_field_type('name_en', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
+        //$crud->set_field_type('name_en', array('file', 'uploads', 'pre_', 'views', 'img'),'', 'multiple');
         //$crud->set_field_type('status', 'checkbox', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
-        $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
+       // $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
         //$crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', '');
 
 
@@ -67,17 +67,18 @@ class Controller_Test extends Controller {
         //$crud->relation_one('content_short', 'test', 'deskription');
 
         //$crud->disable_search();
-        $crud->disable_editor('title');
-        $crud->enable_export();
+       $crud->disable_editor('name');
+        $crud->disable_editor('name_en');
+        $crud->disable_editor('region_en');
+        $crud->disable_editor('region');
+       // $crud->enable_export();
         $crud->enable_delete_group();
-        //$crud->disable_editor('author');
-        //$crud->disable_editor('content_short');
-        //die(print_r($crud->set_field_type));
-        //$crud->add_field('title', 'author', 'date');
-        //$crud->edit_fields('title', 'author');
 
-        $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
-        $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
+        //$crud->add_field('name', 'name_en');
+        //$crud->edit_fields('name', 'name_en');
+
+       // $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
+      //  $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;
         //die(print_r(Kohana::$config->load('crudconfig.database')));
@@ -86,8 +87,9 @@ class Controller_Test extends Controller {
     }
 
     public static function call_del ($key = null) {
-        //die(print_r($key));
-       // return $key['idRT'] +1;
+
+        //die(var_dump($key));
+       // return 9;
        //return false;
     }
 
@@ -96,13 +98,13 @@ class Controller_Test extends Controller {
     }
 
     public static function call_bef_edit ($new_array = null, $old_array = null) {
-        //die(print_r($old_array));
        //$new_array['author'] = $old_array['idRT'] . $new_array['author'];
+        //$old_array['name'] = 'Beit ShemeshBeit ShemeshBeit Shemesh';
         //return false;
     }
 
     public static function addAction ($key_array = null) {
-        die(print_r($key_array));
+        //die(print_r($key_array));
     }
 
     public static function addAction2 ($key_array = null) {
@@ -110,10 +112,14 @@ class Controller_Test extends Controller {
     }
 
     public static function  cal_bef_inser ($key_array = null) {
+
+        //$key_array['name'] = 'o;jifkjv;lbkosghpodafgkjpogfk[g';
+        //die(print_r($key_array));
 //       if ( $key_array['title'] == 123) {
 //           $key_array['title'] = 'ggggggggggggggggggggggggg';
 //       }
-//        return $key_array;
+       //die($key_array['name']);
+        //return $key_array;
     }
 
 

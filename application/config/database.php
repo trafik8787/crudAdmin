@@ -19,9 +19,9 @@ return array
              * Ports and sockets may be appended to the hostname.
              */
             'hostname'   => 'localhost',
-            'database'   => 'kohana',
-            'username'   => 'root',
-            'password'   => 'vertex',
+            'database'   => 'crud',
+            'username'   => 'crud',
+            'password'   => '01mcqW5Lyu0reRa',
             'persistent' => FALSE,
         ),
         'table_prefix' => '',

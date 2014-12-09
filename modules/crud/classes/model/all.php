@@ -28,19 +28,6 @@ class Model_All extends Model
     }
 
 
-    public function set_where ($table, $column , $operator, $id) {
-
-        if ($id != null) {
-            return DB::select()->from($table)
-                ->where($column, $operator, $id)
-                ->execute()->as_array();
-
-        } else {
-            return DB::select()->from($table)
-                ->execute()->as_array();
-        }
-    }
-
     //удаление по id
     public function delete ($table, $id) {
 
@@ -114,9 +101,17 @@ class Model_All extends Model
     }
 
     //количество записей
-    public function count_table ($table) {
+    public function count_table ($table, $set_where = null) {
 
-        $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
+        if ($set_where != null) {
+
+            $sele_where = 'WHERE '.$set_where['colum'].$set_where['operation'].$set_where['value'];
+            $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table.' '.$sele_where);
+
+        } else {
+
+            $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
+        }
 
         return $count_table->execute()->as_array();
     }
@@ -142,7 +137,7 @@ class Model_All extends Model
 
 
     //пагинация
-    public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like) {
+    public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like, $set_where = null) {
 
 
        // die('sdfsdf');
@@ -189,28 +184,38 @@ class Model_All extends Model
                     $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
                 }
 
-
-
             }
-            $likeSql = ' WHERE '.$Sql.' ';
+
+            if ($set_where != null) {
+                $likeSql = ' AND ('.$Sql.') ';
+            } else {
+                $likeSql = ' WHERE '.$Sql.' ';
+            }
 
         } else {
             $likeSql = '';
         }
 
+        //формируем часть запроса для метода условия выборки seе_where()
+        if ($set_where != null) {
+            $sele_where = ' WHERE '.$set_where['colum'].$set_where['operation'].$set_where['value'];
+        } else {
+            $sele_where = '';
+        }
+
+
         $query_count =  DB::query(Database::SELECT,
-            'SELECT * FROM ' .$table.' '.$likeSql.' ')
+            'SELECT * FROM ' .$table.' '.$sele_where.' '.$likeSql)
             ->execute()
             ->as_array();
 
         $query = DB::query(Database::SELECT,
-            'SELECT * FROM ' .$table.' '.$likeSql.' '.
+            'SELECT * FROM '.$table.' '.$sele_where.' '.$likeSql.' '.
             'ORDER BY '. $order_column.' '.$order_by.'
             LIMIT '.$ofset.','.$limit)
             ->execute()
             ->as_array();
 
-        //count($query)
         return array('query' => $query, 'count' => count($query_count));
     }
 
@@ -222,10 +227,6 @@ class Model_All extends Model
             ->execute()
             ->as_array();
 
-//        foreach ($query as $rows) {
-//            $result[$rows[$field]] = $rows[$field];
-//        }
-//
 
         if (!empty($query)) {
 

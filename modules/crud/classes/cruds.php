@@ -91,6 +91,7 @@ class Cruds extends Controller_Main {
     }
 
     public function set_where ($colum, $operation, $value) {
+
         $this->set_where = array('colum' => $colum,
             'operation' =>  $operation,
             'value' => $value);
@@ -216,18 +217,7 @@ class Cruds extends Controller_Main {
         $this->name_colums_ajax = $this->name_colums_table;
 
 
-        //вывод записей по обьекту set_where
-        if ($this->set_where == null) {
-            //выборка всех записей таблицы
-            $query = Model::factory('All')->select_all_where($this->table);
-        } else {
-            $query = Model::factory('All')->set_where($this->table,
-                $this->set_where['colum'],
-                $this->set_where['operation'],
-                $this->set_where['value']);
-        }
-
-
+        //die(print_r($query));
         //назначение имен полям
         if ($this->new_name_column != '') {
             //если вызов состоялся то метод переиницыализируется
@@ -249,7 +239,6 @@ class Cruds extends Controller_Main {
 
 
         return array(
-            'query' => $query,
             'key_primary' => $this->key_primary,
             //'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
@@ -274,8 +263,9 @@ class Cruds extends Controller_Main {
     //обработка аякс запроса пагинация сортировка поиск возвращает JSON
     public function ajax_query ($get) {
 
-        $count = Model::factory('All')->count_table($this->table);
-         //die($count);
+
+        $count = Model::factory('All')->count_table($this->table, $this->set_where);
+
 
         //если колонка с чекбоксами то добавляем в первый елемент масива первый столбик дублируем 0 и 1 одинаковы
         if ($this->enable_delete_group) {
@@ -285,7 +275,6 @@ class Cruds extends Controller_Main {
         //колонки таблицы для отображения
         foreach ($this->name_colums_ajax as $key => $rows_column) {
             //если добавляется колонка групового удаления делаем перещет номером колонок
-
 
             $column[] = $rows_column['COLUMN_NAME'];
         }
@@ -310,7 +299,8 @@ class Cruds extends Controller_Main {
             $order_column, //название поля по которому будет идти сортировка
             $order_by, //тип сортировки ASK DESK
             $search_like, //строка поиска
-            $column); //поля таблицы
+            $column, //поля таблицы
+            $this->set_where); //метод условие выборки set_where ()
 
         //иницыализация языкового класса
         I18n::lang($this->set_lang);
@@ -484,19 +474,9 @@ class Cruds extends Controller_Main {
 //    callback
 
     //перед удалением
-    public function callback_befor_delete ($name_function, $render = null) {
+    public function callback_befor_delete ($name_function) {
         //проверяем запускается ли из екшенов и определяем метод
-
-        if ($render = 'true') {
-            $data = call_user_func(array($this->class_metod['class'],
-                $name_function));
-        }
-
-        if (@$data === false) {
-            $this->callback_befor_delete = false;
-        } else  {
-            $this->callback_befor_delete = array('name_function' => $name_function);
-        }
+        $this->callback_befor_delete = array('name_function' => $name_function);
 
     }
 
@@ -508,18 +488,10 @@ class Cruds extends Controller_Main {
 
 
     //перед обновлением
-    public function callback_befor_edit ($name_function, $render = null) {
-        //определяем метод
-        if ($render == 'true') {
-            $data = call_user_func(array($this->class_metod['class'],
-                $name_function));
-        }
+    public function callback_befor_edit ($name_function) {
 
-        if (@$data === false) {
-            $this->callback_befor_edit = false;
-        } else {
             $this->callback_befor_edit = array('name_function' => $name_function);
-        }
+
     }
 
     //добавить екшен
@@ -595,22 +567,10 @@ class Cruds extends Controller_Main {
 
 
 
-
     //хук добавить
-    public function callback_before_insert ($name_function, $render = null) {
+    public function callback_before_insert ($name_function) {
 
-
-        if ($render == 'true') {
-            $data = call_user_func(array($this->class_metod['class'],
-                $name_function));
-        }
-
-        if (@$data === false) {
-            $this->callback_before_insert = false;
-        } else {
             $this->callback_before_insert = array('name_function' => $name_function);
-
-        }
 
     }
 

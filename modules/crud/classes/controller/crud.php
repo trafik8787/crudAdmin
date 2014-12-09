@@ -18,7 +18,7 @@ class Controller_Crud extends Controller_Main {
     public function  action_delete () {
 
         $re = unserialize(base64_decode($_POST['obj']));
-       //die(print_r($re));
+        //запускается статический метод Controller_Test::asd
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
         //die($retw->callback_befor_delete);
@@ -35,7 +35,7 @@ class Controller_Crud extends Controller_Main {
         if ($retw->callback_befor_delete != null or $retw->callback_after_delete != null) {
             //получаем масив строку таблицы которая должна быть удалена
             //переиницыализация хуков
-            $retw->callback_befor_delete($retw->callback_befor_delete['name_function'], 'true');
+            $retw->callback_befor_delete($retw->callback_befor_delete['name_function']);
             $retw->callback_after_delete($retw->callback_after_delete['name_function']);
 
             $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id);
@@ -44,6 +44,7 @@ class Controller_Crud extends Controller_Main {
 
         //если хук определен возврящаем данные удаления
         if ($retw->callback_befor_delete != null) {
+            //die(print_r($re['callback_functions_array']['function']));
             //переиницыализация статического метода обработчика
             $callbackStatic = call_user_func(array($re['callback_functions_array']['class'],
                 $retw->callback_befor_delete['name_function']), $query_array_del[0]);
@@ -58,8 +59,9 @@ class Controller_Crud extends Controller_Main {
 
 
 
-        if ($retw->callback_befor_delete !== false) {
+        if (!isset($callbackStatic) or $callbackStatic !== false) {
             //удаляем
+            //die($retw->callback_befor_delete);
             if ($this->del_arr == 1) {
                 $query =  Model::factory('All')->group_delete($retw->table, $this->id_del_array);
             } else {
@@ -245,28 +247,29 @@ class Controller_Crud extends Controller_Main {
             //если хук определен
             if ($retw->callback_befor_edit !== null){
 
-                $retw->callback_befor_edit($retw->callback_befor_edit['name_function'], 'true');
+                $retw->callback_befor_edit($retw->callback_befor_edit['name_function']);
                 //получаем масив строку таблицы которая должна быть редактирована
                 $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id);
                // die(print_r($retw->callback_befor_edit['name_function']));
+
+
+                $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
+                    $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));
+
                 //если в хуке returm false
-                if ($retw->callback_befor_edit !== false) {
-                    //die(print_r($update));
-                    //переиницыализация статического метода обработчика
-                    $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
-                        $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));
+                if ($callbackStatic !== false) {
 
                     if ($callbackStatic != '') {
                         $update = $callbackStatic;
                     }
-                }
-            }
 
-            if ($retw->callback_befor_edit !== false) {
+                    $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
+                }
+            } else {
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
             }
 
-            //die(print_r($update));
+
             Request::initial()->redirect(Kohana::$config->load('crudconfig.base_url'));
         }
 
@@ -496,7 +499,7 @@ class Controller_Crud extends Controller_Main {
 
             if ($retw->callback_before_insert != null) {
                 //переиницыалзация хука
-                $retw->callback_before_insert($retw->callback_before_insert['name_function'], 'true');
+                $retw->callback_before_insert($retw->callback_before_insert['name_function']);
 
                 $insert_befor = $insert;
                 $insert = call_user_func(array($re['callback_functions_array']['class'],
@@ -504,7 +507,7 @@ class Controller_Crud extends Controller_Main {
 
             }
 
-            if ($retw->callback_before_insert !== false) {
+            if ($insert !== false) {
                 //если хук ничего не возвращает пишем введенные в форму данные
                 if ($insert == ''){
                     $insert = $insert_befor;
