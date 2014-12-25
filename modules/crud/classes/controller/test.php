@@ -41,15 +41,15 @@ class Controller_Test extends Controller {
         $crud->set_lang('ru');
         //$crud->load_table('test');
        $crud->show_name_column(array('id' => 'ID', 'name' => 'Название')); //переименование полей таблицы вывода
-       // $crud->callback_befor_delete('call_del');
-       // $crud->callback_after_delete('call_after_del');
+        $crud->callback_befor_delete('call_del');
+        $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
        // $crud->remove_add ();
         //$crud->remove_edit();
         //$crud->set_where('name_en','=', "'Dimona'");
 
-        //$crud->callback_befor_edit('call_bef_edit');
+        $crud->callback_befor_edit('call_bef_edit');
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
@@ -62,7 +62,8 @@ class Controller_Test extends Controller {
 
         //$crud->set_field_type('title', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         //$crud->set_field_type('author', 'text', 'y');
-        //$crud->set_field_type('status', 'checkbox');
+        //$crud->set_field_type('name', array('file', 'uploads', 'pre_', 'views', 'img'), '', 'multiple');
+        $crud->set_field_type('name', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'), 'multiple');
 
         //$crud->relation_one('content_short', 'test', 'deskription');
 
@@ -74,10 +75,18 @@ class Controller_Test extends Controller {
        // $crud->enable_export();
         $crud->enable_delete_group();
 
+        $crud->select_multiselect('name');
+
+        //метод идин ко многим 1. имя таблицы 2. поле с какого будет сниматся информация. 3. поле куда нада записать 4. id записи один ко многим
+        $crud->set_one_to_many('relation_copy', 'name', 'bussines_text', 'parent_id');
+        //$crud->set_one_to_many('relation_copy', 'name_en', 'bussines_id', 'parent_id');
+
+        //$crud->set_one_to_many(таблица, имя поля, имя поля индекса);
+
         //$crud->add_field('name', 'name_en');
         //$crud->edit_fields('name', 'name_en');
 
-       // $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
+        $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
       //  $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;
@@ -88,7 +97,7 @@ class Controller_Test extends Controller {
 
     public static function call_del ($key = null) {
 
-        //die(var_dump($key));
+       // die(print_r($key));
        // return 9;
        //return false;
     }
@@ -98,9 +107,13 @@ class Controller_Test extends Controller {
     }
 
     public static function call_bef_edit ($new_array = null, $old_array = null) {
+        //print_r($old_array);
+        //print_r($new_array);
+        //$new_array['name'] = array(456,678);
+        //die('jr');
        //$new_array['author'] = $old_array['idRT'] . $new_array['author'];
         //$old_array['name'] = 'Beit ShemeshBeit ShemeshBeit Shemesh';
-        //return false;
+        //return  $new_array;
     }
 
     public static function addAction ($key_array = null) {
@@ -115,6 +128,7 @@ class Controller_Test extends Controller {
 
         //$key_array['name'] = 'o;jifkjv;lbkosghpodafgkjpogfk[g';
         //die(print_r($key_array));
+        ///$key_array['name'] = array(234, 345345);
 //       if ( $key_array['title'] == 123) {
 //           $key_array['title'] = 'ggggggggggggggggggggggggg';
 //       }

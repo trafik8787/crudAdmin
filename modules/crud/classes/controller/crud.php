@@ -39,6 +39,13 @@ class Controller_Crud extends Controller_Main {
             $retw->callback_after_delete($retw->callback_after_delete['name_function']);
 
             $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id);
+            //получаем данные из таблиц
+            $query_array_del = $query_array_del[0];
+
+            if ($retw->set_one_to_many) {
+                $query_array_del = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_del, $this->id, false);
+            }
+            //die(print_r($query_array_del));
         }
 
 
@@ -47,7 +54,7 @@ class Controller_Crud extends Controller_Main {
             //die(print_r($re['callback_functions_array']['function']));
             //переиницыализация статического метода обработчика
             $callbackStatic = call_user_func(array($re['callback_functions_array']['class'],
-                $retw->callback_befor_delete['name_function']), $query_array_del[0]);
+                $retw->callback_befor_delete['name_function']), $query_array_del);
 
             //если хук ничего не возвращает то присваивание нового параметра не будет
             if ($callbackStatic != '') {
@@ -58,10 +65,14 @@ class Controller_Crud extends Controller_Main {
 
 
 
-
         if (!isset($callbackStatic) or $callbackStatic !== false) {
             //удаляем
             //die($retw->callback_befor_delete);
+
+            if ($retw->set_one_to_many) {
+                $fields = Model::factory('All')->delete_other_table($retw->set_one_to_many, $this->id);
+            }
+
             if ($this->del_arr == 1) {
                 $query =  Model::factory('All')->group_delete($retw->table, $this->id_del_array);
             } else {
@@ -72,7 +83,7 @@ class Controller_Crud extends Controller_Main {
         //проверяем обявлен ли хук
         if ($retw->callback_after_delete != null) {
             call_user_func(array($re['callback_functions_array']['class'],
-                $retw->callback_after_delete['name_function']), $query_array_del[0]);
+                $retw->callback_after_delete['name_function']), $query_array_del);
         }
 
 
@@ -160,7 +171,14 @@ class Controller_Crud extends Controller_Main {
                         //удаляем пустые элементы масива
                         $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
 
-                        $update[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
+                        //если обявлен метод 1-n
+                        if ($retw->set_one_to_many) {
+                            $update[$name_count_rows['COLUMN_NAME']] = $befor_serialise;
+                        } else {
+                            $update[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
+                        }
+
+
                     } else {
                         $update[$name_count_rows['COLUMN_NAME']] = $_POST[$name_count_rows['COLUMN_NAME']];
                     }
@@ -210,10 +228,15 @@ class Controller_Crud extends Controller_Main {
                            } elseif (empty($file_update) and empty($_POST[$colum_file])) { //если поле file  и скрытые поля пусты
                                $file_update = array();
                            }
-                            //сохранение в базе
-                           $update[$name_count_rows['COLUMN_NAME']] = serialize($file_update);
 
-                           
+                           //если определен метод 1-n
+                           if ($retw->set_one_to_many) {
+                               $update[$name_count_rows['COLUMN_NAME']] = $file_update;
+                           } else {
+                               $update[$name_count_rows['COLUMN_NAME']] = serialize($file_update);
+                           }
+
+
                        } else {
                             //если не multiple
 
@@ -251,10 +274,13 @@ class Controller_Crud extends Controller_Main {
                 //получаем масив строку таблицы которая должна быть редактирована
                 $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id);
                // die(print_r($retw->callback_befor_edit['name_function']));
-
+                //получаем данные из других таблиц для хука
+                if ($retw->set_one_to_many) {
+                    $query_array_edit = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_edit[0], $this->id, false);
+                }
 
                 $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
-                    $retw->callback_befor_edit['name_function']), array($update, $query_array_edit[0]));
+                    $retw->callback_befor_edit['name_function']), array($update, $query_array_edit));
 
                 //если в хуке returm false
                 if ($callbackStatic !== false) {
@@ -263,9 +289,32 @@ class Controller_Crud extends Controller_Main {
                         $update = $callbackStatic;
                     }
 
+                    //если обявлен метод 1-n
+                    if ($retw->set_one_to_many) {
+                        //делаем копию массива
+                        $other_update = $update;
+
+                        $update = $this->clear_field_insert($retw->set_one_to_many, $update);
+
+                        Model::factory('All')->update_other_table($retw->set_one_to_many, $other_update, $_POST[$key_primary]);
+
+                    }
+
                     $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
                 }
             } else {
+
+                //если обявлен метод 1-n
+                if ($retw->set_one_to_many) {
+                    //делаем копию массива
+                    $other_update = $update;
+
+                    $update = $this->clear_field_insert($retw->set_one_to_many, $update);
+
+                    Model::factory('All')->update_other_table($retw->set_one_to_many, $other_update, $_POST[$key_primary]);
+
+                }
+
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
             }
 
@@ -278,6 +327,12 @@ class Controller_Crud extends Controller_Main {
 
         $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
         $fields = $fields[0];
+
+        //если обявлен метод один ко многим то данные для поля берем с другой таблицы
+        if ($retw->set_one_to_many) {
+            $fields = Model::factory('All')->get_other_table($retw->set_one_to_many, $fields, $this->id);
+        }
+
 
         //какие будут отображатся при редактировании
         if ($retw->edit_fields != null) {
@@ -313,9 +368,16 @@ class Controller_Crud extends Controller_Main {
             $disable_editor = null;
         }
 
+        //добавляет к полю select атрибут multiple
+        if (!empty($retw->select_multiselect)) {
+            $select_multiselect = $retw->select_multiselect;
+        } else {
+            $select_multiselect = null;
+        }
+
 
         $viev_edit->edit_property = array('field' => $field,
-
+                                            'select_muliselect' => $select_multiselect,
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
                                             'type_field_upload' => $type_field_upload, //масив параметров для поля file
@@ -363,8 +425,12 @@ class Controller_Crud extends Controller_Main {
 
             $query_array_del = Model::factory('All')->select_all_where($retw->table,$this->id);
 
+            if ($retw->set_one_to_many) {
+                $query_array_del = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_del[0], $this->id, false);
+            }
+
             call_user_func(array($re['callback_functions_array']['class'],
-                Arr::get($_POST, 'func')), $query_array_del[0]);
+                Arr::get($_POST, 'func')), $query_array_del);
         }
 
 
@@ -377,13 +443,7 @@ class Controller_Crud extends Controller_Main {
 
 
 
-
-
-
-
-
-
-
+    //новая запись
     public function action_add () {
 
 
@@ -419,7 +479,15 @@ class Controller_Crud extends Controller_Main {
                         //удаляем пустые элементы масива
                         $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
 
-                        $insert[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
+                        //если обявлен метод записи в таблицу а не сериализация
+                        if ($retw->set_one_to_many) {
+
+                            $insert[$name_count_rows['COLUMN_NAME']] = $befor_serialise;
+
+                        } else {
+                            $insert[$name_count_rows['COLUMN_NAME']] = serialize($befor_serialise);
+                        }
+
 
                     } else {
                         $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
@@ -437,7 +505,7 @@ class Controller_Crud extends Controller_Main {
                         //добавляем название поля если он есть в масиве $_FILES
                         $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
 
-                        //проверяем является ли масивом
+                        //проверяем является ли масивом если multiple
                         if (is_array($_FILES[$name_count_rows['COLUMN_NAME']]['name'])) {
 
 
@@ -458,9 +526,12 @@ class Controller_Crud extends Controller_Main {
                                 }
                             }
 
-                            //сохранение в базе
-                            $insert[$name_count_rows['COLUMN_NAME']] = serialize($file_update);
-
+                            //die(print_r($file_update));
+                            if ($retw->set_one_to_many) {
+                                $insert[$name_count_rows['COLUMN_NAME']] = $file_update;
+                            } else {
+                                $insert[$name_count_rows['COLUMN_NAME']] = serialize($file_update);
+                            }
 
                         } else {
                             //если не multiple
@@ -495,7 +566,6 @@ class Controller_Crud extends Controller_Main {
                 }
 
             }
-            //die(print_r($insert));
 
             if ($retw->callback_before_insert != null) {
                 //переиницыалзация хука
@@ -508,17 +578,31 @@ class Controller_Crud extends Controller_Main {
             }
 
             if ($insert !== false) {
-                //если хук ничего не возвращает пишем введенные в форму данные
+                //если хук ничего не возвращает пишем введенные в форму данные исходные
                 if ($insert == ''){
                     $insert = $insert_befor;
                 }
 
-                //удаляем ключи из масивов
+                //проверяем обявлен ли метод отношение один ко многим
+                if ($retw->set_one_to_many) {
+                    //удалем значение поля которое должно быть записано в другую таблицу в основной таблиице
+                    //это поле останется пустым
+                    $other_insert = $insert;
+                    $insert = $this->clear_field_insert($retw->set_one_to_many, $insert);
+
+                }
+
+                //удаляем ключи из масивов (названия полей)
                 $name_count_insert = array_values($name_count_insert);
                 //die(print_r($name_count_insert));
                 $insert_value = array_values($insert);
 
                 $result = Model::factory('All')->insert($retw->table, $name_count_insert, $insert_value);
+
+                //делаем запись в указаную таблицу
+                if ($retw->set_one_to_many) {
+                    Model::factory('all')->set_other_table($retw->set_one_to_many, $other_insert, $result);
+                }
 
             }
 
@@ -526,7 +610,7 @@ class Controller_Crud extends Controller_Main {
                 //переиницыализация
                 $retw->callback_after_insert($retw->callback_after_insert['name_function'], 'true');
 
-                $query_array_del = Model::factory('All')->select_all_where($retw->table, $result[0]);
+                $query_array_del = Model::factory('All')->select_all_where($retw->table, $result);
                 call_user_func(array($re['callback_functions_array']['class'],
                     $retw->callback_after_insert['name_function']), $query_array_del[0]);
 
@@ -576,11 +660,19 @@ class Controller_Crud extends Controller_Main {
             $disable_editor = null;
         }
 
+        //добавляет к полю select атрибут multiple
+        if (!empty($retw->select_multiselect)) {
+            $select_multiselect = $retw->select_multiselect;
+        } else {
+            $select_multiselect = null;
+        }
+
         $viev_add = View::factory('page/add');
 
         $viev_add->add_property = array('field' => $fields,
             'obj' => $_GET['obj'],
             'disable_editor' => $disable_editor, //отключение редактора
+            'select_muliselect' => $select_multiselect,
             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
             'type_field' => $type_field, //типы полей по дефолту
             'name_colums_table_show' => $retw->new_name_column);
@@ -593,5 +685,16 @@ class Controller_Crud extends Controller_Main {
         $this->template->styles = $crud_style['styles'];
     }
 
+
+    //очистка поля перед записью в основную таблицу
+    private function clear_field_insert ($arr_field_new_table, $arr_insert_val) {
+        foreach ($arr_field_new_table as $rows) {
+            if ($arr_insert_val[$rows['field_old']]) {
+                $arr_insert_val[$rows['field_old']] = '';
+            }
+        }
+
+        return $arr_insert_val;
+    }
 
 }

@@ -87,7 +87,7 @@ $(document).ready(function(){
             .html('<span class="glyphicon glyphicon-minus" style="padding: 3px"></span>');
 
         var wit = newEntry.find('.chosen-container-single').width();
-        console.log(wit);
+        //console.log(wit);
         newEntry.find('.chosen-container-single').detach('.chosen-container-single');
         $(".chosen-select").chosen();
         newEntry.find('.chosen-container-single').css('width', wit+'px');

@@ -7,7 +7,7 @@
 </style>
 
 
- <?//die(print_r(unserialize($origin_value_fild)))?>
+ <?//die(print_r($multiselect))?>
 
 
     <?if (!empty($multiple)):?>
@@ -26,42 +26,73 @@
         }
         ?>
 
-        <div class="w-input-form">
+        <?//выбор стиля поля select?>
+        <?if (!empty($multiselect)):?>
+
             <?if (!empty($origin_value_fild)): //проверка на существование если это add?>
+
                 <?if (is_array($origin_value_fild)):?>
-                    <?foreach ($origin_value_fild as $key_orig_row_val => $orig_row_val):?>
-                        <?//поля с кнопкой -?>
+                        <?$orig_row_val = array_flip($origin_value_fild)?>
                         <div class="entry input-group">
-                            <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
-                                    <?foreach ($value_fild as $val => $row):?>
-                                        <option value="<?=$val?>" <?if ($orig_row_val == $val):?> selected <?endif?>><?=$row?></option>
-                                    <?endforeach?>
+                            <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
+                                <?foreach ($value_fild as $val => $row):?>
+                                    <option value="<?=$val?>" <?if (isset($orig_row_val[$val])):?> selected <?endif?>><?=$row?></option>
+                                <?endforeach?>
                             </select>
-                            <span class="input-group-btn">
-                                <button class="btn btn-remove btn-danger" type="button" style="height: 23px; padding: 0 9px 2px 9px;"><span class="glyphicon glyphicon-minus" style="padding: 3px"></span></button>
-                            </span>
 
                         </div>
 
-                    <?endforeach?>
                 <?endif?>
+
+            <?else:?>
+                <div class="entry input-group">
+                    <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
+                        <?foreach ($value_fild as $val => $row):?>
+                            <option value="<?=$val?>"><?=$row?></option>
+                        <?endforeach?>
+                    </select>
+                </div>
             <?endif?>
 
-            <?//поле с кнопкой +?>
-            <div class="entry input-group">
-                <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
-                    <?foreach ($value_fild as $val => $row):?>
-                        <option value="<?=$val?>"><?=$row?></option>
-                    <?endforeach?>
-                </select>
-                <span class="input-group-btn">
-                    <button class="btn btn-success btn-add" type="button" style="height: 23px; padding: 0 9px 2px 9px;">
-                        <span class="glyphicon glyphicon-plus" style="padding: 3px"></span>
-                    </button>
-                </span>
-            </div>
+        <?else:?>
 
-        </div>
+            <div class="w-input-form">
+                <?if (!empty($origin_value_fild)): //проверка на существование если это add?>
+                    <?if (is_array($origin_value_fild)):?>
+                        <?foreach ($origin_value_fild as $key_orig_row_val => $orig_row_val):?>
+                            <?//поля с кнопкой -?>
+                            <div class="entry input-group">
+                                <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
+                                        <?foreach ($value_fild as $val => $row):?>
+                                            <option value="<?=$val?>" <?if ($orig_row_val == $val):?> selected <?endif?>><?=$row?></option>
+                                        <?endforeach?>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-remove btn-danger" type="button" style="height: 23px; padding: 0 9px 2px 9px;"><span class="glyphicon glyphicon-minus" style="padding: 3px"></span></button>
+                                </span>
+
+                            </div>
+
+                        <?endforeach?>
+                    <?endif?>
+                <?endif?>
+
+                <?//поле с кнопкой +?>
+                <div class="entry input-group">
+                    <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
+                        <?foreach ($value_fild as $val => $row):?>
+                            <option value="<?=$val?>"><?=$row?></option>
+                        <?endforeach?>
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-success btn-add" type="button" style="height: 23px; padding: 0 9px 2px 9px;">
+                            <span class="glyphicon glyphicon-plus" style="padding: 3px"></span>
+                        </button>
+                    </span>
+                </div>
+
+            </div>
+        <?endif?>
 
     <?else:?>
 

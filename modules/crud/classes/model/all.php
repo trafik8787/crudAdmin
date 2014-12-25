@@ -61,9 +61,10 @@ class Model_All extends Model
     }
     //добавление
     public function insert ($table, $column_table, $value_table) {
-        return DB::insert($table, $column_table)
+        $query = DB::insert($table, $column_table)
             ->values($value_table)
             ->execute();
+        return $query[0]; //возвращаем id
     }
 
     //ПОЛУЧАЕМ названия ПОЛЯ ТАБЛИИЦЫ
@@ -242,6 +243,81 @@ class Model_All extends Model
 
     }
 
+
+    //запись в таблицу
+    public function set_other_table ($arr_table_other, $arr_insert, $parent_id) {
+
+        foreach ($arr_table_other as $rows_other) {
+
+            if (isset($arr_insert[$rows_other['field_old']])) {
+
+                foreach ($arr_insert[$rows_other['field_old']] as $row_insert) {
+
+                    $query = DB::insert($rows_other['table'], array($rows_other['field_new'], $rows_other['parent_id']))
+                        ->values(array($row_insert, $parent_id))->execute();
+
+                }
+
+
+            }
+
+        }
+
+    }
+
+    //получить запись из таблицы
+    public function get_other_table ($arr_table_other, $edit_value, $parent_id, $no_serialise=true) {
+
+        foreach ($arr_table_other as $rows) {
+
+            $query = DB::select($rows['field_new'])->from($rows['table'])
+                ->where($rows['parent_id'], '=', $parent_id)
+                ->execute()->as_array();
+
+            if (!empty($query)) {
+                foreach ($query as $query_row) {
+                    $result[] = $query_row[$rows['field_new']];
+                }
+
+
+                if ($no_serialise) {
+                    if (isset($edit_value[$rows['field_old']])) {
+                        $edit_value[$rows['field_old']] = serialize($result);
+                    }
+                } else {
+                    if (isset($edit_value[$rows['field_old']])) {
+                        $edit_value[$rows['field_old']] = $result;
+                    }
+                }
+            }
+
+
+
+            $result = array();
+        }
+
+        return $edit_value;
+    }
+
+    //удаление 1-n
+    public function delete_other_table ($arr_table_other, $id) {
+
+        foreach ($arr_table_other as $rows) {
+
+            $query = DB::delete($rows['table'])
+                ->where($rows['parent_id'], '=', $id)
+                ->execute();
+        }
+
+    }
+
+    //обновление записи для 1-n
+    public function update_other_table ($arr_table_other, $edit_value, $id) {
+
+        $this->delete_other_table($arr_table_other, $id);
+        $this->set_other_table($arr_table_other, $edit_value, $id);
+
+    }
 
 
 }

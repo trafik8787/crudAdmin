@@ -31,7 +31,7 @@
 
 
 </script>
-<!--<pre>--><?////die(print_r($add_property))?><!--</pre>-->
+<!--<pre>--><?//print_r($add_property)?><!--</pre>-->
 
 
 <div class="container">
@@ -106,6 +106,13 @@
                             <?else:?>
 
                                 <?
+                                    //добавляет к полю select атрибут multiple
+                                    if (!empty($add_property['select_muliselect'][$name_fied])) {
+                                        $multiselect = $add_property['select_muliselect'][$name_fied];
+                                    } else {
+                                        $multiselect = '';
+                                    }
+
                                     //атрибуты
                                     if (!empty($add_property['new_type_field'][$name_fied]['attr'])) {
 
@@ -146,7 +153,8 @@
                                             'value_fild' => $value_fild,
                                             'multiple' => $multiple,
                                             'name_fied' => $name_fied,
-                                            'attr' => $attr
+                                            'attr' => $attr,
+                                            'multiselect' => $multiselect //изменяет поле select
                                         );
 
                                         echo View::factory('controls/select', $data);
