@@ -31,20 +31,28 @@
 
             <?if (!empty($origin_value_fild)): //проверка на существование если это add?>
 
-                <?if (is_array($origin_value_fild)):?>
+                <?if (is_array($origin_value_fild)): //делаем проверку масив ли это?>
                         <?$orig_row_val = array_flip($origin_value_fild)?>
                         <div class="entry input-group">
-                            <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
+                            <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
                                 <?foreach ($value_fild as $val => $row):?>
                                     <option value="<?=$val?>" <?if (isset($orig_row_val[$val])):?> selected <?endif?>><?=$row?></option>
                                 <?endforeach?>
                             </select>
-
                         </div>
 
+                <?else:?>
+                    <div class="entry input-group">
+                        <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
+                            <?foreach ($value_fild as $val => $row):?>
+                                <option value="<?=$val?>"><?=$row?></option>
+                            <?endforeach?>
+                        </select>
+                    </div>
                 <?endif?>
 
             <?else:?>
+
                 <div class="entry input-group">
                     <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" style="width:500px; height: 20px;" <?=$multiselect?> name="<?=$name_fied?>[]" id="">
                         <?foreach ($value_fild as $val => $row):?>
@@ -62,7 +70,7 @@
                         <?foreach ($origin_value_fild as $key_orig_row_val => $orig_row_val):?>
                             <?//поля с кнопкой -?>
                             <div class="entry input-group">
-                                <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
+                                <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
                                         <?foreach ($value_fild as $val => $row):?>
                                             <option value="<?=$val?>" <?if ($orig_row_val == $val):?> selected <?endif?>><?=$row?></option>
                                         <?endforeach?>
@@ -79,7 +87,7 @@
 
                 <?//поле с кнопкой +?>
                 <div class="entry input-group">
-                    <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
+                    <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" name="<?=$name_fied?>[]" id="">
                         <?foreach ($value_fild as $val => $row):?>
                             <option value="<?=$val?>"><?=$row?></option>
                         <?endforeach?>
@@ -96,7 +104,7 @@
 
     <?else:?>
 
-        <select <?=$attr?> data-placeholder="Choose a Country..." class="form-control chosen-select" name="<?=$name_fied?>" id="">
+        <select <?=$attr?> data-placeholder="Выбрать..." class="form-control chosen-select" name="<?=$name_fied?>" id="">
             <?//проверяем вляется ли переменная масивом?>
             <?if(is_array($value_fild)):?>
                 <?foreach ($value_fild as $val => $row):?>

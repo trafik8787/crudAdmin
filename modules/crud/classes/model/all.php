@@ -9,6 +9,7 @@
 class Model_All extends Model
 {
     protected  $key_primary;
+    private $field_names_array; //масив полей таблицы которые были спарсены напр. {username} ( {last_name} {first_name} )
 
     //выборка по id или без него
     public function select_all_where ($table, $id = null) {
@@ -121,6 +122,8 @@ class Model_All extends Model
     //типы полей таблицы
     private function information_data_type ($table) {
 
+
+
     $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
                                                   FROM INFORMATION_SCHEMA.COLUMNS
                                                   WHERE table_name = :tab
@@ -131,7 +134,6 @@ class Model_All extends Model
     foreach ($data_type->execute()->as_array() as $row) {
         $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
     }
-
 
     return $result;
 }
@@ -220,22 +222,82 @@ class Model_All extends Model
         return array('query' => $query, 'count' => count($query_count));
     }
 
-    //получение данных из другой таблицы
-    public function get_table_relativ ($Table, $field, $field_value) {
+    private function get_pars_string ($field) {
 
-        $query = DB::query(Database::SELECT,
-            'SELECT '.$field.','.$field_value.' FROM ' .$Table.'')
-            ->execute()
-            ->as_array();
+        if(!strstr($field,'{')) {
+            $this->field_names_array = $field;
+        } else {
+            $temp1 = explode('{', $field);
+            unset($temp1[0]);
+
+            $field_names_array = array();
+            foreach ($temp1 as $field)
+                list($field_names_array[]) = explode('}', $field);
+
+           $this->field_names_array = $field_names_array;
+        }
+    }
+
+
+
+    //получение данных из другой таблицы
+    public function get_table_relativ ($Table, $field, $field_value, $wheres_arr = null, $oder_by = null) {
+
+
+        $this->get_pars_string($field);
+
+        if ($wheres_arr == null) {
+
+            $query = DB::select()
+                ->from($Table)
+                ->execute()
+                ->as_array();
+        } else {
+            //присваиваем id записи основной таблицы
+            if ($wheres_arr[2] == 'IDKEY') {
+                $wheres_arr[2] = Cruds::$id;
+            }
+
+            $query = DB::select()
+                ->from($Table)
+                ->where($wheres_arr[0], $wheres_arr[1], $wheres_arr[2])
+                ->execute()
+                ->as_array();
+
+        }
 
 
         if (!empty($query)) {
+            //проверяем если масив
+            if (is_array($this->field_names_array)) {
 
-            foreach ($query as $rows) {
-                $result[$rows[$field_value]] = $rows[$field];
+                foreach ($this->field_names_array as $field_row) {
+                    $temp[] = '{' . $field_row . '}';
+                }
+
+                foreach ($query as $rows) {
+
+                    foreach ($this->field_names_array as $field_names_array_rows) {
+                        $arr_recurs[] = $rows[$field_names_array_rows];
+                    }
+
+                    $str_row = str_replace($temp, $arr_recurs, $field);
+
+                    $result[$rows[$field_value]] = $str_row;
+                    $arr_recurs = array();
+                }
+
+                return $result;
+
+            } else {
+
+                foreach ($query as $rows) {
+                    $result[$rows[$field_value]] = $rows[$this->field_names_array];
+                }
+
+                return $result;
             }
 
-            return $result;
         } else {
             return false;
         }
@@ -318,6 +380,5 @@ class Model_All extends Model
         $this->set_other_table($arr_table_other, $edit_value, $id);
 
     }
-
 
 }

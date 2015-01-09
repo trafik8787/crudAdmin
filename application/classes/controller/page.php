@@ -15,12 +15,8 @@ class Controller_Page extends Controller_Base {
 
     public function action_about () {
 
-       $crud = new Crud;
-       $crud->load();
 
-//       $about = View::factory('/pages/about');
-//        $about->id = $crud->we;
-       View::set_global('title', $crud->render());
+
 
     }
 }

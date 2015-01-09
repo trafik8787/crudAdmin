@@ -1,4 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
+
 /**
  * Created by JetBrains PhpStorm.
  * User: Vitalik
@@ -23,29 +24,33 @@
  * третий параметр - принимает значение поля по дефолту может принимать масив для чекбоксов и радио array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю')
  * четвертый параметр  - multiple поля множественного выбора
  * пятый - масив атрибутов поля
-*/
+ * шестой - для полей select, radio, checkbox (в этом случае третий параметр игнорируется)принимает масив например array('category', '{name} №-{id}','id') 1. название таблицы 2. шаблок вывода в поле select 3. имя поля которое попадет в value
+ */
+class Controller_Test extends Controller
+{
 
-class Controller_Test extends Controller {
-
-    public function action_index() {
+    public function action_index()
+    {
 
         $this->response->body(self::asd()->render());
 
     }
 
 
-    public static  function asd () {
+
+    public static function asd()
+    {
         $crud = new Cruds;
         $crud->load_table('city');
 
         $crud->set_lang('ru');
         //$crud->load_table('test');
-       $crud->show_name_column(array('id' => 'ID', 'name' => 'Название')); //переименование полей таблицы вывода
+        $crud->show_name_column(array('id' => 'ID', 'name' => 'Название')); //переименование полей таблицы вывода
         $crud->callback_befor_delete('call_del');
         $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
-       // $crud->remove_add ();
+        // $crud->remove_add ();
         //$crud->remove_edit();
         //$crud->set_where('name_en','=', "'Dimona'");
 
@@ -53,32 +58,36 @@ class Controller_Test extends Controller {
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-       //$crud->set_field_type('name_en', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
+        //$crud->set_field_type('name_en', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
         //$crud->set_field_type('name_en', array('file', 'uploads', 'pre_', 'views', 'img'),'', 'multiple');
         //$crud->set_field_type('status', 'checkbox', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
-       // $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
+        // $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
         //$crud->set_field_type('content_short', array('file', 'uploads', 'pre_', 'views', 'img'),'', '');
 
 
         //$crud->set_field_type('title', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         //$crud->set_field_type('author', 'text', 'y');
         //$crud->set_field_type('name', array('file', 'uploads', 'pre_', 'views', 'img'), '', 'multiple');
-        $crud->set_field_type('name', 'select', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'), 'multiple');
+       // array('id', '=', 2)
+        $crud->set_field_type('name', 'select', array('y' => 'Да', 'n' => 'Нет'), '', '', array('category', 'name', 'id', ''));
+        //$crud->set_field_type('name_en', 'select', array('y' => 'Да', 'n' => 'Нет'), 'multiple', '', array('category', '{name} №-{id}','id'));
+        //$crud->set_one_to_many('relation_copy', 'name', 'bussines_text', 'category_id');
 
-        //$crud->relation_one('content_short', 'test', 'deskription');
 
         //$crud->disable_search();
-       $crud->disable_editor('name');
+        $crud->disable_editor('name');
         $crud->disable_editor('name_en');
         $crud->disable_editor('region_en');
         $crud->disable_editor('region');
-       // $crud->enable_export();
+        // $crud->enable_export();
         $crud->enable_delete_group();
 
+        //изминить вид поля select
         $crud->select_multiselect('name');
+        //$crud->select_multiselect('name_en');
 
         //метод идин ко многим 1. имя таблицы 2. поле с какого будет сниматся информация. 3. поле куда нада записать 4. id записи один ко многим
-        $crud->set_one_to_many('relation_copy', 'name', 'bussines_text', 'parent_id');
+
         //$crud->set_one_to_many('relation_copy', 'name_en', 'bussines_id', 'parent_id');
 
         //$crud->set_one_to_many(таблица, имя поля, имя поля индекса);
@@ -87,7 +96,7 @@ class Controller_Test extends Controller {
         //$crud->edit_fields('name', 'name_en');
 
         $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
-      //  $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
+        //  $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;
         //die(print_r(Kohana::$config->load('crudconfig.database')));
@@ -95,36 +104,42 @@ class Controller_Test extends Controller {
         return $crud;
     }
 
-    public static function call_del ($key = null) {
+    public static function call_del($key = null)
+    {
 
-       // die(print_r($key));
-       // return 9;
-       //return false;
+        // die(print_r($key));
+        // return 9;
+        //return false;
     }
 
-    public static function call_after_del ($key_array = null) {
+    public static function call_after_del($key_array = null)
+    {
         //die(print_r($key_array));
     }
 
-    public static function call_bef_edit ($new_array = null, $old_array = null) {
+    public static function call_bef_edit($new_array = null, $old_array = null)
+    {
         //print_r($old_array);
         //print_r($new_array);
         //$new_array['name'] = array(456,678);
         //die('jr');
-       //$new_array['author'] = $old_array['idRT'] . $new_array['author'];
+        //$new_array['author'] = $old_array['idRT'] . $new_array['author'];
         //$old_array['name'] = 'Beit ShemeshBeit ShemeshBeit Shemesh';
         //return  $new_array;
     }
 
-    public static function addAction ($key_array = null) {
+    public static function addAction($key_array = null)
+    {
         //die(print_r($key_array));
     }
 
-    public static function addAction2 ($key_array = null) {
+    public static function addAction2($key_array = null)
+    {
         die(print_r($key_array));
     }
 
-    public static function  cal_bef_inser ($key_array = null) {
+    public static function  cal_bef_inser($key_array = null)
+    {
 
         //$key_array['name'] = 'o;jifkjv;lbkosghpodafgkjpogfk[g';
         //die(print_r($key_array));
@@ -132,15 +147,15 @@ class Controller_Test extends Controller {
 //       if ( $key_array['title'] == 123) {
 //           $key_array['title'] = 'ggggggggggggggggggggggggg';
 //       }
-       //die($key_array['name']);
+        //die($key_array['name']);
         //return $key_array;
     }
 
 
-    public static function cal_insert_inser ($key_array = null) {
+    public static function cal_insert_inser($key_array = null)
+    {
         //die(print_r($key_array));
     }
-
 
 
 }

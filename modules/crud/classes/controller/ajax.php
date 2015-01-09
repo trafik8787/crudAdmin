@@ -25,8 +25,11 @@ class Controller_Ajax extends Controller {
 
         $file = $this->request->param('file');
 
+
         $ext = pathinfo($file, PATHINFO_EXTENSION);
         $file = substr($file, 0, -(strlen($ext) + 1));
+
+        //die(print_r($file));
 
         $file = Kohana::find_file('media', $file, $ext);
 

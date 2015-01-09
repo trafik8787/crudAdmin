@@ -159,6 +159,7 @@
                                         //если селект
                                         } elseif ($edit_property['type_field'][$name_fied] == 'select') {
 
+                                            //die(print_r($origin_value_fild));
                                             $data = array(
                                                 'origin_value_fild' => $origin_value_fild,
                                                 'value_fild' => $value_fild,

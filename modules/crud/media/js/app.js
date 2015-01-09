@@ -89,7 +89,9 @@ $(document).ready(function(){
         var wit = newEntry.find('.chosen-container-single').width();
         //console.log(wit);
         newEntry.find('.chosen-container-single').detach('.chosen-container-single');
-        $(".chosen-select").chosen();
+        $(".chosen-select").chosen({
+            allow_single_deselect: true
+        });
         newEntry.find('.chosen-container-single').css('width', wit+'px');
 
 
@@ -111,7 +113,9 @@ $(document).ready(function(){
     });
 
 
-    $(".chosen-select").chosen();
+    $(".chosen-select").chosen({
+        allow_single_deselect: true
+    });
 
     $('.form_date').datetimepicker({
         weekStart: 1,

@@ -60,6 +60,8 @@ class Cruds extends Controller_Main {
 
     public $select_multiselect = null; //изменяет поле select
 
+    public static $id = null; //хранит id записи
+
     public function __construct () {
         parent::before();
 
@@ -600,12 +602,17 @@ class Cruds extends Controller_Main {
     }
 
     //типы полей
-    public function set_field_type ($field_name, $type_field, $field_value = null, $multiple = null, $attr = null) {
+    public function set_field_type ($field_name, $type_field, $field_value = null, $multiple = null, $attr = null, $relation_one = null) {
         //все вызовы в один масив аргументов
         //если тип поля file то принимаем масив значений тип, путь
         if  (is_array($type_field)) {
             $this->type_field_upload[$field_name] = $type_field;
             $type_field = $type_field[0];
+        }
+
+        //проверяем передал ли масив
+        if (!is_array($relation_one)) {
+            $relation_one = null;
         }
 
         if ($attr != null) {
@@ -621,8 +628,40 @@ class Cruds extends Controller_Main {
             'type_field' => $type_field,
             'field_value' => $field_value,
             'multiple' => $multiple,
-            'attr' => $attr_str
+            'attr' => $attr_str,
+            'template_relation' => $relation_one
         );
+    }
+
+    //переоприделение масива метода set_field_type если передан параметр $relation_one
+    public function reload_field_type ($arr_set_field_type) {
+
+
+
+        foreach ($arr_set_field_type as $name_field => $field_rows) {
+
+            if ($field_rows['template_relation'] != null) {
+
+                if (isset($field_rows['template_relation'][3])){
+                    $where_relation = $field_rows['template_relation'][3];
+                } else {
+                    $where_relation = null;
+                }
+
+
+                $field_rows['field_value'] = $this->relation_one($field_rows['template_relation'][0],
+                                                                $field_rows['template_relation'][1],
+                                                                $field_rows['template_relation'][2],
+                                                                $where_relation);
+
+            }
+
+            $result[$name_field] = $field_rows;
+        }
+
+
+
+        $this->set_field_type = $result;
     }
 
     //проверяет является ли файл картинкой
@@ -661,9 +700,9 @@ class Cruds extends Controller_Main {
     }
 
     //выборка из таблицы набора значений
-    public function relation_one ($Table, $field2, $field_value) {
+    public function relation_one ($Table, $field2, $field_value, $where_field) {
 
-        $this->relation_one = Model::factory('All')->get_table_relativ($Table, $field2, $field_value);
+        $this->relation_one = Model::factory('All')->get_table_relativ($Table, $field2, $field_value, $where_field);
         return $this->relation_one;
     }
 
@@ -675,11 +714,12 @@ class Cruds extends Controller_Main {
                                         'parent_id' => $parent_id);
     }
 
-    public function set_many_to_many () {
-        $this->set_many_to_many = true;
-    }
+//    public function set_many_to_many ($table$field_old,) {
+//        $this->set_many_to_many[] = array('table_relation' => $table_relation);
+//    }
 
     //изминяет поле select
+//    todo Изминение поля select
     public function select_multiselect ($field_name) {
         $this->select_multiselect[$field_name] = 'multiple';
     }

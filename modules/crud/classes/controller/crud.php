@@ -152,11 +152,12 @@ class Controller_Crud extends Controller_Main {
             $this->id = Arr::get($_GET, 'id');
         }
 
-
+        Cruds::$id = $this->id;
 
         if (isset($_POST['edit'])) {
 
             $this->id = Arr::get($_POST, $key_primary);
+
 
             $name_count = Model::factory('All')->name_count($retw->table);
             //перебори формирования массива для передачи в модель для обновления записей
@@ -182,7 +183,7 @@ class Controller_Crud extends Controller_Main {
                     } else {
                         $update[$name_count_rows['COLUMN_NAME']] = $_POST[$name_count_rows['COLUMN_NAME']];
                     }
-                //если поля нету то проверяем масив $_FILES
+                    //если поля нету то проверяем масив $_FILES
                     $new_array = $update;
                 } else {
 
@@ -349,6 +350,10 @@ class Controller_Crud extends Controller_Main {
 
         //полечаем значения для переопределения типов полей
         if (!empty($retw->set_field_type)) {
+
+            //переопределяем масив $retw->set_field_type если передан параметр  $relation_one
+            $retw->reload_field_type($retw->set_field_type);
+
             $new_type_field = $retw->set_field_type;
         } else {
             $new_type_field = null;
@@ -647,7 +652,12 @@ class Controller_Crud extends Controller_Main {
 
         //полечаем значения для переопределения типов полей
         if (!empty($retw->set_field_type)) {
+
+            //переопределяем масив $retw->set_field_type если передан параметр  $relation_one
+            $retw->reload_field_type($retw->set_field_type);
             $new_type_field = $retw->set_field_type;
+
+
         } else {
             $new_type_field = null;
         }
