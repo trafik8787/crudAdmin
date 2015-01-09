@@ -21,7 +21,7 @@ class Controller_Crud extends Controller_Main {
         //запускается статический метод Controller_Test::asd
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
-        //die($retw->callback_befor_delete);
+
         $this->id = Arr::get($_POST, 'id');
 
         //флаг для групового удаления
@@ -29,13 +29,12 @@ class Controller_Crud extends Controller_Main {
 
         $this->id_del_array =  Arr::get($_POST, 'id_del_array');
 
-        //die(print_r($this->id_del_array));
 
         //делаем запрос если хоть один хук обявлен
-        if ($retw->callback_befor_delete != null or $retw->callback_after_delete != null) {
+        if ($retw->callback_before_delete != null or $retw->callback_after_delete != null) {
             //получаем масив строку таблицы которая должна быть удалена
             //переиницыализация хуков
-            $retw->callback_befor_delete($retw->callback_befor_delete['name_function']);
+            $retw->callback_before_delete($retw->callback_before_delete['name_function']);
             $retw->callback_after_delete($retw->callback_after_delete['name_function']);
 
             $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id);
@@ -50,11 +49,11 @@ class Controller_Crud extends Controller_Main {
 
 
         //если хук определен возврящаем данные удаления
-        if ($retw->callback_befor_delete != null) {
+        if ($retw->callback_before_delete != null) {
             //die(print_r($re['callback_functions_array']['function']));
             //переиницыализация статического метода обработчика
             $callbackStatic = call_user_func(array($re['callback_functions_array']['class'],
-                $retw->callback_befor_delete['name_function']), $query_array_del);
+                $retw->callback_before_delete['name_function']), $query_array_del);
 
             //если хук ничего не возвращает то присваивание нового параметра не будет
             if ($callbackStatic != '') {
@@ -67,7 +66,6 @@ class Controller_Crud extends Controller_Main {
 
         if (!isset($callbackStatic) or $callbackStatic !== false) {
             //удаляем
-            //die($retw->callback_befor_delete);
 
             if ($retw->set_one_to_many) {
                 $fields = Model::factory('All')->delete_other_table($retw->set_one_to_many, $this->id);
@@ -170,7 +168,8 @@ class Controller_Crud extends Controller_Main {
                     //если это масив то сериализуем
                     if (is_array($_POST[$name_count_rows['COLUMN_NAME']])) {
                         //удаляем пустые элементы масива
-                        $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
+
+                        $befor_serialise = array_filter($_POST[$name_count_rows['COLUMN_NAME']]);
 
                         //если обявлен метод 1-n
                         if ($retw->set_one_to_many) {
@@ -269,19 +268,18 @@ class Controller_Crud extends Controller_Main {
 
 
             //если хук определен
-            if ($retw->callback_befor_edit !== null){
+            if ($retw->callback_before_edit !== null){
 
-                $retw->callback_befor_edit($retw->callback_befor_edit['name_function']);
+                $retw->callback_before_edit($retw->callback_before_edit['name_function']);
                 //получаем масив строку таблицы которая должна быть редактирована
                 $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id);
-               // die(print_r($retw->callback_befor_edit['name_function']));
                 //получаем данные из других таблиц для хука
                 if ($retw->set_one_to_many) {
                     $query_array_edit = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_edit[0], $this->id, false);
                 }
 
                 $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
-                    $retw->callback_befor_edit['name_function']), array($update, $query_array_edit));
+                    $retw->callback_before_edit['name_function']), array($update, $query_array_edit));
 
                 //если в хуке returm false
                 if ($callbackStatic !== false) {
@@ -446,6 +444,61 @@ class Controller_Crud extends Controller_Main {
 
 
 
+    public function action_show_views () {
+
+        $re = unserialize(base64_decode($_GET['obj']));
+
+        $retw = call_user_func(array($re['callback_functions_array']['class'],
+        $re['callback_functions_array']['function']));
+
+            //установка язика
+        I18n::lang($retw->set_lang);
+
+        $key_primary = Model::factory('All')->information_table($retw->table, true);
+        $key_primary = $key_primary[0]->COLUMN_NAME;
+
+        $this->id = Arr::get($_GET, 'id');
+
+        //вид edit
+        $show_views = View::factory('page/show_views');
+
+
+        $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
+        $fields = $fields[0];
+
+        //если обявлен метод один ко многим то данные для поля берем с другой таблицы
+        if ($retw->set_one_to_many) {
+            $fields = Model::factory('All')->get_other_table($retw->set_one_to_many, $fields, $this->id);
+        }
+
+
+        //какие будут отображатся при редактировании
+        if ($retw->edit_fields != null) {
+            //вычисляяем пересечение масивов по ключам
+            $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
+            $field[$key_primary] = $fields[$key_primary];
+        } else {
+            $field = $fields;
+        }
+
+        $show_views->show_views_property = array(
+            'field' => $field,
+            'key_primary' => $key_primary, //id первичный ключ
+            'obj' => $_GET['obj'],
+            'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
+
+        $this->template->render = $show_views;
+
+
+        $crud_style = $retw->static_style();
+
+        $this->template->scripts = $crud_style['scripts'];
+        $this->template->styles = $crud_style['styles'];
+
+    }
+
+
+
 
 
     //новая запись
@@ -482,7 +535,7 @@ class Controller_Crud extends Controller_Main {
                         //подготовка масиивов для передачи в модель
                         $name_count_insert[] = $name_count_rows['COLUMN_NAME'];
                         //удаляем пустые элементы масива
-                        $befor_serialise = array_diff($_POST[$name_count_rows['COLUMN_NAME']], array(''));
+                        $befor_serialise = array_filter($_POST[$name_count_rows['COLUMN_NAME']]);
 
                         //если обявлен метод записи в таблицу а не сериализация
                         if ($retw->set_one_to_many) {

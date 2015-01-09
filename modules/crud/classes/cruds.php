@@ -25,6 +25,11 @@ class Cruds extends Controller_Main {
     private $remove_edit = null; //уброать кнопку редактировать
     private $remove_add = null; //уброать кнопку добавить
 
+    private $show_views = false; //кнопка просмотра записи
+
+    private $icon_edit = false; //переопредилить иконку кнопки редактирования
+    private $icon_delete = false; //переопредилить иконку кнопки удалить
+
     public $disable_editor = array(); //отключение редактора
     private $disable_search = 'f'; //отключение поиска по таблице
     private $enable_delete_group; //включить груповое удаление
@@ -49,9 +54,9 @@ class Cruds extends Controller_Main {
     private $tmp_name_column_file; //временно для rows
 
     //хуки
-    public $callback_befor_delete = null; //перед удалением
+    public $callback_before_delete = null; //перед удалением
     public $callback_after_delete = null; //после удаления
-    public $callback_befor_edit = null; //перед обновлением
+    public $callback_before_edit = null; //перед обновлением
     public $callback_before_insert = null; //перед добавлением
     public $callback_after_insert = null; //после добавления
 
@@ -94,6 +99,25 @@ class Cruds extends Controller_Main {
     //метот блокирования кнопки редактировать
     public function remove_edit () {
         $this->remove_edit = true;
+    }
+
+    //вывод кнопки просмотра записи
+    public function show_views ($icon_class = null) {
+        if ($icon_class == null) {
+            $this->show_views = true;
+        } else {
+            $this->show_views = $icon_class;
+        }
+    }
+
+    //метод переопределяет иконку кноки редактирования название пропадает принимает имя класса
+    public function icon_edit ($icon_class) {
+        $this->icon_edit = $icon_class;
+    }
+
+    //метод переопределяет иконку кноки удаления название пропадает принимает имя класса
+    public function icon_delete ($icon_class) {
+        $this->icon_delete = $icon_class;
     }
 
     public function set_where ($colum, $operation, $value) {
@@ -248,7 +272,8 @@ class Cruds extends Controller_Main {
             'key_primary' => $this->key_primary,
             //'add_insert' => 'asd',
             'add_action_url_icon' => $this->add_action, //добавление екшенов
-            'activ_operation' => array('delete' => $this->remove_delete,
+            'activ_operation' => array(
+                'delete' => $this->remove_delete,
                 'edit' => $this->remove_edit,
                 'add' => $this->remove_add,
                 'search' => $this->disable_search,
@@ -321,15 +346,41 @@ class Cruds extends Controller_Main {
             //редактировать
             if ($this->remove_edit !== true) {
 
+                $icon_edit = null;
+                if ($this->icon_edit !== false) {
+                    $icon_edit = $this->icon_edit;
+                }
+
                 $data = array(
                     'obj' => $obj,
                     'id' => $rows[$this->key_primary],
+                    'icon_edit' => $icon_edit
                 );
                 //добавляем форму
                 $htm_edit = View::factory('action_page/actionEdit', $data);
 
             } else {
                 $htm_edit = '';
+            }
+
+            //кнопка просмотра
+            if ($this->show_views !== false) {
+
+                $icon_vievs = null;
+                if ($this->show_views !== true) {
+                    $icon_vievs = $this->show_views;
+                }
+
+                $data = array(
+                    'obj' => $obj,
+                    'id' => $rows[$this->key_primary],
+                    'icon_class' => $icon_vievs
+                );
+                //добавляем форму
+                $htm_show_views = View::factory('action_page/actionShowViews', $data);
+
+            } else {
+                $htm_show_views = '';
             }
 
             //новые екшены
@@ -356,9 +407,16 @@ class Cruds extends Controller_Main {
             //удалить
             if ($this->remove_delete !== true) {
 
+                $icon_delete = null;
+                if ($this->icon_delete !== false) {
+                    $icon_delete = $this->icon_delete;
+                }
+
+
                 $data = array(
                     'obj' => $obj,
                     'id' => $rows[$this->key_primary],
+                    'icon_delete' => $icon_delete
                 );
                 //добавляем форму
                 $htm_delete = View::factory('action_page/actionDel', $data);
@@ -432,7 +490,7 @@ class Cruds extends Controller_Main {
                 array_unshift($tmp_array, '<input type="checkbox" class="w-chec-table" name="id_del_array[]" value="'.$rows[$this->key_primary].'">');
             }
 
-            $tmp_array[] = $htm_edit.$htm_action.$htm_delete;
+            $tmp_array[] = $htm_show_views.$htm_edit.$htm_action.$htm_delete;
             $dataQuery[] = $tmp_array;
 
 
@@ -480,9 +538,9 @@ class Cruds extends Controller_Main {
 //    callback
 
     //перед удалением
-    public function callback_befor_delete ($name_function) {
+    public function callback_before_delete ($name_function) {
         //проверяем запускается ли из екшенов и определяем метод
-        $this->callback_befor_delete = array('name_function' => $name_function);
+        $this->callback_before_delete = array('name_function' => $name_function);
 
     }
 
@@ -494,9 +552,9 @@ class Cruds extends Controller_Main {
 
 
     //перед обновлением
-    public function callback_befor_edit ($name_function) {
+    public function callback_before_edit ($name_function) {
 
-            $this->callback_befor_edit = array('name_function' => $name_function);
+            $this->callback_before_edit = array('name_function' => $name_function);
 
     }
 

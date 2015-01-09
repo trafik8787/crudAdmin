@@ -46,7 +46,7 @@ class Controller_Test extends Controller
         $crud->set_lang('ru');
         //$crud->load_table('test');
         $crud->show_name_column(array('id' => 'ID', 'name' => 'Название')); //переименование полей таблицы вывода
-        $crud->callback_befor_delete('call_del');
+        $crud->callback_before_delete('call_del');
         $crud->callback_after_delete('call_after_del');
         //$crud->show_columns('idRT', 'title', 'author');
         //$crud->remove_delete();
@@ -54,7 +54,7 @@ class Controller_Test extends Controller
         //$crud->remove_edit();
         //$crud->set_where('name_en','=', "'Dimona'");
 
-        $crud->callback_befor_edit('call_bef_edit');
+        $crud->callback_before_edit('call_bef_edit');
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
@@ -69,7 +69,7 @@ class Controller_Test extends Controller
         //$crud->set_field_type('author', 'text', 'y');
         //$crud->set_field_type('name', array('file', 'uploads', 'pre_', 'views', 'img'), '', 'multiple');
        // array('id', '=', 2)
-        $crud->set_field_type('name', 'select', array('y' => 'Да', 'n' => 'Нет'), '', '', array('category', 'name', 'id', ''));
+        $crud->set_field_type('name', 'text', array('y' => 'Да', 'n' => 'Нет'), 'multiple', '', array('category', 'name', 'id', ''));
         //$crud->set_field_type('name_en', 'select', array('y' => 'Да', 'n' => 'Нет'), 'multiple', '', array('category', '{name} №-{id}','id'));
         //$crud->set_one_to_many('relation_copy', 'name', 'bussines_text', 'category_id');
 
@@ -81,6 +81,14 @@ class Controller_Test extends Controller
         $crud->disable_editor('region');
         // $crud->enable_export();
         $crud->enable_delete_group();
+
+        //добавляет кнопку просмотра передача необязательного параметра названия класа иконки
+        $crud->show_views('glyphicon-search');
+
+        //переопределяет значки кнопок редактировать
+        $crud->icon_edit('glyphicon-pencil');
+        //переопределяет значки кнопок удалить
+        $crud->icon_delete('glyphicon-remove-circle');
 
         //изминить вид поля select
         $crud->select_multiselect('name');
@@ -95,7 +103,7 @@ class Controller_Test extends Controller
         //$crud->add_field('name', 'name_en');
         //$crud->edit_fields('name', 'name_en');
 
-        $crud->add_action('addAction', 'Ban', 'ban/actionAdd', 'glyphicon glyphicon-tower');
+        $crud->add_action('addAction', '', 'ban/actionAdd', 'glyphicon glyphicon-tower');
         //  $crud->add_action('addAction2', 'Ban2', 'ban/actionAdd2');
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;

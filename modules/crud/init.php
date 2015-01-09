@@ -30,6 +30,12 @@ Route::set('add', Kohana::$config->load('crudconfig.base_url').'/add')
     'action'     => 'add',
 ));
 
+Route::set('show_views', Kohana::$config->load('crudconfig.base_url').'/show_views')
+    ->defaults(array(
+        'controller' => 'crud',
+        'action'     => 'show_views',
+    ));
+
 Route::set('NewAction', Kohana::$config->load('crudconfig.base_url').'/new(/<urlnew>(/<id>))')
     ->defaults(array(
     'controller' => 'crud',
