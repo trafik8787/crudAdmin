@@ -10,51 +10,56 @@ $(document).on('click', '.w-cheked-status', function() {
 });
 </script>
 
-<div class="checkbox">
 
-    <?if(is_array($value_fild)):?>
-        <?
-            if(!empty($origin_value_fild)) {
+<div class="w-chec has-error">
+    <div class="checkbox">
+        <div class="w-cheked-right">
 
-                try {
-                    $arr_value = unserialize($origin_value_fild);
-                } catch (Exception $e) {
-                    $arr_value = $origin_value_fild;
-                }
+            <?if(is_array($value_fild)):?>
+                <?
+                    if(!empty($origin_value_fild)) {
 
-            }
+                        try {
+                            $arr_value = unserialize($origin_value_fild);
+                        } catch (Exception $e) {
+                            $arr_value = $origin_value_fild;
+                        }
 
-
-        ?>
-
-        <?if ($type_field == 'checkbox') :?>
-
-            <?foreach ($value_fild as $val => $row):?>
-
-                <label><input <?=$attr?> type="checkbox" name="<?=$name_fied.'['.$val.']'?>" <?if (isset($arr_value[$val])):?> checked <?endif?> value="<?=$val?>"/> <?=$row?></label><br/>
-
-            <?endforeach?>
-
-        <?elseif ($type_field == 'radio'):?>
-
-            <?foreach ($value_fild as $val => $row):?>
-
-                <label><input <?=$attr?> type="radio" name="<?=$name_fied?>" <?if (!empty($arr_value)):?><?if ($arr_value == $val):?> checked <?endif?><?endif?> value="<?=$val?>"/> <?=$row?></label><br/>
-
-            <?endforeach?>
-
-        <?endif?>
+                    }
 
 
-    <?else:?>
+                ?>
 
-        <?if ($value_fild != 0):?>
-            <input <?=$attr?> class="w-cheked-status" type="checkbox" checked value=""/>
-        <?else:?>
-            <input <?=$attr?> class="w-cheked-status" type="checkbox" value=""/>
-        <?endif?>
+                <?if ($type_field == 'checkbox') :?>
 
-        <input class="w-hide-status" name="<?=$name_fied?>" type="hidden" value=""/>
+                    <?foreach ($value_fild as $val => $row):?>
 
-    <?endif?>
+                        <label><?=$row?> <input <?=$attr?> type="checkbox" name="<?=$name_fied.'['.$val.']'?>" <?if (isset($arr_value[$val])):?> checked <?endif?> value="<?=$val?>"/></label><br/>
+
+                    <?endforeach?>
+
+                <?elseif ($type_field == 'radio'):?>
+
+                    <?foreach ($value_fild as $val => $row):?>
+
+                        <label><?=$row?> <input <?=$attr?> type="radio" name="<?=$name_fied?>" <?if (!empty($arr_value)):?><?if ($arr_value == $val):?> checked <?endif?><?endif?> value="<?=$val?>"/></label><br/>
+
+                    <?endforeach?>
+
+                <?endif?>
+
+
+            <?else:?>
+
+                <?if ($value_fild != 0):?>
+                    <input <?=$attr?> class="w-cheked-status" name="<?=$name_fied?>" type="checkbox" checked value=""/>
+                <?else:?>
+                    <input <?=$attr?> class="w-cheked-status" name="<?=$name_fied?>" type="checkbox" value=""/>
+                <?endif?>
+
+                <input class="w-hide-status" name="<?=$name_fied?>" type="hidden" value="<?if (!empty($origin_value_fild)) { echo $origin_value_fild; } else {?>0<?}?>"/>
+
+            <?endif?>
+        </div>
+    </div>
 </div>

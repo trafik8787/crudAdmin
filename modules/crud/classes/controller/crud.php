@@ -324,6 +324,12 @@ class Controller_Crud extends Controller_Main {
         //вид edit
         $viev_edit = View::factory('page/edit');
 
+        //валидация полей
+        if ($retw->validation != null) {
+            $retw->validation_views();
+            $viev_edit->script_validate = $retw->validation;
+        }
+
         $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
         $fields = $fields[0];
 
@@ -731,6 +737,12 @@ class Controller_Crud extends Controller_Main {
         }
 
         $viev_add = View::factory('page/add');
+
+        //валидация полей
+        if ($retw->validation != null) {
+            $retw->validation_views();
+            $viev_add->script_validate = $retw->validation;
+        }
 
         $viev_add->add_property = array('field' => $fields,
             'obj' => $_GET['obj'],

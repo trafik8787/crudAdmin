@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
-
+<?=$script_validate?>
 
 <script>
     $(document).on('click', '#loading-example-btn', function(){
@@ -42,7 +42,7 @@
 
                 <?foreach ($add_property['field'] as  $name_fied):?>
 
-                    <div class="form-group">
+                    <div class="form-group has-feedback">
 
                         <?if (isset($add_property['name_colums_table_show'][$name_fied])):?>
                                 <label for="<?=$name_fied?>" class="col-sm-2 control-label"><?=$add_property['name_colums_table_show'][$name_fied]?></label>

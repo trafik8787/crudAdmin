@@ -31,6 +31,7 @@ return array(
     'LANG_BUTTON_APLY' => 'Применить',
     'LANG_BUTTON_LOAD_APLY' => 'Сохраняю...',
     'LANG_BUTTON_COPY' => 'Копировать',
-    'LANG_SHOW_VIEWS' => 'Просмотр'
+    'LANG_SHOW_VIEWS' => 'Просмотр',
+    'LANG_PREVIOUS' => 'Назад'
 
 );

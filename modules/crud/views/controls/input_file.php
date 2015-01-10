@@ -26,6 +26,8 @@
                                <td>
                                    <a class="example-image-link" href="<?=$row?>" data-lightbox="example-<?=$exemple_id?>" data-title="Optional caption."><img width="70" src="<?=$row?>" alt=""></a>
                                    <input type="hidden" name="editfile-<?=$name_fied?>[]" value="<?=$row?>">
+                                   <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+                                   <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
 
                                    <span class="glyphicon glyphicon-remove w-delete"></span>
 
@@ -74,6 +76,8 @@
     <div class="w-input-form">
         <div class="entry input-group">
             <input type="file"  name="<?=$name_fied?>[]"/>
+            <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+            <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
             <span class="input-group-btn">
                 <button class="btn btn-success btn-add" type="button">
                     <span class="glyphicon glyphicon-plus" style="padding: 3px"></span>
@@ -87,6 +91,8 @@
     <div class="w-input-form">
         <div class="entry input-group">
             <input type="file"  name="<?=$name_fied?>"/>
+            <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+            <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
         </div>
     </div>
 

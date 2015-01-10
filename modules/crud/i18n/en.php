@@ -31,6 +31,7 @@ return array(
     'LANG_BUTTON_APLY' => 'Apply',
     'LANG_BUTTON_LOAD_APLY' => 'Save...',
     'LANG_BUTTON_COPY' => 'Copy',
-    'LANG_SHOW_VIEWS' => 'Views'
+    'LANG_SHOW_VIEWS' => 'Views',
+    'LANG_PREVIOUS' => 'Previous'
 
 );

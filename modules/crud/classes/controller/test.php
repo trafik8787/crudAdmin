@@ -58,7 +58,6 @@ class Controller_Test extends Controller
         $crud->callback_before_insert('cal_bef_inser');
         $crud->callback_after_insert('cal_insert_inser');
 
-        //$crud->set_field_type('name_en', 'select',  $crud->relation_one('test', 'deskription','idd'), '');
         //$crud->set_field_type('name_en', array('file', 'uploads', 'pre_', 'views', 'img'),'', 'multiple');
         //$crud->set_field_type('status', 'checkbox', array('y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'));
         // $crud->set_field_type('status', 'select', array('' => 'Вибрать', 'y' => 'Да', 'n' => 'Нет', 'ner' => 'Незнаю'),'multiple');
@@ -69,7 +68,7 @@ class Controller_Test extends Controller
         //$crud->set_field_type('author', 'text', 'y');
         //$crud->set_field_type('name', array('file', 'uploads', 'pre_', 'views', 'img'), '', 'multiple');
        // array('id', '=', 2)
-        $crud->set_field_type('name', 'text', array('y' => 'Да', 'n' => 'Нет'), 'multiple', '', array('category', 'name', 'id', ''));
+        $crud->set_field_type('name', 'text');
         //$crud->set_field_type('name_en', 'select', array('y' => 'Да', 'n' => 'Нет'), 'multiple', '', array('category', '{name} №-{id}','id'));
         //$crud->set_one_to_many('relation_copy', 'name', 'bussines_text', 'category_id');
 
@@ -90,8 +89,43 @@ class Controller_Test extends Controller
         //переопределяет значки кнопок удалить
         $crud->icon_delete('glyphicon-remove-circle');
 
+//
+//        $crud->validation('name', array('required' => true, 'minlength' => 4, 'maxlength' => 8),
+//                                    array('required' => 'Это поле обязательно для заполнения',
+//                                            'minlength' => 'Логин должен быть минимум 4 символа',
+//                                            'maxlength' => 'Максимальное число символо - 8'));
+
+        $crud->validation('name', array('required' => true),
+            array('required' => 'Это поле обязательно для заполнения'));
+
+        $crud->validation('name_en', array('required' => true, 'minlength' => 4, 'maxlength' => 6),
+            array('required' => 'Это поле обязательно для заполнения-en',
+                'minlength' => 'Логин должен быть минимум 4 символа-en',
+                'maxlength' => 'Максимальное число символо - 6 en'));
+
+
+//        required — поле обязательное для заполнения (true или false)
+//        remote — указывается файл для проверки поля (например: check.php)
+//        email — проверяет корректность e-mail адреса (true или false)
+//        url — проверяет корректность url адреса (true или false)
+//        date — проверка корректности даты (true или false)
+//        dateISO — проверка корректности даты ISO (true или false)
+//        number — проверка на число (true или false)
+//        digits — только цифры (true или false)
+//        creditcard — корректность номера кредитной карты (true или false)
+//        equalTo — равное чему-то (например другому полю equalTo:»#pswd»)
+//        accept — проверка на правильное расширение (accept: «xls|csv»)
+//        maxlength — максимальное кол-во символов (число)
+//        minlength — минимальное кол-во символов (число)
+//        rangelength — кол-во символов от скольки и до скольки (rangelength: [2, 6])
+//        range — число должно быть в диапазоне от и до (range: [13, 23])
+//        max — максимальное значение числа (22)
+//        min — минимальное значение числа (11)
+
+
+
         //изминить вид поля select
-        $crud->select_multiselect('name');
+        //$crud->select_multiselect('name');
         //$crud->select_multiselect('name_en');
 
         //метод идин ко многим 1. имя таблицы 2. поле с какого будет сниматся информация. 3. поле куда нада записать 4. id записи один ко многим
@@ -143,7 +177,7 @@ class Controller_Test extends Controller
 
     public static function addAction2($key_array = null)
     {
-        die(print_r($key_array));
+        //die(print_r($key_array));
     }
 
     public static function  cal_bef_inser($key_array = null)

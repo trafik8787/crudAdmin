@@ -25,6 +25,8 @@
                 <?foreach ($arr_value as $row):?>
                     <div class="entry input-group">
                         <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" value="<?=$row?>">
+                        <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
                                 <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus" style="padding: 3px"></span></button>
                             </span>
@@ -35,6 +37,8 @@
 
                 <div class="entry input-group">
                     <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" value="<?=$arr_value?>">
+                    <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+                    <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
                                 <button class="btn btn-remove btn-danger" type="button"><span class="glyphicon glyphicon-minus" style="padding: 3px"></span></button>
                             </span>
@@ -48,6 +52,8 @@
                               type="<?=$type_field?>"
                               name="<?=$name_fied?>[]"
                               value=""/>
+            <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+            <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                 <span class="input-group-btn">
                     <button class="btn btn-success btn-add" type="button">
                         <span class="glyphicon glyphicon-plus" style="padding: 3px"></span>
@@ -93,6 +99,8 @@
                           name="<?=$name_fied?>"
                           value="<?if (!empty($value_fild)) echo $value_fild?>"
                           id="<?=$name_fied?>"/>
+        <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
     <?else:?>
 
         <div class="input-group date col-md-5 <?=$data_class?>" data-date="" data-date-format="<?=$data_format?>" data-link-field="<?=$name_fied?>" data-link-format="<?=$data_format?>">
@@ -102,6 +110,8 @@
                               name="<?=$name_fied?>"
                               value="<?if (!empty($value_fild)) echo $value_fild?>"
                               id="<?=$name_fied?>"/>
+            <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
+            <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
             <span class="input-group-addon"><span class="glyphicon <?=$date_types?>"></span></span>
         </div>

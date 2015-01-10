@@ -88,3 +88,8 @@
 .input-group {
     margin-bottom: 2px;
 }
+
+.w-cheked-right {
+    display: inline-block;
+    text-align: right;
+}

@@ -1,11 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
-<script>
+<?=$script_validate?>
 
-//    $(document).on('click', '#loading-save', function(){
-//        var form_edit = $('#w-form-edit');
-//        form_edit.detach('target');
-//    });
+<script>
 
 
     $(document).on('click', '#loading-example-btn', function(){
@@ -34,7 +31,7 @@
 
 
 </script>
-<!--<pre>--><?//print_r($edit_property)?><!--</pre>-->
+<!--<pre>--><?//die(print_r($edit_property))?><!--</pre>-->
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -43,7 +40,7 @@
 
                 <?foreach ($edit_property['field'] as $name_fied => $value_fild):?>
                     <?if ($name_fied != $edit_property['key_primary']):?>
-                        <div class="form-group">
+                        <div class="form-group has-feedback">
                             <?if (isset($edit_property['name_colums_table_show'][$name_fied])):?>
 
                                 <label for="<?=$edit_property['name_colums_table_show'][$name_fied]?>" class="col-sm-2 control-label"><?=$edit_property['name_colums_table_show'][$name_fied]?></label>
@@ -69,6 +66,11 @@
                                                $origin_value_fild = $value_fild; //первоначальное значение поля
 
                                                $value_fild =  $edit_property['new_type_field'][$name_fied]['field_value']; //переопределенное значение
+                                        }
+
+                                        //для checkbox с раскладом $crud->set_field_type('name', 'checkbox');
+                                        if (empty($edit_property['new_type_field'][$name_fied]['field_value']) and  $edit_property['new_type_field'][$name_fied]['type_field'] == 'checkbox') {
+                                            $origin_value_fild = $value_fild;
                                         }
 
 

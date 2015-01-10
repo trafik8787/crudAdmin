@@ -65,6 +65,12 @@ class Cruds extends Controller_Main {
 
     public $select_multiselect = null; //изменяет поле select
 
+    public $validation = null; //принимает масив значений для валидации
+    public $validation_messages = null; //принимает масив строк которые отображаются в случае ошибки
+
+    private $rules = array();
+    private $messages = array();
+
     public static $id = null; //хранит id записи
 
     public function __construct () {
@@ -151,6 +157,20 @@ class Cruds extends Controller_Main {
         return $this->template;
     }
 
+    //валидация полей
+    public function validation ($field_name, $property_field_arr, $property_messages_arr) {
+        $this->rules[$field_name] = $property_field_arr;
+        $this->messages[$field_name] = $property_messages_arr;
+        $this->validation_messages = json_encode($this->messages);
+        $this->validation = json_encode($this->rules);
+
+    }
+
+    public function validation_views () {
+        $this->validation = View::factory('controls/scriptValidateJs', array('json_rules' => $this->validation, 'json_messages' => $this->validation_messages));
+    }
+
+
 
     public function static_style () {
 
@@ -182,6 +202,7 @@ class Cruds extends Controller_Main {
             $media->uri(array('file' => 'js/lightbox/js/lightbox.min.js')),
             $media->uri(array('file' => 'js/chosen.jquery.min.js')),
             $media->uri(array('file' => 'js/bootstrap-datetimepicker.min.js')),
+            $media->uri(array('file' => 'js/jquery.validate.min.js')),
             //$media->uri(array('file' => 'js/DataTables-1.10.0/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')),
             //'/js/DataTables-1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf',
             $media->uri(array('file' => 'css/loader.GIF'))
