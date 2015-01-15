@@ -11,7 +11,7 @@ abstract class Controller_Base extends Controller_Template {
         parent::before();
         View::set_global('title', 'Мой сайт');
         View::set_global('description', 'Самый лучший сайт');
-        $this->template->content = '';
+        $this->template->content = 'yrty';
         $this->template->styles = '';
         $this->template->scripts = '';
 

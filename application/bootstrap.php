@@ -146,13 +146,15 @@ Kohana::modules(array(
 //        ->response;
 //}
 
+
+
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'page',
 		'action'     => 'index',
 	));
 
-if ( ! defined('SUPPRESS_REQUEST'))
-{
-    echo Request::current();
-}
+//if ( ! defined('SUPPRESS_REQUEST'))
+//{
+//    echo Request::current();
+//}

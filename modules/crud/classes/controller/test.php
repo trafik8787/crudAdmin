@@ -29,13 +29,33 @@
 class Controller_Test extends Controller
 {
 
+    public static $testing_static_crud;
+
     public function action_index()
     {
-
+        //рендер формы редактирования получает один параметр id строки название поля определяет само по первичному ключу
+        //$this->response->body(self::qwe()->edit_render(11));
         $this->response->body(self::asd()->render());
 
     }
 
+
+    public static function  qwe () {
+        $crud = new Cruds;
+        $crud->load_table('city');
+        $crud->set_lang('ru');
+        $crud->disable_editor('name');
+        $crud->disable_editor('name_en');
+        $crud->disable_editor('region_en');
+        $crud->disable_editor('region');
+
+        $crud->set_field_type('name', 'text');
+
+        $crud->validation('name', array('required' => true),
+            array('required' => 'Это поле обязательно для заполнения'));
+
+        return $crud;
+    }
 
 
     public static function asd()
@@ -79,7 +99,7 @@ class Controller_Test extends Controller
         $crud->disable_editor('region_en');
         $crud->disable_editor('region');
         // $crud->enable_export();
-        $crud->enable_delete_group();
+        //$crud->enable_delete_group();
 
         //добавляет кнопку просмотра передача необязательного параметра названия класа иконки
         $crud->show_views('glyphicon-search');
@@ -95,13 +115,13 @@ class Controller_Test extends Controller
 //                                            'minlength' => 'Логин должен быть минимум 4 символа',
 //                                            'maxlength' => 'Максимальное число символо - 8'));
 
-        $crud->validation('name', array('required' => true),
-            array('required' => 'Это поле обязательно для заполнения'));
+//        $crud->validation('name', array('required' => true),
+//            array('required' => 'Это поле обязательно для заполнения'));
 
-        $crud->validation('name_en', array('required' => true, 'minlength' => 4, 'maxlength' => 6),
-            array('required' => 'Это поле обязательно для заполнения-en',
-                'minlength' => 'Логин должен быть минимум 4 символа-en',
-                'maxlength' => 'Максимальное число символо - 6 en'));
+//        $crud->validation('name_en', array('required' => true, 'minlength' => 4, 'maxlength' => 6),
+//            array('required' => 'Это поле обязательно для заполнения-en',
+//                'minlength' => 'Логин должен быть минимум 4 символа-en',
+//                'maxlength' => 'Максимальное число символо - 6 en'));
 
 
 //        required — поле обязательное для заполнения (true или false)
@@ -142,7 +162,7 @@ class Controller_Test extends Controller
 
         //$test = Model::factory('All')->information_table($crud->table);//[0]->COLUMN_NAME;
         //die(print_r(Kohana::$config->load('crudconfig.database')));
-
+        self::$testing_static_crud = $crud;
         return $crud;
     }
 
@@ -161,6 +181,7 @@ class Controller_Test extends Controller
 
     public static function call_bef_edit($new_array = null, $old_array = null)
     {
+
         //print_r($old_array);
         //print_r($new_array);
         //$new_array['name'] = array(456,678);

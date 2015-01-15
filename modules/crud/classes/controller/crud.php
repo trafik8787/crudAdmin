@@ -125,12 +125,14 @@ class Controller_Crud extends Controller_Main {
 
     public function action_edit () {
 
+        //получаем масив $_GET
+        $get = $this->request->query();
 
         if (isset($_POST['edit'])) {
              //die(print_r($_FILES));
             $re = unserialize(base64_decode($_POST['obj']));
         } else {
-            $re = unserialize(base64_decode($_GET['obj']));
+            $re = unserialize(base64_decode($get['obj']));
         }
 
 
@@ -147,7 +149,7 @@ class Controller_Crud extends Controller_Main {
         if (isset($_POST['edit'])) {
             $this->id = Arr::get($_POST, 'id');
         } else {
-            $this->id = Arr::get($_GET, 'id');
+            $this->id = $get['id'];
         }
 
         Cruds::$id = $this->id;
@@ -392,7 +394,7 @@ class Controller_Crud extends Controller_Main {
                                             'type_field_upload' => $type_field_upload, //масив параметров для поля file
                                             'type_field' => $type_field, //типы полей по дефолту
                                             'key_primary' => $key_primary, //id первичный ключ
-                                            'obj' => $_GET['obj'],
+                                            'obj' => $get['obj'],
                                             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $viev_edit;

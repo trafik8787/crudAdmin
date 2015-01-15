@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
-<?=$script_validate?>
+<?=isset($script_validate) ? $script_validate:''?>
 
 <script>
     $(document).on('click', '#loading-example-btn', function(){

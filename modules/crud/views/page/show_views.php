@@ -46,7 +46,7 @@
 <!--    <a href="/--><?//=Kohana::$config->load('crudconfig.base_url')?><!--/"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Назад</button></a>-->
     <nav>
         <ul class="pager">
-            <li class="previous"><a href="/<?=Kohana::$config->load('crudconfig.base_url')?>/"><span aria-hidden="true">&larr;</span> <?=_('LANG_PREVIOUS')?></a></li>
+            <li class="previous"><a href="/<?=Kohana::$config->load('crudconfig.base_url')?>/"><span aria-hidden="true">&larr;</span> <?=__('LANG_PREVIOUS')?></a></li>
 
         </ul>
     </nav>

@@ -15,12 +15,7 @@ abstract class Controller_Main extends Controller_Template {
     public function before () {
 
         parent::before();
-        View::set_global('title', 'Мой сайт');
-        View::set_global('description', 'Самый лучший сайт');
 
-//        $this->template->content = '';
-//        $this->template->styles = '';
-//        $this->template->scripts = '';
 
     }
 

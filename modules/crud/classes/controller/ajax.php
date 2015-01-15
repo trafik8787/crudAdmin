@@ -29,7 +29,7 @@ class Controller_Ajax extends Controller {
         $ext = pathinfo($file, PATHINFO_EXTENSION);
         $file = substr($file, 0, -(strlen($ext) + 1));
 
-        //die(print_r($file));
+//        die(print_r($file));
 
         $file = Kohana::find_file('media', $file, $ext);
 

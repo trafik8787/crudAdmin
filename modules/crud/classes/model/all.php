@@ -18,7 +18,7 @@ class Model_All extends Model
         $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
         if ($id != null) {
-        return DB::select()->from($table)
+            return DB::select()->from($table)
             ->where($this->key_primary, '=', $id)
             ->execute()->as_array();
 

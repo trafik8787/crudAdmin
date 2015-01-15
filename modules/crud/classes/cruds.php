@@ -10,7 +10,7 @@ class Cruds extends Controller_Main {
 
 
     public $table; //название таблицы
-    private $name_colums_table; //названия полей таблицы
+    public $name_colums_table; //названия полей таблицы
     public $new_name_column; //переименованые названия полей
     public $render = null; //рендер
     public $key_primary; //хранит первичный ключ таблицы
@@ -21,9 +21,9 @@ class Cruds extends Controller_Main {
     //хранит массив вызова обьекта Cruds
     public  $class_metod = null;
     public $column_array = null; //определение вызова метода определения полей таблицы
-    private $remove_delete = null; //уброать кнопку удалить
-    private $remove_edit = null; //уброать кнопку редактировать
-    private $remove_add = null; //уброать кнопку добавить
+    public $remove_delete = null; //уброать кнопку удалить
+    public $remove_edit = null; //уброать кнопку редактировать
+    public $remove_add = null; //уброать кнопку добавить
 
     private $show_views = false; //кнопка просмотра записи
 
@@ -133,6 +133,21 @@ class Cruds extends Controller_Main {
             'value' => $value);
     }
 
+    public function edit_render ($id) {
+
+        $key_primary = Model::factory('All')->information_table($this->table, true);
+        $this->key_primary = $key_primary[0]->COLUMN_NAME;
+
+        $this->object_serial = array('table' => $this->table,
+            'callback_functions_array' => $this->class_metod
+        );
+
+        $obj = base64_encode(serialize($this->object_serial));
+
+        return Request::factory('crud/edit?obj='.$obj.'&'.$this->key_primary.'='.$id)->execute()->body();
+        //echo '<pre>'.print_r($this->object_serial).'</pre>';
+    }
+
     //метод рендера круда
     public function render () {
 
@@ -140,6 +155,7 @@ class Cruds extends Controller_Main {
         $about = View::factory('/page/page');
 
         //передача  в вид содержимого таблицы метода select_table
+
         $about->table_propery = $this->select_table();
 
         $this->render = true;
@@ -236,6 +252,7 @@ class Cruds extends Controller_Main {
                 }
 
             }
+
             return $tmp;
         }
 

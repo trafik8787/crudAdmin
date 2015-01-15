@@ -380,7 +380,7 @@
 
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
             <th>
-                <?=$rows_column['COLUMN_NAME']?>
+                <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME']: ''?>
             </th>
         <?endforeach?>
 
@@ -398,7 +398,7 @@
 
         <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
         <th>
-            <?=$rows_column['COLUMN_NAME']?>
+            <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME'] : ''?>
         </th>
         <?endforeach?>
 
