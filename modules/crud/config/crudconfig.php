@@ -8,6 +8,6 @@
  */
 
 return array(
-    'base_url' => 'admin',
-    'database' => 'crud',
+    'base_url' => 'admin', //базовый url crud
+    'database' => Datagert::name_database(),
 );

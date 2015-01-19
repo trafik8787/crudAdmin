@@ -6,8 +6,6 @@ class Controller_Page extends Controller_Base {
     public function action_index() {
 
 
-
-
         $content = View::factory('/pages/about');
         $content->editer = self::qwe()->edit_render(11);
         //$content->table = self::asd()->render();

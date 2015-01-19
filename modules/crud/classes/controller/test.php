@@ -33,6 +33,7 @@ class Controller_Test extends Controller
 
     public function action_index()
     {
+
         //рендер формы редактирования получает один параметр id строки название поля определяет само по первичному ключу
         //$this->response->body(self::qwe()->edit_render(11));
         $this->response->body(self::asd()->render());
