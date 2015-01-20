@@ -44,7 +44,7 @@
             "bAutoWidth": false,
 
             "oLanguage": {
-                "sProcessing": "<img src='/<?=Kohana::$config->load('crudconfig.base_url')?>/media/css/loader.GIF'>",
+                "sProcessing": "<img src='<?php echo Route::url('docs/media', array('file' => 'img/loader.GIF')) ?>'>",
                 "sZeroRecords": "<?=__('LANG_NO_RECORD')?>",
                 "sInfo": "<?=__('LANG_INFO')?>",
                 "sLengthMenu": "<?=__('LANG_MENY')?>",
@@ -409,4 +409,3 @@
     </tr>
     </tfoot>
 </table>
-
