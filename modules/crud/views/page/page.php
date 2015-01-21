@@ -91,7 +91,7 @@
             ],
 
             "ajax": {
-                "url": "ajax/showTableAjax",
+                "url": "/<?=Kohana::$config->load('crudconfig.base_url')?>/ajax/showTableAjax",
 
                 "data": function ( d ) {
                     d.obj = $('input[name="obj"]').val();

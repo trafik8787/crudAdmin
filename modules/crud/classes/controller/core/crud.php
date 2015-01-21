@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class Controller_Crud extends Controller_Main {
+class Controller_Core_Crud extends Controller_Core_Main {
 
     protected $table;
     protected $id;

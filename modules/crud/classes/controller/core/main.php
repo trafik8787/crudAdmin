@@ -6,7 +6,7 @@
  * Time: 0:55
  * To change this template use File | Settings | File Templates.
  */
-abstract class Controller_Main extends Controller_Template {
+abstract class Controller_Core_Main extends Controller_Template {
 
     public $template = 'page/main_template';
 

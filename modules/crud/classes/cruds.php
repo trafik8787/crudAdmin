@@ -6,7 +6,7 @@
  * Time: 14:01
  */
 
-class Cruds extends Controller_Main {
+class Cruds extends Controller_Core_Main {
 
 
     public $table; //название таблицы
@@ -144,7 +144,12 @@ class Cruds extends Controller_Main {
 
         $obj = base64_encode(serialize($this->object_serial));
 
-        return Request::factory('crud/edit?obj='.$obj.'&'.$this->key_primary.'='.$id)->execute()->body();
+
+        /**
+         * todo имя контроллера предположительно с большой буквы
+         */
+        return Request::factory('core_crud/edit?obj='.$obj.'&'.$this->key_primary.'='.$id)->execute()->body();
+
         //echo '<pre>'.print_r($this->object_serial).'</pre>';
     }
 

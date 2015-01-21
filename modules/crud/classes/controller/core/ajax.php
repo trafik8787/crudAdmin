@@ -6,12 +6,12 @@
  * Time: 17:18
  */
 
-class Controller_Ajax extends Controller {
+class Controller_Core_Ajax extends Controller {
 
     public function action_showTableAjax () {
 
         $re = unserialize(base64_decode($_GET['obj']));
-        //die(print_r($re));
+
         //переиницыализация круда
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));

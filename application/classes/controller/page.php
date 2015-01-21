@@ -5,10 +5,10 @@ class Controller_Page extends Controller_Base {
 
     public function action_index() {
 
-
+        var_dump(Kohana_Request::detect_uri());
         $content = View::factory('/pages/about');
-        $content->editer = self::qwe()->edit_render(11);
-        //$content->table = self::asd()->render();
+       // $content->editer = self::qwe()->edit_render(15);
+        $content->table = self::asd()->render();
 
         $this->template->content = $content;
     }
